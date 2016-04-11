@@ -1,3 +1,3 @@
->Maps4News Interactive map
+# Maps4News Interactive map
 
 Documentation: [click here](docs.md)

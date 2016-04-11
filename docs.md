@@ -3,6 +3,7 @@ Interactive Map
 
 Copyright © 2016 MapCreator
 
+Found a bug?, report it on our [repo](https://github.com/MapOnline/interactive)
 
 ## Table of contents
 * Introduction
