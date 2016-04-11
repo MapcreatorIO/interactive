@@ -1,0 +1,41 @@
+.m4n-zoom-container {
+  position: absolute;
+  top: 20px;
+  right: 10px;
+  background: white;
+  font-size: 15px;
+  font-weight: bold;
+  font-family: "Arial", serif;
+  color: #555;
+  text-align: center;
+}
+
+.m4n-zoom-button {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+}
+
+.m4n-zoom-button:hover {
+  background: #efefef;
+}
+
+.m4n-zoom-container div:first-child {
+  border-bottom: 0;
+}
+
+.m4n-zoom-container div:first-child::before {
+  content: '+';
+}
+
+.m4n-zoom-container div:last-child::before {
+  content: '\2013';
+}
+
+.m4n-zoom-button.disabled {
+  background: #ddd;
+  color: #aaa;
+  cursor: default;
+}

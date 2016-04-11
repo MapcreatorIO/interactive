@@ -1,0 +1,24 @@
+{
+  "name": "m4n-interactive",
+  "version": "2.0.4",
+  "description": "Maps4News Interactive Map",
+  "main": "dist/m4n.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "map"
+  ],
+  "author": "Maps4News",
+  "license": "proprietary",
+  "dependencies": {
+    "grunt": "^1.0.1"
+  },
+  "devDependencies": {
+    "grunt-contrib-less": "^1.2.0",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-contrib-template": "^1.0",
+    "grunt-jsbeautifier": "^0.2.10"
+  }
+}
