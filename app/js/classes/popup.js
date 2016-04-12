@@ -174,22 +174,26 @@ Popup.prototype.stopVideo = function() {
  * Start the video inside the popup
  */
 Popup.prototype.startVideo = function() {
-	switch(this.media_type) {
-		case "youtube":
-			if(
-				this.youtube && [
-					YT.PlayerState.UNSTARTED,
-					YT.PlayerState.PAUSED,
-					YT.PlayerState.CUED,
-					YT.PlayerState.BUFFERING
-				].indexOf(this.youtube.getPlayerState()) !== -1
-			) {
-				this.youtube.playVideo();
-			}
-			break;
-		case "video":
-			document.getElementById(this.video_id).play();
-			break;
+	try { // TODO fix youtube check
+		switch(this.media_type) {
+			case "youtube":
+				if(
+					this.youtube && [
+						YT.PlayerState.UNSTARTED,
+						YT.PlayerState.PAUSED,
+						YT.PlayerState.CUED,
+						YT.PlayerState.BUFFERING
+					].indexOf(this.youtube.getPlayerState()) !== -1
+				) {
+					this.youtube.playVideo();
+				}
+				break;
+			case "video":
+				document.getElementById(this.video_id).play();
+				break;
+		}
+	} catch(e) {
+		console.warn("YouTube wasn't ready, yet!", e);
 	}
 };
 
