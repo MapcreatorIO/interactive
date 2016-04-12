@@ -28,7 +28,8 @@ Popup.prototype.getApiObject = function() {
 	var self = this;
 	return {
 		number: self.number,
-		info: { title: self.title, info: self.info },
+		title: self.title,
+		info: self.info,
 		show: function(center) {
 			self.show(center);
 		},

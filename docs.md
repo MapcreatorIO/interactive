@@ -188,21 +188,17 @@ The API `popup` function will return a specific popup, its structure is as follo
 	 * The number of the popup
 	 */
 	number: 1,
+
 	/**
-	 * Info namespace
+	 * The title of the popup
 	 */
-	info: {
-		/**
-		 * The title of the popup
-		 */
-		title: "Title",
-		/**
-		 * The body text of the popup
-		 * Without the media (image, video, etc).
-		 * Can contain HTML tags
-		 */
-		info: "Body Text"
-	},
+	title: "Title",
+	/**
+	 * The body text of the popup
+	 * Without the media (image, video, etc).
+	 * Can contain HTML tags
+	 */
+	info: "Body Text",
 	/**
 	 * Show the popup
 	 * @param {boolean} [center=false] - Center the map to the popup
