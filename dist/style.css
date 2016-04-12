@@ -136,6 +136,7 @@
   font-weight: bold;
   width: 100%;
   padding: 10px 10px;
+  background: inherit;
 }
 .m4n-sidebar-footer {
   height: 40px;
@@ -149,6 +150,7 @@
   max-height: calc(100% - 119px);
   padding: 10px;
   width: 100%;
+  background: inherit;
 }
 .m4n-sidebar .m4n-title {
   margin-top: 4px;
