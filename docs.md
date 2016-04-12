@@ -188,7 +188,6 @@ The API `popup` function will return a specific popup, its structure is as follo
 	 * The number of the popup
 	 */
 	number: 1,
-
 	/**
 	 * The title of the popup
 	 */
@@ -207,8 +206,9 @@ The API `popup` function will return a specific popup, its structure is as follo
 	/**
 	 * Toggle the popup
 	 * @param {boolean} [center=false] - Center the map to the popup when it's shown
+	 * @param {boolean} [force=false] - Force hiding the popup when it's hidden
 	 */
-	toggle: function(center) {},
+	toggle: function(center, force) {},
 	/**
 	 * Hide the popup
 	 */

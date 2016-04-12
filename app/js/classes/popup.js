@@ -33,11 +33,11 @@ Popup.prototype.getApiObject = function() {
 		show: function(center) {
 			self.show(center);
 		},
-		toggle: function(center) {
-			self.toggle(center);
+		toggle: function(center, force) {
+			self.toggle(center, force);
 		},
-		hide: function() {
-			self.hide();
+		hide: function(force) {
+			self.hide(force);
 		}
 	};
 };
@@ -138,10 +138,11 @@ Popup.prototype.onHide = function(force) {
  * Toggle a popup
  *
  * @param {boolean} [center=false] - center the map
+ * @param {boolean} [force=false] - force hiding the popup
  */
-Popup.prototype.toggle = function(center) {
+Popup.prototype.toggle = function(center, force) {
 	if(this.on_screen) {
-		this.hide();
+		this.hide(force);
 	} else {
 		this.show(center);
 	}
