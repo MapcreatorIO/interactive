@@ -2451,7 +2451,11 @@ var M4nInteractive = (function(options, container, callback) {
          */
         createElement: function(tag, classes, events) {
             var element = document.createElement(tag);
-            element.classList.add(classes);
+
+            if (classes !== null) {
+                element.classList.add(classes);
+            }
+
             for (var event in events) {
                 if (events.hasOwnProperty(event)) {
                     element.addEventListener(event, events[event]);
