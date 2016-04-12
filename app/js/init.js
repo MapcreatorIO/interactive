@@ -7,7 +7,7 @@
 	if(!options.path) throw 'M4nInteractive Parameter \'path\' is missing';
 	if(!container) throw 'M4nInteractive: No container was given';
 
-	main.interact = options.interact || "controls";
+	main.interact = options.interact || "scroll";
 	main.environment = options.environment || "online";
 
 	main.version = { map: '2.0', code: '2.0.4' }; // TODO Add version to json for verification

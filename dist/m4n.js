@@ -17,7 +17,7 @@ var M4nInteractive = (function(options, container, callback) {
         if (!options.path) throw 'M4nInteractive Parameter \'path\' is missing';
         if (!container) throw 'M4nInteractive: No container was given';
 
-        main.interact = options.interact || "controls";
+        main.interact = options.interact || "scroll";
         main.environment = options.environment || "online";
 
         main.version = {

@@ -61,12 +61,12 @@ The M4nInteractive class accepts the following parameters:
   | download    | This should be used when a user wants to self-host their map. |
   | development | Used by M4N employees during development. (will enable debugging mode) |
 
-  - __interact__. (optional; default "controls") The way interaction with the map works.
+  - __interact__. (optional; default "scroll") The way interaction with the map works.
 
   | Name     | Description |
   | -------- | ----------- |
-  | controls | use the on-screen controls and the mouse buttons to zoom in or out (holding ctrl will __enable__ scroll zooming) |
   | scroll   | allow scrolling the map to zoom it in or out (holding ctrl will __disable__ scroll zooming) |
+  | controls | use the on-screen controls and the mouse buttons to zoom in or out (holding ctrl will __enable__ scroll zooming) |
   | smart    | an overlay will be placed over the map when the user is not working with the map and disables the events to the map (timeout of 3 seconds; will not disable when a popup is active) |
 
   - __debug__. (not recommended) true or false, this allows the map object to be returned from the browser's console.
