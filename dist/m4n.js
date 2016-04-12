@@ -1172,8 +1172,8 @@ var M4nInteractive = (function(options, container, callback) {
      */
     Popup.prototype.show = function(center) {
         if (!this.on_screen) {
-            // Hide all other popups
-            main.object.popups.hideAll();
+            // Hide all other popups (including sidebars)
+            main.object.popups.hideAll(true);
 
             // Get the clicked point
             var point = main.object.levels.getCurrent().points.get(this.number);
@@ -1207,7 +1207,7 @@ var M4nInteractive = (function(options, container, callback) {
      * To be overwritten by popup specific function
      *
      * @param {Element} point
-     * @returns {boolean}
+     * @returns {boolean} - If the popup has been shown
      */
     Popup.prototype.onShowMobile = function(point) {
         // Overwrite with popup specific code
@@ -1221,7 +1221,7 @@ var M4nInteractive = (function(options, container, callback) {
      * To be overwritten by popup specific function
      *
      * @param {Element} point
-     * @returns {boolean}
+     * @returns {boolean} - if the popup has be shown on mobile
      */
     Popup.prototype.onShowDesktop = function(point) {
         // Overwrite with popup specific code
@@ -1232,6 +1232,7 @@ var M4nInteractive = (function(options, container, callback) {
      * Hide a popup
      *
      * @param {boolean} [force=false] - force hiding the popup
+     * @returns {boolean} - if the popup has been hidden
      */
     Popup.prototype.hide = function(force) {
         if (this.on_screen) {
@@ -1719,9 +1720,9 @@ var M4nInteractive = (function(options, container, callback) {
     /**
      * Hide all popups
      */
-    Popups.prototype.hideAll = function() {
+    Popups.prototype.hideAll = function(force) {
         this.list.forEach(function(element) {
-            element.hide();
+            element.hide(force);
         });
     };
 

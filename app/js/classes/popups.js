@@ -82,9 +82,9 @@ Popups.prototype.generateHTML = function() {
 /**
  * Hide all popups
  */
-Popups.prototype.hideAll = function() {
+Popups.prototype.hideAll = function(force) {
 	this.list.forEach(function(element) {
-		element.hide();
+		element.hide(force);
 	});
 };
 
