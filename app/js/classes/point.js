@@ -50,3 +50,36 @@ Point.prototype.isOn = function(x, y) {
 		y < this.position.top + this.size.height + main.globals.offset.get().y
 	);
 };
+
+/**
+ * Get info about the current position of a point
+ * @returns {object}
+ */
+Point.prototype.location = function() {
+	var object = {
+		left: this.position.left + main.globals.offset.get().x,
+		top: this.position.top + main.globals.offset.get().y,
+		right: -(this.position.left + main.globals.offset.get().x - main.object.canvas.clientWidth + this.size.width),
+		bottom: -(this.position.top + main.globals.offset.get().y - main.object.canvas.clientHeight + this.size.height)
+	};
+
+	object.locationX = (function() {
+		if(object.left < 5) {
+			return "left";
+		} else if(object.right < 5) {
+			return "right";
+		}
+		return "center";
+	})();
+
+	object.locationY = (function() {
+		if(object.top < 5) {
+			return "above";
+		} else if(object.bottom < 5) {
+			return "beneath";
+		}
+		return "center";
+	})();
+
+	return object;
+};

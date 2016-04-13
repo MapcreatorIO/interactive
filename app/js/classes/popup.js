@@ -55,9 +55,32 @@ Popup.prototype.show = function(center) {
 		// Get the clicked point
 		var point = main.object.levels.getCurrent().points.get(this.number);
 
-		// Center the map
-		if(center === true && (main.globals.offset.get().x > point.position.left && main.globals.offset.get().y > point.position.top)) {
+		point.location();
+
+		// Center the map TODO FIX
+		if(center === true) {
 			helpers.moveTo(point.position.left + (point.size.width / 2), point.position.top + (point.size.height / 2));
+		} else {
+			var object = { x: 0, y: 0 };
+
+			var location = point.location();
+			if(location.locationX !== "center" || location.locationY !== "center") {
+				if(location.left < 5) {
+					object.x = 5 - location.left;
+				} else if(location.right < 5) {
+					object.x = -(5 - location.right);
+				}
+
+				if(location.top < 5) {
+					object.y = 5 - location.top;
+				} else if(location.bottom < 5) {
+					object.y = -(5 - location.bottom);
+				}
+
+				if(object.x !== 0 || object.y !== 0) {
+					helpers.moveBy(object.x, object.y);
+				}
+			}
 		}
 
 		var self = this;

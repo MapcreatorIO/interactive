@@ -19,6 +19,16 @@ var helpers = {
 	},
 
 	/**
+	 * Moves the canvas by a specific number of pixels
+	 * @param {number} x - the x value (map offset)
+	 * @param {number} y - the y value (map offset)
+	 */
+	moveBy: function(x, y) {
+		main.globals.offset.changeBy(x, y);
+		main.object.levels.getCurrent().draw();
+	},
+
+	/**
 	 * Help set value of double (tap|click)
 	 */
 	doubleTap: function() {

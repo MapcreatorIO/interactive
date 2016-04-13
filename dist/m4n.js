@@ -1064,6 +1064,39 @@ var M4nInteractive = (function(options, container, callback) {
             y < this.position.top + this.size.height + main.globals.offset.get().y
         );
     };
+
+    /**
+     * Get info about the current position of a point
+     * @returns {object}
+     */
+    Point.prototype.location = function() {
+        var object = {
+            left: this.position.left + main.globals.offset.get().x,
+            top: this.position.top + main.globals.offset.get().y,
+            right: -(this.position.left + main.globals.offset.get().x - main.object.canvas.clientWidth + this.size.width),
+            bottom: -(this.position.top + main.globals.offset.get().y - main.object.canvas.clientHeight + this.size.height)
+        };
+
+        object.locationX = (function() {
+            if (object.left < 5) {
+                return "left";
+            } else if (object.right < 5) {
+                return "right";
+            }
+            return "center";
+        })();
+
+        object.locationY = (function() {
+            if (object.top < 5) {
+                return "above";
+            } else if (object.bottom < 5) {
+                return "beneath";
+            }
+            return "center";
+        })();
+
+        return object;
+    };
     /**
      * The points class
      * @class
@@ -1178,9 +1211,35 @@ var M4nInteractive = (function(options, container, callback) {
             // Get the clicked point
             var point = main.object.levels.getCurrent().points.get(this.number);
 
-            // Center the map
-            if (center === true && (main.globals.offset.get().x > point.position.left && main.globals.offset.get().y > point.position.top)) {
+            point.location();
+
+            // Center the map TODO FIX
+            if (center === true) {
                 helpers.moveTo(point.position.left + (point.size.width / 2), point.position.top + (point.size.height / 2));
+            } else {
+                var object = {
+                    x: 0,
+                    y: 0
+                };
+
+                var location = point.location();
+                if (location.locationX !== "center" || location.locationY !== "center") {
+                    if (location.left < 5) {
+                        object.x = 5 - location.left;
+                    } else if (location.right < 5) {
+                        object.x = -(5 - location.right);
+                    }
+
+                    if (location.top < 5) {
+                        object.y = 5 - location.top;
+                    } else if (location.bottom < 5) {
+                        object.y = -(5 - location.bottom);
+                    }
+
+                    if (object.x !== 0 || object.y !== 0) {
+                        helpers.moveBy(object.x, object.y);
+                    }
+                }
             }
 
             var self = this;
@@ -2400,6 +2459,16 @@ var M4nInteractive = (function(options, container, callback) {
         moveTo: function(x, y) {
             main.globals.offset.changeTo(-(x - (main.object.canvas.clientWidth / 2)), -(y - (main.object.canvas.clientHeight / 2)));
 
+            main.object.levels.getCurrent().draw();
+        },
+
+        /**
+         * Moves the canvas by a specific number of pixels
+         * @param {number} x - the x value (map offset)
+         * @param {number} y - the y value (map offset)
+         */
+        moveBy: function(x, y) {
+            main.globals.offset.changeBy(x, y);
             main.object.levels.getCurrent().draw();
         },
 
