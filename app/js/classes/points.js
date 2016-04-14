@@ -48,7 +48,7 @@ Points.prototype.hitAPoint = function(x, y) {
  * @returns {Point|null} The requested point
  */
 Points.prototype.get = function(number) {
-	for(var i = 0; i < this.list.length; i +=1) {
+	for(var i = 0; i < this.list.length; i++) {
 		if(this.list[i].number == number) {
 			return this.list[i];
 		}

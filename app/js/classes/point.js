@@ -82,5 +82,5 @@ Point.prototype.location = function() {
 		})()
 	};
 
-	 return object;
+	return object;
 };

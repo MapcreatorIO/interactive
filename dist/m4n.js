@@ -707,7 +707,7 @@ var M4nInteractive = (function(options, container, callback) {
         this._type = "level";
 
         this.is_loaded = false;
-        this.tiles = [];
+        this.tiles = {};
 
         if (level !== false) {
             for (var property in level) {
@@ -1145,7 +1145,7 @@ var M4nInteractive = (function(options, container, callback) {
      * @returns {Point|null} The requested point
      */
     Points.prototype.get = function(number) {
-        for (var i = 0; i < this.list.length; i += 1) {
+        for (var i = 0; i < this.list.length; i++) {
             if (this.list[i].number == number) {
                 return this.list[i];
             }

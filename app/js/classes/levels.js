@@ -101,7 +101,7 @@ Levels.prototype.getLevels = function(rLevels) {
  * Get all levels except the given ones
  * @param {number|Array} numbers - the number not to return
  */
-Levels.prototype.getAllExcept = function (numbers) {
+Levels.prototype.getAllExcept = function(numbers) {
 	if(typeof numbers == "number") {
 		numbers = [numbers];
 	}
@@ -179,8 +179,12 @@ Levels.prototype.change = function(level) {
 			changeTo(levels[0]);
 		}
 
-		if(levels[1] !== null) { levels[1].load(); }
-		if(levels[2] !== null) { levels[2].load(); }
+		if(levels[1] !== null) {
+			levels[1].load();
+		}
+		if(levels[2] !== null) {
+			levels[2].load();
+		}
 	}
 };
 

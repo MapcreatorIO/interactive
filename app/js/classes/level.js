@@ -7,7 +7,7 @@ var Level = function(level) {
 	this._type = "level";
 
 	this.is_loaded = false;
-	this.tiles = [];
+	this.tiles = {};
 
 	if(level !== false) {
 		for(var property in level) {
