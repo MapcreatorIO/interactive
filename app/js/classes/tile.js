@@ -29,37 +29,33 @@ var Tile = function(tile) {
  * Download the tile
  */
 Tile.prototype.load = function() {
-	var tile = this;
-
-	tile.image.src = main.url + tile.url;
-	tile.state = 1;
-	tile.image.onload = function() {
-		tile.state = 2;
-		main.object.levels.getLevel(tile.level).checkLoaded();
-	};
-	tile.image.onerror = function() {
-		tile.state = 3;
-		main.object.levels.getLevel(tile.level).checkLoaded();
-	};
+	this.image.src = main.url + this.url;
+	this.state = 1;
+	this.image.onload = function() {
+		this.state = 2;
+		main.object.levels.getLevel(this.level).checkLoaded();
+	}.bind(this);
+	this.image.onerror = function() {
+		this.state = 3;
+		main.object.levels.getLevel(this.level).checkLoaded();
+	}.bind(this);
 };
 
 /**
  * Draw the tile on screen
  */
 Tile.prototype.draw = function() {
-	var tile = this;
-
 	/**
 	 * Draw a tile on screen
 	 */
 	var show = function() {
-		var left = tile.position.left + main.globals.offset.get().x;
-		var top = tile.position.top + main.globals.offset.get().y;
+		var left = this.position.left + main.globals.offset.get().x;
+		var top = this.position.top + main.globals.offset.get().y;
 
-		if(tile.isVisible(left, top, tile.size.width, tile.size.height)) {
-			main.object.context.drawImage(tile.image, left, top, tile.size.width, tile.size.height);
+		if(this.isVisible(left, top, this.size.width, this.size.height)) {
+			main.object.context.drawImage(this.image, left, top, this.size.width, this.size.height);
 		}
-	};
+	}.bind(this);
 
 	/**
 	 * Draw an "x" when a tile is unable to load
@@ -70,31 +66,31 @@ Tile.prototype.draw = function() {
 		main.object.context.lineWidth = 8;
 		main.object.context.lineCap = "round";
 		main.object.context.beginPath();
-		main.object.context.moveTo(10 + tile.position.left + offset.x,
-			10 + tile.position.top + offset.y);
-		main.object.context.lineTo(-10 + tile.position.left + tile.size.width + offset.x,
-			-10 + tile.position.top + tile.size.height + offset.y);
+		main.object.context.moveTo(10 + this.position.left + offset.x,
+			10 + this.position.top + offset.y);
+		main.object.context.lineTo(-10 + this.position.left + this.size.width + offset.x,
+			-10 + this.position.top + this.size.height + offset.y);
 		main.object.context.stroke();
 
 		main.object.context.beginPath();
-		main.object.context.moveTo(10 + tile.position.left + offset.x,
-			-10 + tile.position.top + tile.size.height + offset.y);
-		main.object.context.lineTo(-10 + tile.position.left + tile.size.width + offset.x,
-			10 + tile.position.top + offset.y);
+		main.object.context.moveTo(10 + this.position.left + offset.x,
+			-10 + this.position.top + this.size.height + offset.y);
+		main.object.context.lineTo(-10 + this.position.left + this.size.width + offset.x,
+			10 + this.position.top + offset.y);
 		main.object.context.stroke();
-		tile.state = 3;
-	};
+		this.state = 3;
+	}.bind(this);
 
-	switch(tile.state) {
-		case tile.loadingStates.initial:
-			tile.load();
+	switch(this.state) {
+		case this.loadingStates.initial:
+			this.load();
 			break;
-		case tile.loadingStates.loading:
+		case this.loadingStates.loading:
 			break;
-		case tile.loadingStates.loaded:
+		case this.loadingStates.loaded:
 			show();
 			break;
-		case tile.loadingStates.error:
+		case this.loadingStates.error:
 			error();
 			break;
 	}

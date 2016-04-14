@@ -50,14 +50,13 @@ Levels.prototype.getIdealLevel = function() {
  * @returns {object}
  */
 Levels.prototype.getApiObject = function() {
-	var self = this;
 	var levels = [];
 
 	this.list.forEach(function(item) {
 		levels.push(item.getApiObject());
 	});
 
-	return { current: self.current, levels: levels };
+	return { current: this.current, levels: levels };
 };
 
 /**

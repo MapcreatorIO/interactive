@@ -724,17 +724,15 @@ var M4nInteractive = (function(options, container, callback) {
      * @returns {object}
      */
     Level.prototype.getApiObject = function() {
-        var self = this;
-
         return {
-            level: self.level,
+            level: this.level,
             isLoaded: this.is_loaded,
             changeTo: function() {
-                main.object.levels.change(self.level);
-            },
+                main.object.levels.change(this.level);
+            }.bind(this),
             load: function() {
-                self.load();
-            }
+                this.load();
+            }.bind(this)
         };
     };
 
@@ -863,7 +861,6 @@ var M4nInteractive = (function(options, container, callback) {
      * @returns {object}
      */
     Levels.prototype.getApiObject = function() {
-        var self = this;
         var levels = [];
 
         this.list.forEach(function(item) {
@@ -871,7 +868,7 @@ var M4nInteractive = (function(options, container, callback) {
         });
 
         return {
-            current: self.current,
+            current: this.current,
             levels: levels
         };
     };
@@ -1181,20 +1178,19 @@ var M4nInteractive = (function(options, container, callback) {
      * @returns {object} The popup api object
      */
     Popup.prototype.getApiObject = function() {
-        var self = this;
         return {
-            number: self.number,
-            title: self.title,
-            info: self.info,
+            number: this.number,
+            title: this.title,
+            info: this.info,
             show: function(center) {
-                self.show(center);
-            },
+                this.show(center);
+            }.bind(this),
             toggle: function(center, force) {
-                self.toggle(center, force);
-            },
+                this.toggle(center, force);
+            }.bind(this),
             hide: function(force) {
-                self.hide(force);
-            }
+                this.hide(force);
+            }.bind(this)
         };
     };
 
@@ -1242,14 +1238,13 @@ var M4nInteractive = (function(options, container, callback) {
                 }
             }
 
-            var self = this;
             var wasShown = (function() {
                 if (main.isMobile) {
-                    return self.onShowMobile(point);
+                    return this.onShowMobile(point);
                 } else {
-                    return self.onShowDesktop(point);
+                    return this.onShowDesktop(point);
                 }
-            })();
+            }.bind(this))();
 
             if (wasShown) {
                 this.startVideo();
@@ -1559,8 +1554,6 @@ var M4nInteractive = (function(options, container, callback) {
      * @returns {Element} the popup
      */
     Popup.prototype.generateOverlay = function(popup, title_html, info_html, media_html) {
-        var self = this;
-
         popup.classList.add("m4n-overlay");
 
         var info_container = document.createElement("div");
@@ -1573,11 +1566,11 @@ var M4nInteractive = (function(options, container, callback) {
 
         var close_button = helpers.createElement("span", "close_overlay", {
             "click": function() {
-                self.hide();
-            },
+                this.hide();
+            }.bind(this),
             "touchend": function() {
-                self.hide();
-            }
+                this.hide();
+            }.bind(this)
         });
 
         aligner.appendChild(info_container);
@@ -1614,7 +1607,6 @@ var M4nInteractive = (function(options, container, callback) {
      * @returns {Element} the popup
      */
     Popup.prototype.generateSidebar = function(popup, title_html, info_html, media_html) {
-        var self = this;
 
         popup.classList.add("m4n-sidebar-container");
 
@@ -1622,11 +1614,11 @@ var M4nInteractive = (function(options, container, callback) {
         var header = helpers.createElement("div", "m4n-sidebar-header");
         var close = helpers.createElement("div", "m4n-sidebar-close", {
             "click": function() {
-                self.hide(true);
-            },
+                this.hide(true);
+            }.bind(this),
             "touchend": function() {
-                self.hide(true);
-            }
+                this.hide(true);
+            }.bind(this)
         });
 
         header.appendChild(close);
@@ -1641,9 +1633,9 @@ var M4nInteractive = (function(options, container, callback) {
 
         var previous = helpers.createElement("li", null, {
             "click": function() {
-                self.hide(true);
+                this.hide(true);
                 var new_popup;
-                if (self.number != main.object.popups.getFirst().number) {
+                if (this.number != main.object.popups.getFirst().number) {
                     new_popup = main.api.popup(self.number - 1);
                 } else {
                     new_popup = main.api.popup(main.object.popups.getLast().number);
@@ -1651,14 +1643,14 @@ var M4nInteractive = (function(options, container, callback) {
                 if (new_popup !== null) {
                     new_popup.show(true);
                 }
-            }
+            }.bind(this)
         });
 
         var next = helpers.createElement("li", null, {
             "click": function() {
-                self.hide(true);
+                this.hide(true);
                 var new_popup;
-                if (self.number != main.object.popups.getLast().number) {
+                if (this.number != main.object.popups.getLast().number) {
                     new_popup = main.api.popup(self.number + 1);
                 } else {
                     new_popup = main.api.popup(main.object.popups.getFirst().number);
@@ -1666,7 +1658,7 @@ var M4nInteractive = (function(options, container, callback) {
                 if (new_popup !== null) {
                     new_popup.show(true);
                 }
-            }
+            }.bind(this)
         });
 
         var clear = document.createElement("div");
@@ -1834,37 +1826,33 @@ var M4nInteractive = (function(options, container, callback) {
      * Download the tile
      */
     Tile.prototype.load = function() {
-        var tile = this;
-
-        tile.image.src = main.url + tile.url;
-        tile.state = 1;
-        tile.image.onload = function() {
-            tile.state = 2;
-            main.object.levels.getLevel(tile.level).checkLoaded();
-        };
-        tile.image.onerror = function() {
-            tile.state = 3;
-            main.object.levels.getLevel(tile.level).checkLoaded();
-        };
+        this.image.src = main.url + this.url;
+        this.state = 1;
+        this.image.onload = function() {
+            this.state = 2;
+            main.object.levels.getLevel(this.level).checkLoaded();
+        }.bind(this);
+        this.image.onerror = function() {
+            this.state = 3;
+            main.object.levels.getLevel(this.level).checkLoaded();
+        }.bind(this);
     };
 
     /**
      * Draw the tile on screen
      */
     Tile.prototype.draw = function() {
-        var tile = this;
-
         /**
          * Draw a tile on screen
          */
         var show = function() {
-            var left = tile.position.left + main.globals.offset.get().x;
-            var top = tile.position.top + main.globals.offset.get().y;
+            var left = this.position.left + main.globals.offset.get().x;
+            var top = this.position.top + main.globals.offset.get().y;
 
-            if (tile.isVisible(left, top, tile.size.width, tile.size.height)) {
-                main.object.context.drawImage(tile.image, left, top, tile.size.width, tile.size.height);
+            if (this.isVisible(left, top, this.size.width, this.size.height)) {
+                main.object.context.drawImage(this.image, left, top, this.size.width, this.size.height);
             }
-        };
+        }.bind(this);
 
         /**
          * Draw an "x" when a tile is unable to load
@@ -1875,29 +1863,29 @@ var M4nInteractive = (function(options, container, callback) {
             main.object.context.lineWidth = 8;
             main.object.context.lineCap = "round";
             main.object.context.beginPath();
-            main.object.context.moveTo(10 + tile.position.left + offset.x,
-                10 + tile.position.top + offset.y);
-            main.object.context.lineTo(-10 + tile.position.left + tile.size.width + offset.x, -10 + tile.position.top + tile.size.height + offset.y);
+            main.object.context.moveTo(10 + this.position.left + offset.x,
+                10 + this.position.top + offset.y);
+            main.object.context.lineTo(-10 + this.position.left + this.size.width + offset.x, -10 + this.position.top + this.size.height + offset.y);
             main.object.context.stroke();
 
             main.object.context.beginPath();
-            main.object.context.moveTo(10 + tile.position.left + offset.x, -10 + tile.position.top + tile.size.height + offset.y);
-            main.object.context.lineTo(-10 + tile.position.left + tile.size.width + offset.x,
-                10 + tile.position.top + offset.y);
+            main.object.context.moveTo(10 + this.position.left + offset.x, -10 + this.position.top + this.size.height + offset.y);
+            main.object.context.lineTo(-10 + this.position.left + this.size.width + offset.x,
+                10 + this.position.top + offset.y);
             main.object.context.stroke();
-            tile.state = 3;
-        };
+            this.state = 3;
+        }.bind(this);
 
-        switch (tile.state) {
-            case tile.loadingStates.initial:
-                tile.load();
+        switch (this.state) {
+            case this.loadingStates.initial:
+                this.load();
                 break;
-            case tile.loadingStates.loading:
+            case this.loadingStates.loading:
                 break;
-            case tile.loadingStates.loaded:
+            case this.loadingStates.loaded:
                 show();
                 break;
-            case tile.loadingStates.error:
+            case this.loadingStates.error:
                 error();
                 break;
         }

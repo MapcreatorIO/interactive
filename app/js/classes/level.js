@@ -24,17 +24,15 @@ var Level = function(level) {
  * @returns {object}
  */
 Level.prototype.getApiObject = function() {
-	var self = this;
-
 	return {
-		level: self.level,
+		level: this.level,
 		isLoaded: this.is_loaded,
 		changeTo: function() {
-			main.object.levels.change(self.level);
-		},
+			main.object.levels.change(this.level);
+		}.bind(this),
 		load: function() {
-			self.load();
-		}
+			this.load();
+		}.bind(this)
 	};
 };
 

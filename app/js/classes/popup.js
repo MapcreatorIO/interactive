@@ -25,20 +25,19 @@ var Popup = function(popup) {
  * @returns {object} The popup api object
  */
 Popup.prototype.getApiObject = function() {
-	var self = this;
 	return {
-		number: self.number,
-		title: self.title,
-		info: self.info,
+		number: this.number,
+		title: this.title,
+		info: this.info,
 		show: function(center) {
-			self.show(center);
-		},
+			this.show(center);
+		}.bind(this),
 		toggle: function(center, force) {
-			self.toggle(center, force);
-		},
+			this.toggle(center, force);
+		}.bind(this),
 		hide: function(force) {
-			self.hide(force);
-		}
+			this.hide(force);
+		}.bind(this)
 	};
 };
 
@@ -83,14 +82,13 @@ Popup.prototype.show = function(center) {
 			}
 		}
 
-		var self = this;
 		var wasShown = (function() {
 			if(main.isMobile) {
-				return self.onShowMobile(point);
+				return this.onShowMobile(point);
 			} else {
-				return self.onShowDesktop(point);
+				return this.onShowDesktop(point);
 			}
-		})();
+		}.bind(this))();
 
 		if(wasShown) {
 			this.startVideo();
@@ -400,8 +398,6 @@ Popup.prototype.generatePopover = function(popup, title_html, info_html, media_h
  * @returns {Element} the popup
  */
 Popup.prototype.generateOverlay = function(popup, title_html, info_html, media_html) {
-	var self = this;
-
 	popup.classList.add("m4n-overlay");
 
 	var info_container = document.createElement("div");
@@ -413,8 +409,8 @@ Popup.prototype.generateOverlay = function(popup, title_html, info_html, media_h
 	var aligner = document.createElement("div");
 
 	var close_button = helpers.createElement("span", "close_overlay", {
-		"click": function() { self.hide(); },
-		"touchend": function() { self.hide(); }
+		"click": function() { this.hide(); }.bind(this),
+		"touchend": function() { this.hide(); }.bind(this)
 	});
 
 	aligner.appendChild(info_container);
@@ -451,15 +447,14 @@ Popup.prototype.generateOverlay = function(popup, title_html, info_html, media_h
  * @returns {Element} the popup
  */
 Popup.prototype.generateSidebar = function(popup, title_html, info_html, media_html) {
-	var self = this;
 
 	popup.classList.add("m4n-sidebar-container");
 
 	var sidebar = helpers.createElement("div", "m4n-sidebar");
 	var header = helpers.createElement("div", "m4n-sidebar-header");
 	var close = helpers.createElement("div", "m4n-sidebar-close", {
-		"click": function() { self.hide(true); },
-		"touchend": function() { self.hide(true); }
+		"click": function() { this.hide(true); }.bind(this),
+		"touchend": function() { this.hide(true); }.bind(this)
 	});
 
 	header.appendChild(close);
@@ -474,9 +469,9 @@ Popup.prototype.generateSidebar = function(popup, title_html, info_html, media_h
 
 	var previous = helpers.createElement("li", null, {
 		"click": function() {
-			self.hide(true);
+			this.hide(true);
 			var new_popup;
-			if(self.number != main.object.popups.getFirst().number) {
+			if(this.number != main.object.popups.getFirst().number) {
 				new_popup = main.api.popup(self.number -1);
 			} else {
 				new_popup = main.api.popup(main.object.popups.getLast().number);
@@ -484,14 +479,14 @@ Popup.prototype.generateSidebar = function(popup, title_html, info_html, media_h
 			if(new_popup !== null) {
 				new_popup.show(true);
 			}
-		}
+		}.bind(this)
 	});
 
 	var next = helpers.createElement("li", null, {
 		"click": function() {
-			self.hide(true);
+			this.hide(true);
 			var new_popup;
-			if(self.number != main.object.popups.getLast().number) {
+			if(this.number != main.object.popups.getLast().number) {
 				new_popup = main.api.popup(self.number + 1);
 			} else {
 				new_popup = main.api.popup(main.object.popups.getFirst().number);
@@ -499,7 +494,7 @@ Popup.prototype.generateSidebar = function(popup, title_html, info_html, media_h
 			if(new_popup !== null) {
 				new_popup.show(true);
 			}
-		}
+		}.bind(this)
 	});
 
 	var clear = document.createElement("div");
