@@ -1074,23 +1074,24 @@ var M4nInteractive = (function(options, container, callback) {
             bottom: -(this.position.top + main.globals.offset.get().y - main.object.canvas.clientHeight + this.size.height)
         };
 
-        object.locationX = (function() {
-            if (object.left < 5) {
-                return "left";
-            } else if (object.right < 5) {
-                return "right";
-            }
-            return "center";
-        })();
-
-        object.locationY = (function() {
-            if (object.top < 5) {
-                return "above";
-            } else if (object.bottom < 5) {
-                return "beneath";
-            }
-            return "center";
-        })();
+        object.location = {
+            x: (function() {
+                if (object.left < 5) {
+                    return "left";
+                } else if (object.right < 5) {
+                    return "right";
+                }
+                return "center";
+            })(),
+            y: (function() {
+                if (object.top < 5) {
+                    return "above";
+                } else if (object.bottom < 5) {
+                    return "beneath";
+                }
+                return "center";
+            })()
+        };
 
         return object;
     };
@@ -1207,9 +1208,7 @@ var M4nInteractive = (function(options, container, callback) {
             // Get the clicked point
             var point = main.object.levels.getCurrent().points.get(this.number);
 
-            point.location();
-
-            // Center the map TODO FIX
+            // Center the map
             if (center === true) {
                 helpers.moveTo(point.position.left + (point.size.width / 2), point.position.top + (point.size.height / 2));
             } else {
@@ -1219,7 +1218,7 @@ var M4nInteractive = (function(options, container, callback) {
                 };
 
                 var location = point.location();
-                if (location.locationX !== "center" || location.locationY !== "center") {
+                if (location.location.x !== "center" || location.location.y !== "center") {
                     if (location.left < 5) {
                         object.x = 5 - location.left;
                     } else if (location.right < 5) {

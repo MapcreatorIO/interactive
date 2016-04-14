@@ -63,23 +63,24 @@ Point.prototype.location = function() {
 		bottom: -(this.position.top + main.globals.offset.get().y - main.object.canvas.clientHeight + this.size.height)
 	};
 
-	object.locationX = (function() {
-		if(object.left < 5) {
-			return "left";
-		} else if(object.right < 5) {
-			return "right";
-		}
-		return "center";
-	})();
+	object.location = {
+		x: (function() {
+			if(object.left < 5) {
+				return "left";
+			} else if(object.right < 5) {
+				return "right";
+			}
+			return "center";
+		})(),
+		y: (function() {
+			if(object.top < 5) {
+				return "above";
+			} else if(object.bottom < 5) {
+				return "beneath";
+			}
+			return "center";
+		})()
+	};
 
-	object.locationY = (function() {
-		if(object.top < 5) {
-			return "above";
-		} else if(object.bottom < 5) {
-			return "beneath";
-		}
-		return "center";
-	})();
-
-	return object;
+	 return object;
 };
