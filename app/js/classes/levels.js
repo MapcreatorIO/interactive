@@ -24,7 +24,7 @@ Levels.prototype.getIdealLevel = function() {
 	var level = this.getLevel(0);
 
 	this.getAllExcept(0).forEach(function(item) {
-		if(level != null) {
+		if(level !== null) {
 			var difference, prev_difference;
 			if(main.object.canvas.clientWidth >= main.object.canvas.clientHeight) { // If wider
 				difference = Math.abs(main.object.canvas.width - item.requested_area.size.width);

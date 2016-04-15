@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
 
 	// All tasks required for 1 build
-	var task = ['less', 'template', 'jsbeautifier', 'uglify'];
+	var task = ['template', 'jsbeautifier', 'less', 'uglify'];
 
 	grunt.initConfig({
 

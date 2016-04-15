@@ -837,7 +837,7 @@ var M4nInteractive = (function(options, container, callback) {
         var level = this.getLevel(0);
 
         this.getAllExcept(0).forEach(function(item) {
-            if (level != null) {
+            if (level !== null) {
                 var difference, prev_difference;
                 if (main.object.canvas.clientWidth >= main.object.canvas.clientHeight) { // If wider
                     difference = Math.abs(main.object.canvas.width - item.requested_area.size.width);
@@ -2186,6 +2186,7 @@ var M4nInteractive = (function(options, container, callback) {
                 var fingers = e.touches;
                 var currentLevel = main.object.levels.getCurrent();
 
+                var gPz;
                 if (fingers.length === 1) {
                     var finger = fingers[0];
                     var new_offset = {
@@ -2199,7 +2200,7 @@ var M4nInteractive = (function(options, container, callback) {
                                 (main.globals.clickStart.y - fingers[0].pageY) * (main.globals.clickStart.y - fingers[0].pageY)
                             );
 
-                            var gPz = helpers.gesturePinchZoom(e) / 40;
+                            gPz = helpers.gesturePinchZoom(e) / 40;
                             if (gPz < 1 && gPz > -1) {
                                 main.globals.distance = gPz;
                                 helpers.zoom(gPz);
@@ -2225,7 +2226,7 @@ var M4nInteractive = (function(options, container, callback) {
                             y: (fingers[0].pageY + fingers[1].pageY) / 2
                         };
 
-                        var gPz = helpers.gesturePinchZoom(e) / 40;
+                        gPz = helpers.gesturePinchZoom(e) / 40;
                         if (gPz < 1 && gPz > -1) {
                             main.globals.distance = gPz;
                             helpers.zoom(gPz);
@@ -2288,7 +2289,9 @@ var M4nInteractive = (function(options, container, callback) {
          */
         dblclick: function(e) {
             if (
-                e.target.id == main.canvas && main.object.levels.getCurrent().isOn(e.layerX, e.layerY) && helpers.isInteracting()
+                e.target.id == main.canvas &&
+                main.object.levels.getCurrent().isOn(e.layerX, e.layerY) &&
+                helpers.isInteracting()
             ) {
                 helpers.setInteractTime();
                 var currentLevel = main.object.levels.getCurrent();

@@ -195,6 +195,7 @@ var events = {
 			var fingers = e.touches;
 			var currentLevel = main.object.levels.getCurrent();
 
+			var gPz;
 			if(fingers.length === 1) {
 				var finger = fingers[0];
 				var new_offset = {
@@ -208,7 +209,7 @@ var events = {
 							(main.globals.clickStart.y - fingers[0].pageY) * (main.globals.clickStart.y - fingers[0].pageY)
 						);
 
-						var gPz = helpers.gesturePinchZoom(e) / 40;
+						gPz = helpers.gesturePinchZoom(e) / 40;
 						if(gPz < 1 && gPz > -1) {
 							main.globals.distance = gPz;
 							helpers.zoom(gPz);
@@ -231,7 +232,7 @@ var events = {
 						y: (fingers[0].pageY + fingers[1].pageY) / 2
 					};
 
-					var gPz = helpers.gesturePinchZoom(e) / 40;
+					gPz = helpers.gesturePinchZoom(e) / 40;
 					if(gPz < 1 && gPz > -1) {
 						main.globals.distance = gPz;
 						helpers.zoom(gPz);
@@ -293,9 +294,9 @@ var events = {
 	 */
 	dblclick: function(e) {
 		if(
-			e.target.id == main.canvas
-			&& main.object.levels.getCurrent().isOn(e.layerX, e.layerY)
-			&& helpers.isInteracting()
+			e.target.id == main.canvas &&
+			main.object.levels.getCurrent().isOn(e.layerX, e.layerY) &&
+			helpers.isInteracting()
 		) {
 			helpers.setInteractTime();
 			var currentLevel = main.object.levels.getCurrent();
