@@ -154,6 +154,7 @@ var events = {
 			helpers.setInteractTime();
 			e.preventDefault();
 
+			main.object.canvas.classList.remove('pointing');
 			main.object.canvas.classList.add('grabbing');
 
 			main.globals.offset.changeBy(

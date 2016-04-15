@@ -2142,6 +2142,7 @@ var M4nInteractive = (function(options, container, callback) {
                 helpers.setInteractTime();
                 e.preventDefault();
 
+                main.object.canvas.classList.remove('pointing');
                 main.object.canvas.classList.add('grabbing');
 
                 main.globals.offset.changeBy(
