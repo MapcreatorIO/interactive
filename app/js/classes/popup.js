@@ -470,7 +470,7 @@ Popup.prototype.generateSidebar = function(popup, title_html, info_html, media_h
 			this.hide(true);
 			var new_popup;
 			if(this.number != main.object.popups.getFirst().number) {
-				new_popup = main.api.popup(self.number -1);
+				new_popup = main.api.popup(this.number -1);
 			} else {
 				new_popup = main.api.popup(main.object.popups.getLast().number);
 			}
@@ -485,7 +485,7 @@ Popup.prototype.generateSidebar = function(popup, title_html, info_html, media_h
 			this.hide(true);
 			var new_popup;
 			if(this.number != main.object.popups.getLast().number) {
-				new_popup = main.api.popup(self.number + 1);
+				new_popup = main.api.popup(this.number + 1);
 			} else {
 				new_popup = main.api.popup(main.object.popups.getFirst().number);
 			}
