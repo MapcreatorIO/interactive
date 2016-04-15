@@ -1,17 +1,19 @@
 module.exports = function(grunt) {
 
-	// All tasks required for 1 build
-	var task = ['template', 'jsbeautifier', 'less', 'uglify'];
-
 	grunt.initConfig({
 
 		watch: {
-			default: {
+			javascript: {
 				files: [
-					'app/**/*.js',
+					'app/**/*.js'
+				],
+				tasks: ['template', 'jsbeautifier', 'uglify']
+			},
+			less: {
+				files: [
 					'app/**/*.less'
 				],
-				tasks: task
+				tasks: ['less']
 			}
 		},
 
@@ -50,5 +52,5 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-less');
 
-	grunt.registerTask('default', task.concat('watch'));
+	grunt.registerTask('default', ['template', 'jsbeautifier', 'uglify', 'less', 'watch']);
 };
