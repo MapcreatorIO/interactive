@@ -16,6 +16,7 @@ var events = {
 			main.globals.dragPosition = { x: e.pageX, y: e.pageY };
 			if(e.which === 1) {
 				main.globals.isDown = true;
+				main.object.canvas.classList.add('grabbing');
 			}
 		}
 	},
@@ -64,17 +65,16 @@ var events = {
 		if(e.target.id == main.canvas) {
 			helpers.setInteractTime();
 			main.globals.isDown = false;
+			main.object.canvas.classList.remove('grabbing');
 			if(e.pageX == main.globals.clickStart.x && e.pageY == main.globals.clickStart.y) {
 				var point = main.object.levels.getCurrent().points.hitAPoint(e.layerX, e.layerY);
 				if(point !== null && e.which === 1) {
-					main.object.canvas.style.cursor = "pointer";
 					main.object.popups.get(point.number).show();
 				} else {
 					if(main.globals.doubleTap === true) {
 						events.dblclick(e);
 						main.globals.doubleTap = null;
 					} else {
-						main.object.canvas.style.cursor = "auto";
 						main.object.popups.hideAll();
 					}
 				}
@@ -154,7 +154,7 @@ var events = {
 			helpers.setInteractTime();
 			e.preventDefault();
 
-			main.object.canvas.style.cursor = "all-scroll";
+			main.object.canvas.classList.add('grabbing');
 
 			main.globals.offset.changeBy(
 				e.pageX - main.globals.dragPosition.x,
@@ -166,7 +166,11 @@ var events = {
 		} else if(e.target.id == main.canvas) {
 			var point = currentLevel.points.hitAPoint(e.layerX, e.layerY);
 
-			main.object.canvas.style.cursor = (point !== null ? "pointer" : "auto");
+			if(point !== null) {
+				main.object.canvas.classList.add('pointing');
+			} else {
+				main.object.canvas.classList.remove('pointing');
+			}
 
 			if(main.object.settings.eventType == "mouseenter") {
 				if(point !== null) {
@@ -262,11 +266,7 @@ var events = {
 			main.globals.scroll.value += (function() {
 				var w = e.wheelDelta, d = e.detail;
 				if(d) {
-					if(w) {
-						return w / d / 40 * d > 0 ? 1 : -1;
-					} else {
-						return -d / 3;
-					}
+					return w ? (w / d / 40 * d > 0 ? 1 : -1) : (-d / 3);
 				}
 				return w / 120;
 			})();

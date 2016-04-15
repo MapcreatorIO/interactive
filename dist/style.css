@@ -14,6 +14,17 @@
 }
 .m4n-canvas {
   float: left;
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+.m4n-canvas.grabbing {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+}
+.m4n-canvas.pointing {
+  cursor: pointer;
 }
 .m4n-video::-webkit-media-controls-current-time-display,
 .m4n-video::-webkit-media-controls-time-remaining-display,
@@ -297,5 +308,5 @@
 .m4n-zoom-button.disabled {
   background: #ddd;
   color: #aaa;
-  cursor: default;
+  cursor: not-allowed;
 }
