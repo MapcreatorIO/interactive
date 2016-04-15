@@ -194,21 +194,23 @@ function createHtmlElements() {
 	}
 
 	// Load css
-	var style = document.createElement("link");
-	style.id = "m4n-style";
-	style.rel = "stylesheet";
-	style.type = "text/css";
-	style.href = (function() {
-		switch(options.environment) {
-			case 'development':
-				return location.href.split("/").slice(0, -1).join("/") + '/style.css';
-			case 'local':
-				return options.path + 'style.css';
-			default:
-				return '//' + options.environment + '.maps4news.com/ia/' + main.version.map + '/style.css';
-		}
-	})();
-	document.head.appendChild(style);
+	if(document.getElementById("m4n-style") === null) {
+		var style = document.createElement("link");
+		style.id = "m4n-style";
+		style.rel = "stylesheet";
+		style.type = "text/css";
+		style.href = (function() {
+			switch(options.environment) {
+				case 'development':
+					return location.href.split("/").slice(0, -1).join("/") + '/style.css';
+				case 'local':
+					return options.path + 'style.css';
+				default:
+					return '//' + options.environment + '.maps4news.com/ia/' + main.version.map + '/style.css';
+			}
+		})();
+		document.head.appendChild(style);
+	}
 
 	"<!= custom_style !>";
 
