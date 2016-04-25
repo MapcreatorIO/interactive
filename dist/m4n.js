@@ -831,7 +831,7 @@ var M4nInteractive = (function(options, container, callback) {
 
     /**
      * Get the ideal level for the current canvas size
-     * @returns {number} The level number
+     * @returns {Level} The level number
      */
     Levels.prototype.getIdealLevel = function() {
         var level = this.getLevel(0);
@@ -871,6 +871,8 @@ var M4nInteractive = (function(options, container, callback) {
 
         return {
             current: this.current,
+            highest: this.getHighest().level,
+            lowest: this.getLowest().level,
             levels: levels
         };
     };

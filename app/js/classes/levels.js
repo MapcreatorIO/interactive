@@ -18,7 +18,7 @@ var Levels = function(levels) {
 
 /**
  * Get the ideal level for the current canvas size
- * @returns {number} The level number
+ * @returns {Level} The level number
  */
 Levels.prototype.getIdealLevel = function() {
 	var level = this.getLevel(0);
@@ -56,7 +56,12 @@ Levels.prototype.getApiObject = function() {
 		levels.push(item.getApiObject());
 	});
 
-	return { current: this.current, levels: levels };
+	return {
+		current: this.current,
+		highest: this.getHighest().level,
+		lowest: this.getLowest().level,
+		levels: levels
+	};
 };
 
 /**
