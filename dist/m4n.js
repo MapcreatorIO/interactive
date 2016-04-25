@@ -1385,6 +1385,7 @@ var M4nInteractive = (function(options, container, callback) {
 
         var popup = document.createElement("div");
         popup.id = this.html_id;
+        popup.style.zIndex = main.object.canvas.style.zIndex + 1;
 
         var title_html = helpers.createElement("div", "m4n-title");
         title_html.innerHTML = title;
@@ -1527,9 +1528,9 @@ var M4nInteractive = (function(options, container, callback) {
             };
 
             // TODO redo if statements; redo
-            if ((fits.above || !fits.beneath) && fits.nextTo) {
+            if ((fits.above || !fits.beneath) && !fits.nextTo) {
                 showAbove();
-            } else if (fits.nextTo) {
+            } else if (!fits.nextTo) {
                 showBeneath();
             } else if (fits.left) {
                 showLeft();
