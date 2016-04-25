@@ -31,7 +31,7 @@ main.globals = {
             main.globals.mapOffset.y += y;
         },
         changeTo: function (x, y) {
-            main.globals.mapOffset = {x: x, y: y};
+            main.globals.mapOffset = { x: x, y: y };
         },
         get: function () {
             return main.globals.mapOffset;

@@ -44,16 +44,16 @@ var events = {
 		}
 
 		// Android zoom
-		if(e.touches.length == 1 && main.globals.doubleTap === true) {
-			main.globals.isScaling = true;
-			// main.object.context.save();
-			main.globals.startDistance = 1;
-
-			main.globals.lastPos = {
-				x: (main.globals.clickStart.x + e.touches[0].pageX) / 2,
-				y: (main.globals.clickStart.y + e.touches[0].pageY) / 2
-			};
-		}
+		// if(e.touches.length == 1 && main.globals.doubleTap === true) {
+		// 	main.globals.isScaling = true;
+		// 	// main.object.context.save();
+		// 	main.globals.startDistance = 1;
+		//
+		// 	main.globals.lastPos = {
+		// 		x: (main.globals.clickStart.x + e.touches[0].pageX) / 2,
+		// 		y: (main.globals.clickStart.y + e.touches[0].pageY) / 2
+		// 	};
+		// }
 	},
 
 	/**
@@ -92,8 +92,8 @@ var events = {
 		if(e.target.id == main.canvas) {
 			helpers.setInteractTime();
 			if(helpers.validateTouchMoveClickMargin(main.globals.clickStart, main.globals.dragPosition) && !main.globals.isScaling) {
-				var point = main.object.levels.getCurrent().points
-					.hitAPoint(main.globals.dragPosition.x, main.globals.dragPosition.y);
+				var point = main.object.levels.getCurrent()
+					.points.hitAPoint(main.globals.dragPosition.x, main.globals.dragPosition.y);
 				if(point !== null) {
 					main.object.popups.get(point.number).show();
 				} else {
@@ -110,37 +110,31 @@ var events = {
 				}
 			}
 		}
+
 		if(main.globals.isScaling) {
-			var differrence = main.globals.new_distance - main.globals.startDistance;
-			var steps = Math.round( Math.abs(differrence) / 100 );
+			var difference = main.globals.newDistance - main.globals.startDistance;
+			var steps = Math.round(Math.abs(difference) / 100);
 
 			var currentLevel = main.object.levels.getCurrent();
 			var newLevel = main.object.levels.getLevel(currentLevel.level + function() {
-					if(differrence > 0) { return steps; }
+					if(difference > 0) { return steps; }
 					else { return -steps; }
-				}());
-
-			while(newLevel === null) {
-				steps--;
-				newLevel = main.object.levels.getLevel(newLevel);
-			}
+				}()) || currentLevel;
 
 			if(steps > 0) {
-				var levels = [currentLevel, newLevel];
-				var pinchCentre = {x: main.globals.lastPos.x, y: main.globals.lastPos.y};
+				var pinchCentre = { x: main.globals.lastPos.x, y: main.globals.lastPos.y };
 
 				main.globals.offset.changeTo(
-					pinchCentre.x - (levels[1].size.width / levels[0].size.width) * (pinchCentre.x - main.globals.offset.get().x),
-					pinchCentre.y - (levels[1].size.height / levels[0].size.height) * (pinchCentre.y - main.globals.offset.get().y)
+					pinchCentre.x - (newLevel.size.width / currentLevel.size.width) * (pinchCentre.x - main.globals.offset.get().x),
+					pinchCentre.y - (newLevel.size.height / currentLevel.size.height) * (pinchCentre.y - main.globals.offset.get().y)
 				);
 				main.object.levels.change(newLevel.level);
-
 
 				main.globals.startDistance = 0;
 				main.globals.isScaling = false;
 			}
 			main.object.context.setTransform(1, 0, 0, 1, 0, 0);
-			main.object.levels.getCurrent().draw();
+			newLevel.draw();
 		}
 	},
 
@@ -162,6 +156,9 @@ var events = {
 				e.pageY - main.globals.dragPosition.y
 			);
 			main.globals.dragPosition = { x: e.pageX, y: e.pageY };
+
+
+			main.object.context.fillRect(e.pageX - 5, e.pageY -5, 10, 10);
 
 			currentLevel.draw();
 		} else if(e.target.id == main.canvas) {
@@ -205,7 +202,7 @@ var events = {
 				};
 				if(new_offset.x !== main.globals.offset.get().x && new_offset.y !== main.globals.offset.get().y) {
 					if(main.globals.doubleTap === true && main.globals.isScaling) { // if the user has double tapped and is holding down his/her finger
-						main.globals.new_distance = Math.sqrt(
+						main.globals.newDistance = Math.sqrt(
 							(main.globals.clickStart.x - fingers[0].pageX) * (main.globals.clickStart.x - fingers[0].pageX) +
 							(main.globals.clickStart.y - fingers[0].pageY) * (main.globals.clickStart.y - fingers[0].pageY)
 						);
@@ -224,7 +221,7 @@ var events = {
 			} else if(fingers.length === 2) {
 				if(main.globals.isScaling === true) {
 					// Todo: improve delta calculation
-					main.globals.new_distance = Math.sqrt(
+					main.globals.newDistance = Math.sqrt(
 						(fingers[0].pageX - fingers[1].pageX) * (fingers[0].pageX - fingers[1].pageX) +
 						(fingers[0].pageY - fingers[1].pageY) * (fingers[0].pageY - fingers[1].pageY)
 					);
