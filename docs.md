@@ -254,6 +254,14 @@ The API `levels` function will return an array of all `level` objects as describ
 	 */
 	current: 0,
 	/**
+	 * The highest level
+	 */
+	highest: -2,
+	/**
+	 * The lowest level
+	 */
+	lowest: 2,
+	/**
 	 * All level object as described above
 	 */
 	levels: []
