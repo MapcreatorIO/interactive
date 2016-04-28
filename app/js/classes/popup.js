@@ -61,17 +61,24 @@ Popup.prototype.show = function(center) {
 			var object = { x: 0, y: 0 };
 
 			var location = point.location();
+
 			if(location.location.x !== "center" || location.location.y !== "center") {
-				if(location.left < 5) {
-					object.x = 5 - location.left;
-				} else if(location.right < 5) {
-					object.x = -(5 - location.right);
+				// Check if popup isn't wider than the canvas
+				if(!(location.left < 0 && location.right < 0)) {
+					if(location.left < 5) {
+						object.x = 5 - location.left;
+					} else if(location.right < 5) {
+						object.x = -(5 - location.right);
+					}
 				}
 
-				if(location.top < 5) {
-					object.y = 5 - location.top;
-				} else if(location.bottom < 5) {
-					object.y = -(5 - location.bottom);
+				// Check if the popup isn't higher than the canvas
+				if(!(location.top < 0 && location.bottom < 0)) {
+					if(location.top < 5) {
+						object.y = 5 - location.top;
+					} else if(location.bottom < 5) {
+						object.y = -(5 - location.bottom);
+					}
 				}
 
 				if(object.x !== 0 || object.y !== 0) {
