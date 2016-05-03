@@ -48,7 +48,7 @@ First we have a div tag which will act as a container for the canvas and other v
 
 The M4nInteractive class accepts the following parameters:
 
-1. A JSON object with the settings for the map
+1. A JSON object with the settings for the map.
   - __path__. The id that was generated with the map render job.
      -  If your environment is *download* then this path should be the absolute path to the folder where the map.json file and images from the map are in.
   - __environment__. (optional; default "online") The specific environment of your map.
@@ -75,7 +75,7 @@ The M4nInteractive class accepts the following parameters:
 3. The callback (optional), this will be called after the map has finished initializing. Best used for subscribing to custom events. The callback function has 1 parameter, the map object, as described below.
 
 ## The Map Object
-The final object that will be returned to your variable will have a couple of properties
+The final object that will be returned to your variable will have a couple of properties.
 
 ```js
 {
@@ -180,7 +180,7 @@ In the API you will find a number of functions which can be used to interact wit
 ```
 
 #### popup
-The API `popup` function will return a specific popup, its structure is as follows
+The API `popup` function will return a specific popup, its structure is as follows.
 
 ```js
 {
@@ -211,16 +211,17 @@ The API `popup` function will return a specific popup, its structure is as follo
 	toggle: function(center, force) {},
 	/**
 	 * Hide the popup
+	 * @param {boolean} [force=false] - Force hiding the popup
 	 */
-	hide: function() {}
+	hide: function(force) {}
 }
 ```
 
 #### popups
-The API `popups` function will return an array of all `popup` objects as described above
+The API `popups` function will return an array of all `popup` objects as described above.
 
 #### level
-The API `level` function will return a specific level, its structure is as follows
+The API `level` function will return a specific level, its structure is as follows.
 
 ```js
 {
@@ -245,7 +246,7 @@ The API `level` function will return a specific level, its structure is as follo
 ```
 
 #### levels
-The API `levels` function will return an array of all `level` objects as described above as well as the current level
+The API `levels` function will return an array of all `level` objects as described above as well as the current level.
 
 ```js
 {
