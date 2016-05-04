@@ -17,30 +17,40 @@ module.exports = function(grunt) {
 			}
 		},
 
+		jsbeautifier: {
+			files : ['dist/m4n.js', 'prod/m4n.js']
+		},
+
 		less: {
-			default: {
+			dev: {
 				options: {
 					cleancss: true
 				},
 				files: { "dist/style.css": "app/less/main.less" }
+			},
+			prod: {
+				options: {
+					cleancss: true
+				},
+				files: { "prod/style.css": "app/less/main.less" }
 			}
 		},
 
-		jsbeautifier: {
-			files : ['dist/m4n.js']
-		},
-
 		template: {
-			default: {
+			dev: {
 				template: "app/js/main.js",
 				dest: "dist/m4n.js"
+			},
+			prod: {
+				template: "app/js/main.js",
+				dest: "prod/m4n.js"
 			}
 		},
 
 		uglify: {
 			default: {
 				files: {
-					'dist/m4n.min.js': ['dist/m4n.js']
+					'prod/m4n.min.js': ['prod/m4n.js']
 				}
 			}
 		}
@@ -52,5 +62,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-less');
 
-	grunt.registerTask('default', ['template', 'jsbeautifier', 'uglify', 'less', 'watch']);
+	grunt.registerTask('default', ['template:dev', 'jsbeautifier', 'less:dev', 'watch']);
+	grunt.registerTask('production', ['template:prod', 'jsbeautifier', 'uglify', 'less:prod']);
 };
