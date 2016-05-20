@@ -48,10 +48,13 @@ module.exports = function(grunt) {
 		},
 
 		uglify: {
+			options: {
+				report: 'gzip'
+			},
 			default: {
 				files: {
 					'prod/m4n.min.js': ['prod/m4n.js']
-				}
+				},
 			}
 		}
 	});
