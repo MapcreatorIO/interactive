@@ -18,32 +18,22 @@ module.exports = function(grunt) {
 		},
 
 		jsbeautifier: {
-			files : ['dist/m4n.js', 'prod/m4n.js']
+			files : ['dist/m4n.js']
 		},
 
 		less: {
-			dev: {
+			default: {
 				options: {
 					cleancss: true
 				},
 				files: { "dist/style.css": "app/less/main.less" }
-			},
-			prod: {
-				options: {
-					cleancss: true
-				},
-				files: { "prod/style.css": "app/less/main.less" }
 			}
 		},
 
 		template: {
-			dev: {
+			default: {
 				template: "app/js/main.js",
 				dest: "dist/m4n.js"
-			},
-			prod: {
-				template: "app/js/main.js",
-				dest: "prod/m4n.js"
 			}
 		},
 
@@ -53,8 +43,21 @@ module.exports = function(grunt) {
 			},
 			default: {
 				files: {
-					'prod/m4n.min.js': ['prod/m4n.js']
-				},
+					'dist/m4n.min.js': ['dist/m4n.js']
+				}
+			}
+		},
+
+		copy: {
+			default: {
+				files: [
+					{
+						expand: true,
+						cwd: 'include/',
+						src: '**',
+						dest: 'dist/'
+					}
+				]
 			}
 		}
 	});
@@ -64,7 +67,8 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-less');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 
-	grunt.registerTask('default', ['template:dev', 'jsbeautifier', 'less:dev', 'watch']);
-	grunt.registerTask('production', ['template:prod', 'jsbeautifier', 'uglify', 'less:prod']);
+	grunt.registerTask('default', ['template', 'jsbeautifier', 'less', 'watch']);
+	grunt.registerTask('production', ['template', 'jsbeautifier', 'uglify', 'less', 'copy']);
 };

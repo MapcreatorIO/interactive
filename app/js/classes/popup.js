@@ -64,7 +64,7 @@ Popup.prototype.show = function(center) {
 
 			if(location.location.x !== "center" || location.location.y !== "center") {
 				// Check if popup isn't wider than the canvas
-				if(!(location.left < 0 && location.right < 0)) {
+				if(!(location.left <= 5 && location.right <= 5)) {
 					if(location.left < 5) {
 						object.x = 5 - location.left;
 					} else if(location.right < 5) {
@@ -73,7 +73,7 @@ Popup.prototype.show = function(center) {
 				}
 
 				// Check if the popup isn't higher than the canvas
-				if(!(location.top < 0 && location.bottom < 0)) {
+				if(!(location.top <= 5 && location.bottom <= 5)) {
 					if(location.top < 5) {
 						object.y = 5 - location.top;
 					} else if(location.bottom < 5) {
@@ -330,62 +330,85 @@ Popup.prototype.generatePopover = function(popup, title_html, info_html, media_h
 
 	this.onShowDesktop = function(point) {
 		popup.style.display = "block";
+
+		// Triangle
 		var heightTriangle = 16.97056274847714; // 24 = width of a triangle plus the border
+		var triangle = popup.getElementsByClassName("m4n-popover-triangle")[0];
 
-		var left = Math.max(0.15, Math.min(0.85, ((point.position.left + main.globals.offset.get().x) / main.object.canvas.clientWidth))),
-			top = Math.max(0.05, Math.min(0.85, ((point.position.top + main.globals.offset.get().y) / main.object.canvas.clientHeight))),
+		// Position for triangle
+		var left = Math.max(0.15, Math.min(0.85, ((point.position.left + main.globals.offset.get().x) / main.object.canvas.clientWidth)));
+		var top = Math.max(0.05, Math.min(0.85, ((point.position.top + main.globals.offset.get().y) / main.object.canvas.clientHeight)));
 
-			triangle = popup.getElementsByClassName("m4n-popover-triangle")[0],
-			fits = {
-				nextTo: (
-					(main.globals.offset.get().x + point.position.left + (popup.clientWidth * left) + (point.size.width / 2)) < main.object.canvas.clientWidth &&
-					(main.globals.offset.get().x + point.position.left - (popup.clientWidth * left) + (point.size.width / 2)) > 0
-				),
-				above: (main.globals.offset.get().y + point.position.top - heightTriangle) > popup.clientHeight,
-				beneath: (main.object.canvas.clientHeight - (main.globals.offset.get().y + point.position.top + point.size.height + heightTriangle)) > popup.clientHeight,
-				left: (main.globals.offset.get().x + point.position.left - heightTriangle) > popup.clientWidth,
-				right: (main.object.canvas.clientWidth - (main.globals.offset.get().x + point.position.left + point.size.width + heightTriangle)) > popup.clientWidth
-			};
+		// Bounding Client Rect of the canvas
+		var boundingRect = main.object.canvas.getBoundingClientRect();
 
-		var showAbove = function() {
-			triangle.classList.add("bottom");
-			popup.style.top = main.globals.offset.get().y + point.position.top - popup.clientHeight - heightTriangle + 'px';
-			popup.style.left = main.globals.offset.get().x + point.position.left + (point.size.width / 2) - (popup.clientWidth * left) + 'px';
-			triangle.style.left = (left * 100) + "%";
+		// Formulas for where the popup fits
+		var formulas = {
+			above: main.globals.offset.get().y + point.position.top - heightTriangle,
+			beneath: boundingRect.height - (main.globals.offset.get().y + point.position.top + point.size.height) - heightTriangle,
+			left: main.globals.offset.get().x + point.position.left - heightTriangle,
+			right: boundingRect.width - (main.globals.offset.get().x + point.position.left + point.size.width) - heightTriangle
 		};
 
-		var showBeneath = function() {
-			triangle.classList.add("top");
-			popup.style.top = main.globals.offset.get().y + point.position.top + point.size.height + heightTriangle + 'px';
-			popup.style.left = main.globals.offset.get().x + point.position.left + (point.size.width / 2) - (popup.clientWidth * left) + 'px';
-			triangle.style.left = (left * 100) + "%";
+		// Booleans for where the popup fits
+		var fits = {
+			onCanvas: {
+				above: formulas.above > popup.clientHeight,
+				beneath: formulas.beneath > popup.clientHeight,
+				left: formulas.left > popup.clientWidth,
+				right: formulas.right > popup.clientWidth
+			},
+			onScreen: {
+				above: (formulas.above + boundingRect.top) > popup.clientHeight,
+				beneath: (formulas.beneath + (window.innerHeight - boundingRect.height - boundingRect.top)) > popup.clientHeight,
+				left: (formulas.left + boundingRect.left) > popup.clientWidth,
+				right: (formulas.right + (window.innerWidth - boundingRect.width - boundingRect.left)) > popup.clientWidth
+			}
 		};
 
-		var showLeft = function() {
-			triangle.classList.add("right");
-			popup.style.top = (main.globals.offset.get().y + point.position.top + (point.size.height / 2) - (popup.clientHeight * top) - 10) + 'px';
-			popup.style.left = main.globals.offset.get().x + point.position.left - popup.clientWidth - heightTriangle + 'px';
-			triangle.style.top = (top * 100) + "%";
+		console.log(formulas, "\n", fits.onCanvas, "\n", fits.onScreen);
+
+		var show = {
+			above: function() {
+				triangle.classList.add("bottom");
+				popup.style.top = main.globals.offset.get().y + point.position.top - popup.clientHeight - heightTriangle + 'px';
+				popup.style.left = main.globals.offset.get().x + point.position.left + (point.size.width / 2) - (popup.clientWidth * left) + 'px';
+				triangle.style.left = (left * 100) + "%";
+			},
+			beneath: function() {
+				triangle.classList.add("top");
+				popup.style.top = main.globals.offset.get().y + point.position.top + point.size.height + heightTriangle + 'px';
+				popup.style.left = main.globals.offset.get().x + point.position.left + (point.size.width / 2) - (popup.clientWidth * left) + 'px';
+				triangle.style.left = (left * 100) + "%";
+			},
+			left: function() {
+				triangle.classList.add("right");
+				popup.style.top = (main.globals.offset.get().y + point.position.top + (point.size.height / 2) - (popup.clientHeight * top) - 10) + 'px';
+				popup.style.left = main.globals.offset.get().x + point.position.left - popup.clientWidth - heightTriangle + 'px';
+				triangle.style.top = (top * 100) + "%";
+			},
+			right: function() {
+				triangle.classList.add("left");
+				popup.style.top = (main.globals.offset.get().y + point.position.top + (point.size.height / 2) - (popup.clientHeight * top) - 10) + 'px';
+				popup.style.left = main.globals.offset.get().x + point.position.left + point.size.width + heightTriangle + 'px';
+				triangle.style.top = (top * 100) + "%";
+			}
 		};
 
-		var showRight = function() {
-			triangle.classList.add("left");
-			popup.style.top = (main.globals.offset.get().y + point.position.top + (point.size.height / 2) - (popup.clientHeight * top) - 10) + 'px';
-			popup.style.left = main.globals.offset.get().x + point.position.left + point.size.width + heightTriangle + 'px';
-			triangle.style.top = (top * 100) + "%";
-		};
-
-		// TODO redo if statements; redo
-		if((fits.above || !fits.beneath) && !fits.nextTo) {
-			showAbove();
-		} else if(!fits.nextTo) {
-			showBeneath();
-		} else if(fits.left) {
-			showLeft();
-		} else if(fits.right) {
-			showRight();
+		if(fits.onCanvas.above && fits.onScreen.above) {
+			show.above();
+		} else if(fits.onCanvas.beneath && fits.onScreen.beneath) {
+			show.beneath();
 		} else {
-			showAbove();
+
+			if(fits.onCanvas.left && fits.onScreen.left) {
+				show.left();
+			} else if(fits.onCanvas.right && fits.onScreen.right) {
+				show.right();
+			} else {
+				show.above();
+			}
+
 		}
 
 		return true;

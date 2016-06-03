@@ -6,17 +6,13 @@ if (!isset($_GET['path'])) {
 	$path = htmlentities($_GET['path']);
 }
 
-if(!isset($_GET['id'])) {
-	$id = "m4n-" . str_shuffle("withlovefrommaps4news");
-} else {
-	$id = htmlentities($_GET['id']);
-}
-
-$env = isset($_GET['env']) ? htmlentities($_GET['env']) : "online";
-
 if(isset($_GET['style'])) {
 	$style = htmlentities($_GET['style']);
 }
+
+$id = isset($_GET['id']) ? htmlentities($_GET['id']) : "m4n-" . str_shuffle("withlovefrommaps4news");
+
+$env = isset($_GET['env']) ? htmlentities($_GET['env']) : "online";
 
 ?>
 <html>

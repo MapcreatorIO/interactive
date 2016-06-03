@@ -15,10 +15,11 @@
     "grunt": "^1.0.1"
   },
   "devDependencies": {
+    "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-less": "^1.2.0",
+    "grunt-contrib-template": "^1.0",
     "grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-contrib-template": "^1.0",
     "grunt-jsbeautifier": "^0.2.10"
   }
 }
