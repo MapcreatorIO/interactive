@@ -122,7 +122,7 @@ In the API you will find a number of functions which can be used to interact wit
 	level: function() {},
 	/**
 	 * Will return all levels
-	 * @returns {level[]}
+	 * @returns {levels}
 	 */
 	levels: function() {},
 	/**
@@ -246,7 +246,7 @@ The API `level` function will return a specific level, its structure is as follo
 ```
 
 #### levels
-The API `levels` function will return an array of all `level` objects as described above as well as the current level.
+The API `levels` function will return an array of all `level` objects as described above as well as the highest, lowest and the current level.
 
 ```js
 {
@@ -263,7 +263,7 @@ The API `levels` function will return an array of all `level` objects as describ
 	 */
 	lowest: 2,
 	/**
-	 * All level object as described above
+	 * All level objects as described above
 	 */
 	levels: []
 }
@@ -295,14 +295,14 @@ Since it’s possible to have multiple maps run on one page we have implemented 
 `“level_loaded”`
 
 This event will be called when all tiles (images) of a level have been downloaded.
-One argument will be passed to the listener, the level object of the level that has been loaded.
+One argument will be passed to the listener, the `level` object of the level that has been loaded.
 
 --------
 
 `“level_drawn”`
 
 This event will be called when a level has been drawn on the canvas.
-One argument will be passed to the listener, the level object of the level that has been drawn.
+One argument will be passed to the listener, the `level` object of the level that has been drawn.
 
 Note: this will be called on every move made by the user and/or API.
 
@@ -311,21 +311,21 @@ Note: this will be called on every move made by the user and/or API.
 `“level_changed”`
 
 This event will be called when the currently displayed level has changed.
-One argument will be passed to the listener, the level object of the level that the map has changed to.
+One argument will be passed to the listener, the `level` object of the level that the map has changed to.
 
 -------
 
 `“popup_shown”`
 
 This event will be called when a popup has been displayed on screen.
-One argument will be passed to the listener, the popup object of the popup that has been shown.
+One argument will be passed to the listener, the `popup` object of the popup that has been shown.
 
 -------
 
 `“popup_hidden”`
 
 This event will be called when a popup has been hidden.
-One argument will be passed to the listener, the popup object of the popup that has been hidden.
+One argument will be passed to the listener, the `popup` object of the popup that has been hidden.
 
 ## Misc
 
@@ -337,7 +337,7 @@ It's also possible to generate an iframe version of the map via the Maps4News to
 ```
 Customization of the iframe map is done via the get variables in the url. There are a total of 4 parameters that can be added to the url.
 
-1. __path__. Same of the inline version.
+1. __path__. Same as the inline version.
 2. __env__. (optional; default "online") Same as the environment for the inline version (note that you should also change the subdomain).
   - The download environment is not available for iframe maps, if you wish to host your own iframe map you should create your own HTML document with an inline map inside, as described above.
 3. __id__. (optional) A specific id for the container.
@@ -347,7 +347,7 @@ The iframe map does not allow eventListeners due to limitations with DOM.
 
 
 ### Style Overwriting
-The Interactive Map adds its own `style.css` file to your page head, if you wish to overwrite certain styles used in the map. you can add a `link` tag to your head with the id `m4n-style-custom`. The map will look for this id when setting up its HTML elements and will remove and re-add this tag so that the styles defined in your css file will have priority over the ones in our main `style.css` file.
+The Interactive Map adds its own `style.css` file to your page head. If you wish to overwrite certain styles used in the map, you can add a `link` tag to your head with the id `m4n-style-custom`. The map will look for this id when setting up its HTML elements and will remove and re-add this tag so that the styles defined in your css file will have priority over the ones in our main `style.css` file.
 
 ```html
 <link id="m4n-style-custom" href="path/to/style.css" type="text/css" rel="stylesheet"/>
