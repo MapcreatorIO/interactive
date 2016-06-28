@@ -62,21 +62,19 @@ var events = {
 	 */
 	mouseUp: function(e) {
 		e.preventDefault();
-		if(e.target.id == main.canvas) {
-			helpers.setInteractTime();
-			main.globals.isDown = false;
-			main.object.canvas.classList.remove('grabbing');
-			if(e.pageX == main.globals.clickStart.x && e.pageY == main.globals.clickStart.y) {
-				var point = main.object.levels.getCurrent().points.hitAPoint(e.layerX, e.layerY);
-				if(point !== null && e.which === 1) {
-					main.object.popups.get(point.number).show();
+		helpers.setInteractTime();
+		main.globals.isDown = false;
+		main.object.canvas.classList.remove('grabbing');
+		if(e.pageX == main.globals.clickStart.x && e.pageY == main.globals.clickStart.y) {
+			var point = main.object.levels.getCurrent().points.hitAPoint(e.layerX, e.layerY);
+			if(point !== null && e.which === 1) {
+				main.object.popups.get(point.number).show();
+			} else {
+				if(main.globals.doubleTap === true) {
+					events.dblclick(e);
+					main.globals.doubleTap = null;
 				} else {
-					if(main.globals.doubleTap === true) {
-						events.dblclick(e);
-						main.globals.doubleTap = null;
-					} else {
-						main.object.popups.hideAll();
-					}
+					main.object.popups.hideAll();
 				}
 			}
 		}
