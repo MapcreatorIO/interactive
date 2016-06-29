@@ -1,7 +1,7 @@
 /**
 
  **/
-function createHomeButton(control_container) {
+function createHomeButton() {
 
 	var home_container = helpers.createElement('div', 'm4n-home-container');
 	var home_button = helpers.createElement('div', ['m4n-control-button'], {
@@ -11,7 +11,7 @@ function createHomeButton(control_container) {
 	});
 
 	home_container.appendChild(home_button);
+	home_container.appendChild(helpers.createElement('div', 'm4n-control-separator'));
 
-	control_container.appendChild(home_container);
-	control_container.appendChild(helpers.createElement('div', 'm4n-control-separator'));
+	main.controlContainer.appendChild(home_container);
 }

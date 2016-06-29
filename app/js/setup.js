@@ -22,18 +22,18 @@ function initializeM4n(mapJson) {
 
 	main.object = revive(mapJson);
 
-	var controlContainer = helpers.createElement('div', 'm4n-control-container');
+	main.controlContainer = helpers.createElement('div', 'm4n-control-container');
 
 	if(main.object.levels.count() > 1 && main.zoomControls) {
-		createZoomControls(controlContainer);
+		createZoomControls();
 	}
 
 	if(main.homeButton) {
-		createHomeButton(controlContainer);
+		createHomeButton();
 	}
 
-	controlContainer.style.zIndex = main.object.canvas.style.zIndex +1;
-	container.appendChild(controlContainer);
+	main.controlContainer.style.zIndex = main.object.canvas.style.zIndex +1;
+	container.appendChild(main.controlContainer);
 
 	if(!container.hasPredefinedHeight) {
 		var level = main.object.levels.getCurrent();

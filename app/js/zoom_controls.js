@@ -1,7 +1,7 @@
 /**
  * Create the zoom controls
  */
-function createZoomControls(control_container) {
+function createZoomControls() {
 	// Zoom controls
 	var zoom_container = helpers.createElement('div', 'm4n-zoom-container');
 	var zoom_control_in = helpers.createElement('div', 'm4n-control-button', {
@@ -34,7 +34,7 @@ function createZoomControls(control_container) {
 
 	zoom_container.appendChild(zoom_control_in);
 	zoom_container.appendChild(zoom_control_out);
+	zoom_container.appendChild(helpers.createElement('div', 'm4n-control-separator'));
 
-	control_container.appendChild(zoom_container);
-	control_container.appendChild(helpers.createElement('div', 'm4n-control-separator'));
+	main.controlContainer.appendChild(zoom_container);
 }

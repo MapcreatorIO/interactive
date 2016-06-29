@@ -148,5 +148,26 @@ main.api = {
 			main.globals.offset.changeBy(0, 40 * (factor || 1));
 			level.draw();
 		}
+	},
+
+	controls: {
+
+		/**
+		 * Array of controls to add
+		 * @param {Array} objects
+		 */
+		add: function(objects) {
+			var control_container = helpers.createElement('div', 'm4n-custom-control-container');
+			objects.forEach(function(object) {
+				var control = helpers.createElement('div', 'm4n-control-button', {
+					'click': object.click
+				});
+				control.setAttribute('data-content', object.text);
+				control_container.appendChild(control);
+			});
+			control_container.appendChild(helpers.createElement('div', 'm4n-control-separator'));
+
+			main.controlContainer.appendChild(control_container);
+		}
 	}
 };

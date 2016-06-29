@@ -178,6 +178,14 @@ In the API you will find a number of functions which can be used to interact wit
 		 * @param {number} [factor=1]
 		 */
 		down: function(factor) {}
+	},
+	
+	controls: {
+		/**
+		 * Array of controls to add
+		 * @param {Array} objects
+		 */
+		add: function(objects) {}
 	}
 }
 ```
@@ -271,6 +279,47 @@ The API `levels` function will return an array of all `level` objects as describ
 	levels: []
 }
 ```
+
+#### controls
+The API `controls` namespace has one method: `add`, this method can be used to add clusters of icons to the control container.
+
+The `add` method accepts an array of objects with this following properties.
+
+```js
+[
+	{
+		/**
+		 * The text for the button, css compatible.
+		 **/
+		text: '1',
+		/**
+		 * The method called when the button is clicked.
+		 **/
+		click: function() {}
+	},
+	{
+		text: '2',
+		click: function() {
+			console.log('2');
+		}
+	}
+]
+```
+each array of objects will form a cluster onderneath the zoom or home controls.
+
+#####example
+
+```js
+var levels = [];
+map.api.levels().levels.forEach(function(level) {
+	levels.push({
+		'text': level.level,
+		'click': level.changeTo
+	});
+});
+map.api.controls.add(levels);
+```
+This will add a cluster of all levels to the control container and when they're clicked the map will change to that level.
 
 ### addEventListener
 The `addEventListener` method is used to add an eventListener to an event.
