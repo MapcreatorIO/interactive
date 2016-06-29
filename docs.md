@@ -69,6 +69,8 @@ The M4nInteractive class accepts the following parameters:
   | controls | use the on-screen controls and the mouse buttons to zoom in or out (holding ctrl will __enable__ scroll zooming) |
   | smart    | an overlay will be placed over the map when the user is not working with the map and disables the events to the map (timeout of 3 seconds; will not disable when a popup is active) |
 
+  - __zoomControls__. (optional; default true) Enable or disable the zoom controls for maps with more than 1 level.
+
   - __debug__. (not recommended) true or false, this allows the map object to be returned from the browser's console.
 
 2. The div container node (in this case the `div` with id `m4n-map`).

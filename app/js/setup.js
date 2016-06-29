@@ -22,7 +22,7 @@ function initializeM4n(mapJson) {
 
 	main.object = revive(mapJson);
 
-	if(main.object.levels.count() > 1) {
+	if(main.object.levels.count() > 1 && main.zoomControls) {
 		createZoomControls();
 	}
 

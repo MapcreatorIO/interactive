@@ -9,6 +9,7 @@
 
 	main.interact = options.interact || "scroll";
 	main.environment = options.environment || "online";
+	main.zoomControls = typeof options.zoomControls !== 'undefined' ? options.zoomControls : true;
 
 	main.version = { map: '2.0', code: '2.0.4' }; // TODO Add version to json for verification
 
