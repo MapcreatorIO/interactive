@@ -7,7 +7,7 @@ module.exports = function(grunt) {
 				files: [
 					'app/**/*.js'
 				],
-				tasks: ['template', 'jsbeautifier', 'uglify']
+				tasks: ['template', 'jsbeautifier']
 			},
 			less: {
 				files: [
