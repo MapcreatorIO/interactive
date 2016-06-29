@@ -60,7 +60,6 @@ The M4nInteractive class accepts the following parameters:
   | bleeding    | For maps generated with the M4N bleeding tool. |
   | download    | This should be used when a user wants to self-host their map. |
   | development | Used by M4N employees during development. (will enable debugging mode) |
-
   - __interact__. (optional; default "scroll") The way interaction with the map works.
 
   | Name     | Description |
@@ -70,6 +69,8 @@ The M4nInteractive class accepts the following parameters:
   | smart    | an overlay will be placed over the map when the user is not working with the map and disables the events to the map (timeout of 3 seconds; will not disable when a popup is active) |
 
   - __zoomControls__. (optional; default true) Enable or disable the zoom controls for maps with more than 1 level.
+
+  - __homeButton__. (optional; default true) Enable or disable the home button
 
   - __debug__. (not recommended) true or false, this allows the map object to be returned from the browser's console.
 

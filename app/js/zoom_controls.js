@@ -1,17 +1,17 @@
 /**
  * Create the zoom controls
  */
-function createZoomControls() {
+function createZoomControls(control_container) {
 	// Zoom controls
 	var zoom_container = helpers.createElement('div', 'm4n-zoom-container');
-	var zoom_control_in = helpers.createElement('div', 'm4n-zoom-button', {
+	var zoom_control_in = helpers.createElement('div', 'm4n-control-button', {
 		'click': function() {
 			if(!zoom_control_in.classList.contains('disabled')) {
 				main.api.zoom.in();
 			}
 		}
 	});
-	var zoom_control_out = helpers.createElement('div', 'm4n-zoom-button', {
+	var zoom_control_out = helpers.createElement('div', 'm4n-control-button', {
 		'click': function() {
 			if(!zoom_control_out.classList.contains('disabled')) {
 				main.api.zoom.out();
@@ -32,10 +32,9 @@ function createZoomControls() {
 		}
 	});
 
-	zoom_container.style.zIndex = main.object.canvas.style.zIndex +1;
-
 	zoom_container.appendChild(zoom_control_in);
 	zoom_container.appendChild(zoom_control_out);
 
-	container.appendChild(zoom_container);
+	control_container.appendChild(zoom_container);
+	control_container.appendChild(helpers.createElement('div', 'm4n-control-separator'));
 }
