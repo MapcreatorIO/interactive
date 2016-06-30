@@ -44,18 +44,18 @@
 ////
 // Button icons
 
-.m4n-zoom-container div:first-child::before {
+.m4n-zoom-container div.m4n-control-button:nth-child(1)::before {
   content: '+';
 }
 
-.m4n-zoom-container div:last-child::before {
+.m4n-zoom-container div.m4n-control-button:nth-child(2)::before {
   content: '\2013';
 }
 
-.m4n-home-container div:first-child::before {
+.m4n-home-container div.m4n-control-button:first-child::before {
   content: '\2302';
 }
 
-.m4n-custom-control-container div::before {
+.m4n-custom-control-container div.m4n-control-button::before {
   content: attr(data-content);
 }

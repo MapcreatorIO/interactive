@@ -4,7 +4,7 @@
 function createHomeButton() {
 
 	var home_container = helpers.createElement('div', 'm4n-home-container');
-	var home_button = helpers.createElement('div', ['m4n-control-button'], {
+	var home_button = helpers.createElement('div', 'm4n-control-button', {
 		'click': function() {
 			main.api.reset();
 		}
