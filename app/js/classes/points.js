@@ -31,15 +31,12 @@ Points.prototype.draw = function() {
  * @returns {Point|null} The point the user clicked on
  */
 Points.prototype.hitAPoint = function(x, y) {
-	var point = null;
-
-	this.list.forEach(function(item) {
-		if(item.isOn(x, y)) {
-			point = item;
-			return false;
+	for(var i = 0; i < this.list.length; i++) {
+		if(this.list[i].isOn(x, y)) {
+			return this.list[i];
 		}
-	});
-	return point;
+	}
+	return null;
 };
 
 /**

@@ -366,7 +366,7 @@ Popup.prototype.generatePopover = function(popup, title_html, info_html, media_h
 			}
 		};
 
-		console.log(formulas, "\n", fits.onCanvas, "\n", fits.onScreen);
+		// console.log(formulas, "\n", fits.onCanvas, "\n", fits.onScreen);
 
 		var show = {
 			above: function() {

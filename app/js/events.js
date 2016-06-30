@@ -94,7 +94,7 @@ var events = {
 			if(helpers.validateTouchMoveClickMargin(main.globals.clickStart, main.globals.dragPosition) && !main.globals.isScaling) {
 				var point = main.object.levels.getCurrent()
 					.points.hitAPoint(main.globals.dragPosition.x, main.globals.dragPosition.y);
-				if(point !== null) {
+				if(point !== null && !main.globals.isScaling) {
 					main.object.popups.get(point.number).show();
 				} else {
 					if(main.globals.doubleTap === true) {
@@ -221,16 +221,25 @@ var events = {
 			} else if(fingers.length === 2) {
 				if(main.globals.isScaling === true) {
 					// Todo: improve delta calculation
-					main.globals.newDistance = Math.sqrt(
+					var newDistance = Math.sqrt(
 						(fingers[0].pageX - fingers[1].pageX) * (fingers[0].pageX - fingers[1].pageX) +
 						(fingers[0].pageY - fingers[1].pageY) * (fingers[0].pageY - fingers[1].pageY)
 					);
+
+					var pinching = newDistance < main.globals.newDistance;
+
+					main.globals.newDistance = newDistance;
 					main.globals.lastPos = {
 						x: (fingers[0].pageX + fingers[1].pageX) / 2,
 						y: (fingers[0].pageY + fingers[1].pageY) / 2
 					};
 
-					gPz = helpers.gesturePinchZoom(e) / 40;
+					if(!(
+						(currentLevel.level == main.object.levels.getLowest().level && !pinching) ||
+						(currentLevel.level == main.object.levels.getHighest().level && pinching)
+					)) {
+						gPz = helpers.gesturePinchZoom(e) / 40;
+					}
 					if(gPz < 1 && gPz > -1) {
 						main.globals.distance = gPz;
 						helpers.zoom(gPz);
@@ -342,7 +351,9 @@ var events = {
 	 * When the document gets resized
 	 */
 	resize: function() {
-		var fullscreen = document.webkitFullscreenElement || document.msFullscreenElement || document.mozFullScreenElement;
+		var fullscreen =
+			document.fullscreenElement || document.webkitFullscreenElement ||
+			document.msFullscreenElement || document.mozFullScreenElement;
 		if(fullscreen) {
 			if([fullscreen.id.indexOf("-youtube"), fullscreen.id.indexOf("-video")].indexOf(-1) > -1) {
 				main.globals.videoFullscreen.value = true;

@@ -93,12 +93,10 @@ Popups.prototype.hideAll = function(force) {
  * @returns {Popup|null} the current popup
  */
 Popups.prototype.getCurrent = function() {
-	var current = null;
-	this.getAll().forEach(function(item) {
-		if(item.on_screen) {
-			current = item;
-			return false;
+	for(var i = 0; i < this.list.length; i++) {
+		if(this.list[i].on_screen) {
+			return this.list[i];
 		}
-	});
-	return current;
+	}
+	return null;
 };

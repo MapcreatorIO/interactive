@@ -13,10 +13,10 @@ var Point = function(point) {
 			}
 		}
 	}
-	// TODO refactor to support all formats
+
 	this.position = {
-		left: Math.min.apply(null, this.shape.map(function(item) { return item.x })) - 5,
-		top: Math.min.apply(null, this.shape.map(function(item) { return item.y })) - 5
+		left: Math.min.apply(null, this.shape.map(function(item) { return item.x })) - 10,
+		top: Math.min.apply(null, this.shape.map(function(item) { return item.y })) - 10
 	};
 	this.size = {
 		width: Math.max.apply(null, this.shape.map(function(item) { return item.x })) - this.position.left + 10,
