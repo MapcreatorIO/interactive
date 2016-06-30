@@ -29,7 +29,7 @@ Here we’ll talk a bit about the boilerplate code that the tool will provide.
 
 Example
 
-```js
+```html
 <div id="m4n-map">
 	<script src="https://www.path.to/m4n.js"></script>
 	<script>
@@ -88,15 +88,15 @@ The final object that will be returned to your variable will have a couple of pr
 	api: {},
 	/**
 	 * Method to subscribe to an event.
-	 * @param {string} event - One of the events as described below
-	 * @param {function} callback - Your callback method
-	 * @returns {number} - The listener id
+	 * @param {String} event - One of the events as described below
+	 * @param {Function} callback - Your callback method
+	 * @returns {Number} - The listener id
 	 */
 	addEventListener: function(event, callback),
 	/**
 	 * Method to unsubscribe from an event
-	 * @param {string} event - One of the events as described below
-	 * @param {number} listenerId - the id returned from addEventListener
+	 * @param {String} event - One of the events as described below
+	 * @param {Number} listenerId - the id returned from addEventListener
 	 */
 	removeEventListener: function(event, listenerId)
 }
@@ -109,23 +109,23 @@ In the API you will find a number of functions which can be used to interact wit
 {
 	/**
 	 * Will return a popup api object
-	 * @param {number} i - The number of the popup
-	 * @returns {popup|null}
+	 * @param {Number} i - The number of the popup
+	 * @returns {Popup|null} - The requested popup object
 	 */
 	popup: function(i) {},
 	/**
 	 * Will return all popups
-	 * @returns {popup[]}
+	 * @returns {Popup[]} - All popup objects in an array
 	 */
 	popups: function() {},
 	/**
 	 * Will return a level api object
-	 * @returns {level|null}
+	 * @returns {Level|null} - The requested level object
 	 */
-	level: function() {},
+	level: function(i) {},
 	/**
 	 * Will return all levels
-	 * @returns {levels}
+	 * @returns {Level[]} - All level objects in an array
 	 */
 	levels: function() {},
 	/**
@@ -142,7 +142,7 @@ In the API you will find a number of functions which can be used to interact wit
 	zoom: {
 		/**
 		 * Change to a specific level
-		 * @param {number} level - The level number
+		 * @param {Number} level - The level number
 		 */
 		to: function(level) {},
 		/**
@@ -160,22 +160,22 @@ In the API you will find a number of functions which can be used to interact wit
 	move: {
 		/**
 		 * Move the map (40 * factor)px to the left (x + 40 * factor)
-		 * @param {number} [factor=1]
+		 * @param {Number} [factor=1]
 		 */
 		left: function(factor) {},
 		/**
 		 * Move the map (40 * factor)px to the right (x - 40 * factor)
-		 * @param {number} [factor=1]
+		 * @param {Number} [factor=1]
 		 */
 		right: function(factor) {},
 		/**
 		 * Move the map (40 * factor)px up (y + 40 * factor)
-		 * @param {number} [factor=1]
+		 * @param {Number} [factor=1]
 		 */
 		up: function(factor) {},
 		/**
 		 * Move the map (40 * factor)px down (y - 40 * factor)
-		 * @param {number} [factor=1]
+		 * @param {Number} [factor=1]
 		 */
 		down: function(factor) {}
 	},
@@ -183,7 +183,7 @@ In the API you will find a number of functions which can be used to interact wit
 	controls: {
 		/**
 		 * Array of controls to add
-		 * @param {Array} objects
+		 * @param {Array} objects - The array object
 		 */
 		add: function(objects) {}
 	}
@@ -211,18 +211,18 @@ The API `popup` function will return a specific popup, its structure is as follo
 	info: "Body Text",
 	/**
 	 * Show the popup
-	 * @param {boolean} [center=false] - Center the map to the popup
+	 * @param {Boolean} [center=false] - Center the map to the popup
 	 */
 	show: function(center) {},
 	/**
 	 * Toggle the popup
-	 * @param {boolean} [center=false] - Center the map to the popup when it's shown
-	 * @param {boolean} [force=false] - Force hiding the popup when it's hidden
+	 * @param {Boolean} [center=false] - Center the map to the popup when it's shown
+	 * @param {Boolean} [force=false] - Force hiding the popup when it's hidden
 	 */
 	toggle: function(center, force) {},
 	/**
 	 * Hide the popup
-	 * @param {boolean} [force=false] - Force hiding the popup
+	 * @param {Boolean} [force=false] - Force hiding the popup
 	 */
 	hide: function(force) {}
 }
@@ -290,11 +290,11 @@ The `add` method accepts an array of objects with this following properties.
 	{
 		/**
 		 * The text for the button, css compatible.
-		 **/
+		 */
 		text: '1',
 		/**
 		 * The method called when the button is clicked.
-		 **/
+		 */
 		click: function() {}
 	},
 	{
@@ -326,7 +326,7 @@ The `addEventListener` method is used to add an eventListener to an event.
 
 ```js
 /**
- * @param {level} level - The level that has been drawn
+ * @param {Level} level - The level that has been drawn
  */
 var logEventId = map.addEventListener("level_drawn", function(level) {
 	console.log(level.level);
