@@ -6,19 +6,22 @@ Copyright © 2016 MapCreator
 Found a bug?, report it on our [repo](https://github.com/MapOnline/interactive)
 
 ## Table of contents
-* Introduction
-* Setup
-* The Map Object
-	* API
-		* popup
-		* level
-	* addEventListener
-	* removeEventListener
-* Events
-	* The Events
-* Misc
-	* Iframe
-	* Style Overwriting
+* [Introduction](#introduction)
+* [Setup](#setup)
+* [The Map Object](#the-map-object)
+	* [API](#api)
+		* [popup](#popup)
+		* [popups](#popups)
+		* [level](#level)
+		* [levels](#levels)
+		* [controls](#controls)
+	* [addEventListener](#addeventlistener)
+	* [removeEventListener](#removeeventlistener)
+* [Events](#events)
+	* [The Events](#the-events)
+* [Misc](#misc)
+	* [Iframe](#iframe)
+	* [Style Overwriting](#style-overwriting)
 
 ## Introduction
 This document will explain the Maps4News Interactive Map from basic setup to more advanced API features. Most of the features mentioned in the documentation will only be available in the inline variant of the map.
