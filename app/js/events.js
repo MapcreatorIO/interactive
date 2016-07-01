@@ -44,16 +44,16 @@ var events = {
 		}
 
 		// Android zoom
-		if(e.touches.length == 1 && main.globals.doubleTap === true) {
-			main.globals.isScaling = true;
-			// main.object.context.save();
-			main.globals.startDistance = 1;
-
-			main.globals.lastPos = {
-				x: (main.globals.clickStart.x + e.touches[0].pageX) / 2,
-				y: (main.globals.clickStart.y + e.touches[0].pageY) / 2
-			};
-		}
+		// if(e.touches.length == 1 && main.globals.doubleTap === true) {
+		// 	main.globals.isScaling = true;
+		// 	// main.object.context.save();
+		// 	main.globals.startDistance = 1;
+		//
+		// 	main.globals.lastPos = {
+		// 		x: (main.globals.clickStart.x + e.touches[0].pageX) / 2,
+		// 		y: (main.globals.clickStart.y + e.touches[0].pageY) / 2
+		// 	};
+		// }
 	},
 
 	/**
@@ -61,21 +61,26 @@ var events = {
 	 * @param e - The event object
 	 */
 	mouseUp: function(e) {
-		e.preventDefault();
-		if(e.target.id == main.canvas) {
-			helpers.setInteractTime();
+		if(helpers.isInteracting() && !helpers.clickedInCanvas(e.target) && !main.globals.isDown) {
+			helpers.showTimeoutOverlay();
+		}
+
+		if(main.globals.isDown) {
+			e.preventDefault();
 			main.globals.isDown = false;
 			main.object.canvas.classList.remove('grabbing');
-			if(e.pageX == main.globals.clickStart.x && e.pageY == main.globals.clickStart.y) {
-				var point = main.object.levels.getCurrent().points.hitAPoint(e.layerX, e.layerY);
-				if(point !== null && e.which === 1) {
-					main.object.popups.get(point.number).show();
-				} else {
-					if(main.globals.doubleTap === true) {
-						events.dblclick(e);
-						main.globals.doubleTap = null;
+			if(helpers.clickedInCanvas(e.target)) {
+				if(e.pageX == main.globals.clickStart.x && e.pageY == main.globals.clickStart.y) {
+					var point = main.object.levels.getCurrent().points.hitAPoint(e.layerX, e.layerY);
+					if(point !== null && e.which === 1) {
+						main.object.popups.get(point.number).show();
 					} else {
-						main.object.popups.hideAll();
+						if(main.globals.doubleTap === true) {
+							events.dblclick(e);
+							main.globals.doubleTap = null;
+						} else {
+							main.object.popups.hideAll();
+						}
 					}
 				}
 			}
@@ -87,60 +92,59 @@ var events = {
 	 * @param e - The event object
 	 */
 	touchEnd: function(e) {
-		e.preventDefault();
-		main.globals.isDown = false;
-		if(e.target.id == main.canvas) {
-			helpers.setInteractTime();
-			if(helpers.validateTouchMoveClickMargin(main.globals.clickStart, main.globals.dragPosition) && !main.globals.isScaling) {
-				var point = main.object.levels.getCurrent().points
-					.hitAPoint(main.globals.dragPosition.x, main.globals.dragPosition.y);
-				if(point !== null) {
-					main.object.popups.get(point.number).show();
+		if(helpers.isInteracting() && !helpers.clickedInCanvas(e.target) && !main.globals.isDown) {
+			helpers.showTimeoutOverlay();
+		}
+
+		if(main.globals.isDown) {
+			e.preventDefault();
+			main.globals.isDown = false;
+			if(helpers.clickedInCanvas(e.target)) {
+				if(helpers.validateTouchMoveClickMargin(main.globals.clickStart, main.globals.dragPosition) && !main.globals.isScaling) {
+					var point = main.object.levels.getCurrent()
+						.points.hitAPoint(main.globals.dragPosition.x, main.globals.dragPosition.y);
+					if(point !== null && !main.globals.isScaling) {
+						main.object.popups.get(point.number).show();
+					} else {
+						if(main.globals.doubleTap === true) {
+							events.dbltap(e);
+							main.globals.doubleTap = null;
+						} else {
+							main.object.popups.hideAll();
+						}
+					}
 				} else {
 					if(main.globals.doubleTap === true) {
-						events.dbltap(e);
 						main.globals.doubleTap = null;
-					} else {
-						main.object.popups.hideAll();
 					}
 				}
-			} else {
-				if(main.globals.doubleTap === true) {
-					main.globals.doubleTap = null;
+			}
+
+			if(main.globals.isScaling) {
+				var difference = main.globals.newDistance - main.globals.startDistance;
+				var steps = Math.round(Math.abs(difference) / 100);
+
+				var currentLevel = main.object.levels.getCurrent();
+				var newLevel = main.object.levels.getLevel(currentLevel.level + function() {
+							if(difference > 0) { return steps; }
+							else { return -steps; }
+						}()) || currentLevel;
+
+				if(steps > 0) {
+					var pinchCentre = { x: main.globals.lastPos.x, y: main.globals.lastPos.y };
+
+					main.globals.offset.changeTo(
+						pinchCentre.x - (newLevel.size.width / currentLevel.size.width) * (pinchCentre.x - main.globals.offset.get().x),
+						pinchCentre.y - (newLevel.size.height / currentLevel.size.height) * (pinchCentre.y - main.globals.offset.get().y)
+					);
+					main.object.levels.change(newLevel.level);
+
+					main.globals.startDistance = 0;
+					main.globals.isScaling = false;
 				}
+				main.object.context.setTransform(1, 0, 0, 1, 0, 0);
+				newLevel.draw();
 			}
-		}
-		if(main.globals.isScaling) {
-			var differrence = main.globals.new_distance - main.globals.startDistance;
-			var steps = Math.round( Math.abs(differrence) / 100 );
-
-			var currentLevel = main.object.levels.getCurrent();
-			var newLevel = main.object.levels.getLevel(currentLevel.level + function() {
-					if(differrence > 0) { return steps; }
-					else { return -steps; }
-				}());
-
-			while(newLevel === null) {
-				steps--;
-				newLevel = main.object.levels.getLevel(newLevel);
-			}
-
-			if(steps > 0) {
-				var levels = [currentLevel, newLevel];
-				var pinchCentre = {x: main.globals.lastPos.x, y: main.globals.lastPos.y};
-
-				main.globals.offset.changeTo(
-					pinchCentre.x - (levels[1].size.width / levels[0].size.width) * (pinchCentre.x - main.globals.offset.get().x),
-					pinchCentre.y - (levels[1].size.height / levels[0].size.height) * (pinchCentre.y - main.globals.offset.get().y)
-				);
-				main.object.levels.change(newLevel.level);
-
-
-				main.globals.startDistance = 0;
-				main.globals.isScaling = false;
-			}
-			main.object.context.setTransform(1, 0, 0, 1, 0, 0);
-			main.object.levels.getCurrent().draw();
 		}
 	},
 
@@ -151,9 +155,9 @@ var events = {
 	mouseMove: function(e) {
 		var currentLevel = main.object.levels.getCurrent();
 		if(main.globals.isDown && helpers.isInteracting()) {
-			helpers.setInteractTime();
 			e.preventDefault();
 
+			main.object.canvas.classList.remove('pointing');
 			main.object.canvas.classList.add('grabbing');
 
 			main.globals.offset.changeBy(
@@ -162,8 +166,11 @@ var events = {
 			);
 			main.globals.dragPosition = { x: e.pageX, y: e.pageY };
 
+
+			main.object.context.fillRect(e.pageX - 5, e.pageY -5, 10, 10);
+
 			currentLevel.draw();
-		} else if(e.target.id == main.canvas) {
+		} else if(helpers.clickedInCanvas(e.target)) {
 			var point = currentLevel.points.hitAPoint(e.layerX, e.layerY);
 
 			if(point !== null) {
@@ -190,8 +197,6 @@ var events = {
 		if(main.globals.isDown && helpers.isInteracting()) {
 			e.preventDefault();
 
-			helpers.setInteractTime();
-
 			var fingers = e.touches;
 			var currentLevel = main.object.levels.getCurrent();
 
@@ -204,7 +209,7 @@ var events = {
 				};
 				if(new_offset.x !== main.globals.offset.get().x && new_offset.y !== main.globals.offset.get().y) {
 					if(main.globals.doubleTap === true && main.globals.isScaling) { // if the user has double tapped and is holding down his/her finger
-						main.globals.new_distance = Math.sqrt(
+						main.globals.newDistance = Math.sqrt(
 							(main.globals.clickStart.x - fingers[0].pageX) * (main.globals.clickStart.x - fingers[0].pageX) +
 							(main.globals.clickStart.y - fingers[0].pageY) * (main.globals.clickStart.y - fingers[0].pageY)
 						);
@@ -223,16 +228,25 @@ var events = {
 			} else if(fingers.length === 2) {
 				if(main.globals.isScaling === true) {
 					// Todo: improve delta calculation
-					main.globals.new_distance = Math.sqrt(
+					var newDistance = Math.sqrt(
 						(fingers[0].pageX - fingers[1].pageX) * (fingers[0].pageX - fingers[1].pageX) +
 						(fingers[0].pageY - fingers[1].pageY) * (fingers[0].pageY - fingers[1].pageY)
 					);
+
+					var pinching = newDistance < main.globals.newDistance;
+
+					main.globals.newDistance = newDistance;
 					main.globals.lastPos = {
 						x: (fingers[0].pageX + fingers[1].pageX) / 2,
 						y: (fingers[0].pageY + fingers[1].pageY) / 2
 					};
 
-					gPz = helpers.gesturePinchZoom(e) / 40;
+					if(!(
+						(currentLevel.level == main.object.levels.getLowest().level && !pinching) ||
+						(currentLevel.level == main.object.levels.getHighest().level && pinching)
+					)) {
+						gPz = helpers.gesturePinchZoom(e) / 40;
+					}
 					if(gPz < 1 && gPz > -1) {
 						main.globals.distance = gPz;
 						helpers.zoom(gPz);
@@ -258,8 +272,7 @@ var events = {
 			}
 		})();
 
-		if(e.target.id == main.canvas && willScroll) {
-			helpers.setInteractTime();
+		if(helpers.clickedInCanvas(e.target) && willScroll) {
 			clearTimeout(main.globals.scroll.timeout);
 			e.preventDefault();
 
@@ -294,11 +307,10 @@ var events = {
 	 */
 	dblclick: function(e) {
 		if(
-			e.target.id == main.canvas &&
+			helpers.clickedInCanvas(e.target) &&
 			main.object.levels.getCurrent().isOn(e.layerX, e.layerY) &&
 			helpers.isInteracting()
 		) {
-			helpers.setInteractTime();
 			var currentLevel = main.object.levels.getCurrent();
 			var newLevel = main.object.levels.getLevel(currentLevel.level + function() {
 					return e.which == 1 ? 1 : -1;
@@ -319,8 +331,7 @@ var events = {
 	 * @param e - The event object
 	 */
 	dbltap: function(e) {
-		if(e.target.id == main.canvas && main.object.levels.isOn(main.globals.dragPosition.x, main.globals.dragPosition.y)) {
-			helpers.setInteractTime();
+		if(helpers.clickedInCanvas(e.target) && main.object.levels.isOn(main.globals.dragPosition.x, main.globals.dragPosition.y)) {
 			var levels = main.object.levels.getLevels([main.object.levels.current, main.object.levels.current + 1]);
 			if(levels[1] !== null) {
 				main.globals.offset.changeTo(
@@ -344,7 +355,9 @@ var events = {
 	 * When the document gets resized
 	 */
 	resize: function() {
-		var fullscreen = document.webkitFullscreenElement || document.msFullscreenElement || document.mozFullScreenElement;
+		var fullscreen =
+			document.fullscreenElement || document.webkitFullscreenElement ||
+			document.msFullscreenElement || document.mozFullScreenElement;
 		if(fullscreen) {
 			if([fullscreen.id.indexOf("-youtube"), fullscreen.id.indexOf("-video")].indexOf(-1) > -1) {
 				main.globals.videoFullscreen.value = true;

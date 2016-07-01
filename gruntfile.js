@@ -1,18 +1,24 @@
 module.exports = function(grunt) {
 
-	// All tasks required for 1 build
-	var task = ['template', 'jsbeautifier', 'less', 'uglify'];
-
 	grunt.initConfig({
 
 		watch: {
-			default: {
+			javascript: {
 				files: [
-					'app/**/*.js',
+					'app/**/*.js'
+				],
+				tasks: ['template', 'jsbeautifier']
+			},
+			less: {
+				files: [
 					'app/**/*.less'
 				],
-				tasks: task
+				tasks: ['less']
 			}
+		},
+
+		jsbeautifier: {
+			files : ['dist/m4n.js']
 		},
 
 		less: {
@@ -24,10 +30,6 @@ module.exports = function(grunt) {
 			}
 		},
 
-		jsbeautifier: {
-			files : ['dist/m4n.js']
-		},
-
 		template: {
 			default: {
 				template: "app/js/main.js",
@@ -36,10 +38,26 @@ module.exports = function(grunt) {
 		},
 
 		uglify: {
+			options: {
+				report: 'gzip'
+			},
 			default: {
 				files: {
 					'dist/m4n.min.js': ['dist/m4n.js']
 				}
+			}
+		},
+
+		copy: {
+			default: {
+				files: [
+					{
+						expand: true,
+						cwd: 'include/',
+						src: '**',
+						dest: 'dist/'
+					}
+				]
 			}
 		}
 	});
@@ -49,6 +67,8 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-less');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 
-	grunt.registerTask('default', task.concat('watch'));
+	grunt.registerTask('default', ['template', 'jsbeautifier', 'less', 'watch']);
+	grunt.registerTask('production', ['template', 'jsbeautifier', 'uglify', 'less', 'copy']);
 };

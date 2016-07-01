@@ -60,7 +60,13 @@ Level.prototype.checkLoaded = function() {
 Level.prototype.draw = function() {
 	main.object.popups.hideAll();
 
+
+	main.object.context.save();
+	main.object.context.setTransform(1, 0, 0, 1, 0, 0);
+
 	main.object.context.clearRect(0, 0, main.object.canvas.width, main.object.canvas.height);
+
+	main.object.context.restore();
 
 	main.globals.offset.changeTo(
 		this.getBounds(true, main.globals.offset.get().x),
@@ -68,6 +74,10 @@ Level.prototype.draw = function() {
 	);
 
 	this.tiles.draw();
+
+	if(main.dev) {
+		this.points.draw();
+	}
 
 	main.object.levels.setCurrent(this.level);
 	triggerEvent("level_drawn", this.getApiObject());

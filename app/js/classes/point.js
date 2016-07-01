@@ -13,14 +13,14 @@ var Point = function(point) {
 			}
 		}
 	}
-	// TODO refactor to support all formats
+
 	this.position = {
-		left: Math.min(this.shape[0].x, this.shape[1].x, this.shape[2].x, this.shape[3].x),
-		top: Math.min(this.shape[0].y, this.shape[1].y, this.shape[2].y, this.shape[3].y)
+		left: Math.min.apply(null, this.shape.map(function(item) { return item.x })) - 10,
+		top: Math.min.apply(null, this.shape.map(function(item) { return item.y })) - 10
 	};
 	this.size = {
-		width: Math.max(this.shape[0].x, this.shape[1].x, this.shape[2].x, this.shape[3].x) - this.position.left,
-		height: Math.max(this.shape[0].y, this.shape[1].y, this.shape[2].y, this.shape[3].y) - this.position.top
+		width: Math.max.apply(null, this.shape.map(function(item) { return item.x })) - this.position.left + 10,
+		height: Math.max.apply(null, this.shape.map(function(item) { return item.y })) - this.position.top + 10
 	};
 };
 

@@ -148,5 +148,52 @@ main.api = {
 			main.globals.offset.changeBy(0, 40 * (factor || 1));
 			level.draw();
 		}
+	},
+
+	controls: {
+
+		/**
+		 * Array of controls to add
+		 * @param {Array|Object} objects
+		 */
+		add: function(objects) {
+			if(!Array.isArray(objects)) {
+				objects = [objects];
+			}
+			var control_container = helpers.createElement('div', 'm4n-custom-control-container');
+			objects.forEach(function(object) {
+
+				var isDisabled = false;
+
+				// If disabled properties are given
+				if(object.hasOwnProperty('disabled')) {
+					var checkDisabled = function() {
+						isDisabled = object.disabled.callback();
+						if(isDisabled) {
+							control.classList.add('disabled');
+						} else if(control.classList.contains('disabled')) {
+							control.classList.remove('disabled');
+						}
+					};
+
+					// If the object want to listen to an event
+					if(object.disabled.hasOwnProperty('event')) {
+						addEventListener(object.disabled.event, checkDisabled);
+					}
+				}
+
+				var control = helpers.createElement('div', 'm4n-control-button', {
+					'click': function() {
+						if(!isDisabled) { object.click(); }
+					}
+				});
+
+				control.setAttribute('data-content', object.text);
+				control_container.appendChild(control);
+			});
+			control_container.appendChild(helpers.createElement('div', 'm4n-control-separator'));
+
+			main.controlContainer.appendChild(control_container);
+		}
 	}
 };

@@ -22,9 +22,18 @@ function initializeM4n(mapJson) {
 
 	main.object = revive(mapJson);
 
-	if(main.object.levels.count() > 1) {
+	main.controlContainer = helpers.createElement('div', 'm4n-control-container');
+
+	if(main.object.levels.count() > 1 && main.zoomControls) {
 		createZoomControls();
 	}
+
+	if(main.homeButton) {
+		createHomeButton();
+	}
+
+	main.controlContainer.style.zIndex = main.object.canvas.style.zIndex +1;
+	container.appendChild(main.controlContainer);
 
 	if(!container.hasPredefinedHeight) {
 		var level = main.object.levels.getCurrent();
@@ -233,5 +242,7 @@ function createHtmlElements() {
 }
 
 "<!= zoom_controls !>";
+
+"<!= home_button !>";
 
 "<!= event_listener !>";

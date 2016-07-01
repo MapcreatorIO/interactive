@@ -6,19 +6,22 @@ Copyright © 2016 MapCreator
 Found a bug?, report it on our [repo](https://github.com/MapOnline/interactive)
 
 ## Table of contents
-* Introduction
-* Setup
-* The Map Object
-	* API
-		* popup
-		* level
-	* addEventListener
-	* removeEventListener
-* Events
-	* The Events
-* Misc
-	* Iframe
-	* Style Overwriting
+* [Introduction](#introduction)
+* [Setup](#setup)
+* [The Map Object](#the-map-object)
+	* [API](#api)
+		* [popup](#popup)
+		* [popups](#popups)
+		* [level](#level)
+		* [levels](#levels)
+		* [controls](#controls)
+	* [addEventListener](#addeventlistener)
+	* [removeEventListener](#removeeventlistener)
+* [Events](#events)
+	* [The Events](#the-events)
+* [Misc](#misc)
+	* [Iframe](#iframe)
+	* [Style Overwriting](#style-overwriting)
 
 ## Introduction
 This document will explain the Maps4News Interactive Map from basic setup to more advanced API features. Most of the features mentioned in the documentation will only be available in the inline variant of the map.
@@ -29,7 +32,7 @@ Here we’ll talk a bit about the boilerplate code that the tool will provide.
 
 Example
 
-```js
+```html
 <div id="m4n-map">
 	<script src="https://www.path.to/m4n.js"></script>
 	<script>
@@ -48,7 +51,7 @@ First we have a div tag which will act as a container for the canvas and other v
 
 The M4nInteractive class accepts the following parameters:
 
-1. A JSON object with the settings for the map
+1. A JSON object with the settings for the map.
   - __path__. The id that was generated with the map render job.
      -  If your environment is *download* then this path should be the absolute path to the folder where the map.json file and images from the map are in.
   - __environment__. (optional; default "online") The specific environment of your map.
@@ -60,7 +63,6 @@ The M4nInteractive class accepts the following parameters:
   | bleeding    | For maps generated with the M4N bleeding tool. |
   | download    | This should be used when a user wants to self-host their map. |
   | development | Used by M4N employees during development. (will enable debugging mode) |
-
   - __interact__. (optional; default "scroll") The way interaction with the map works.
 
   | Name     | Description |
@@ -69,13 +71,17 @@ The M4nInteractive class accepts the following parameters:
   | controls | use the on-screen controls and the mouse buttons to zoom in or out (holding ctrl will __enable__ scroll zooming) |
   | smart    | an overlay will be placed over the map when the user is not working with the map and disables the events to the map (timeout of 3 seconds; will not disable when a popup is active) |
 
+  - __zoomControls__. (optional; default true) Enable or disable the zoom controls for maps with more than 1 level.
+
+  - __homeButton__. (optional; default true) Enable or disable the home button
+
   - __debug__. (not recommended) true or false, this allows the map object to be returned from the browser's console.
 
 2. The div container node (in this case the `div` with id `m4n-map`).
 3. The callback (optional), this will be called after the map has finished initializing. Best used for subscribing to custom events. The callback function has 1 parameter, the map object, as described below.
 
 ## The Map Object
-The final object that will be returned to your variable will have a couple of properties
+The final object that will be returned to your variable will have a couple of properties.
 
 ```js
 {
@@ -85,15 +91,15 @@ The final object that will be returned to your variable will have a couple of pr
 	api: {},
 	/**
 	 * Method to subscribe to an event.
-	 * @param {string} event - One of the events as described below
-	 * @param {function} callback - Your callback method
-	 * @returns {number} - The listener id
+	 * @param {String} event - One of the events as described below
+	 * @param {Function} callback - Your callback method
+	 * @returns {Number} - The listener id
 	 */
 	addEventListener: function(event, callback),
 	/**
 	 * Method to unsubscribe from an event
-	 * @param {string} event - One of the events as described below
-	 * @param {number} listenerId - the id returned from addEventListener
+	 * @param {String} event - One of the events as described below
+	 * @param {Number} listenerId - the id returned from addEventListener
 	 */
 	removeEventListener: function(event, listenerId)
 }
@@ -106,23 +112,23 @@ In the API you will find a number of functions which can be used to interact wit
 {
 	/**
 	 * Will return a popup api object
-	 * @param {number} i - The number of the popup
-	 * @returns {popup|null}
+	 * @param {Number} i - The number of the popup
+	 * @returns {Popup|null} - The requested popup object
 	 */
 	popup: function(i) {},
 	/**
 	 * Will return all popups
-	 * @returns {popup[]}
+	 * @returns {Popup[]} - All popup objects in an array
 	 */
 	popups: function() {},
 	/**
 	 * Will return a level api object
-	 * @returns {level|null}
+	 * @returns {Level|null} - The requested level object
 	 */
-	level: function() {},
+	level: function(i) {},
 	/**
 	 * Will return all levels
-	 * @returns {level[]}
+	 * @returns {Level[]} - All level objects in an array
 	 */
 	levels: function() {},
 	/**
@@ -139,7 +145,7 @@ In the API you will find a number of functions which can be used to interact wit
 	zoom: {
 		/**
 		 * Change to a specific level
-		 * @param {number} level - The level number
+		 * @param {Number} level - The level number
 		 */
 		to: function(level) {},
 		/**
@@ -157,30 +163,38 @@ In the API you will find a number of functions which can be used to interact wit
 	move: {
 		/**
 		 * Move the map (40 * factor)px to the left (x + 40 * factor)
-		 * @param {number} [factor=1]
+		 * @param {Number} [factor=1]
 		 */
 		left: function(factor) {},
 		/**
 		 * Move the map (40 * factor)px to the right (x - 40 * factor)
-		 * @param {number} [factor=1]
+		 * @param {Number} [factor=1]
 		 */
 		right: function(factor) {},
 		/**
 		 * Move the map (40 * factor)px up (y + 40 * factor)
-		 * @param {number} [factor=1]
+		 * @param {Number} [factor=1]
 		 */
 		up: function(factor) {},
 		/**
 		 * Move the map (40 * factor)px down (y - 40 * factor)
-		 * @param {number} [factor=1]
+		 * @param {Number} [factor=1]
 		 */
 		down: function(factor) {}
+	},
+
+	controls: {
+		/**
+		 * Array of controls to add
+		 * @param {Array} objects - The array object
+		 */
+		add: function(objects) {}
 	}
 }
 ```
 
 #### popup
-The API `popup` function will return a specific popup, its structure is as follows
+The API `popup` function will return a specific popup, its structure is as follows.
 
 ```js
 {
@@ -200,27 +214,28 @@ The API `popup` function will return a specific popup, its structure is as follo
 	info: "Body Text",
 	/**
 	 * Show the popup
-	 * @param {boolean} [center=false] - Center the map to the popup
+	 * @param {Boolean} [center=false] - Center the map to the popup
 	 */
 	show: function(center) {},
 	/**
 	 * Toggle the popup
-	 * @param {boolean} [center=false] - Center the map to the popup when it's shown
-	 * @param {boolean} [force=false] - Force hiding the popup when it's hidden
+	 * @param {Boolean} [center=false] - Center the map to the popup when it's shown
+	 * @param {Boolean} [force=false] - Force hiding the popup when it's hidden
 	 */
 	toggle: function(center, force) {},
 	/**
 	 * Hide the popup
+	 * @param {Boolean} [force=false] - Force hiding the popup
 	 */
-	hide: function() {}
+	hide: function(force) {}
 }
 ```
 
 #### popups
-The API `popups` function will return an array of all `popup` objects as described above
+The API `popups` function will return an array of all `popup` objects as described above.
 
 #### level
-The API `level` function will return a specific level, its structure is as follows
+The API `level` function will return a specific level, its structure is as follows.
 
 ```js
 {
@@ -245,7 +260,7 @@ The API `level` function will return a specific level, its structure is as follo
 ```
 
 #### levels
-The API `levels` function will return an array of all `level` objects as described above as well as the current level
+The API `levels` function will return an array of all `level` objects as described above as well as the highest, lowest and the current level.
 
 ```js
 {
@@ -254,18 +269,83 @@ The API `levels` function will return an array of all `level` objects as describ
 	 */
 	current: 0,
 	/**
-	 * All level object as described above
+	 * The highest level
+	 */
+	highest: -2,
+	/**
+	 * The lowest level
+	 */
+	lowest: 2,
+	/**
+	 * All level objects as described above
 	 */
 	levels: []
 }
 ```
+
+#### controls
+The API `controls` namespace has one method: `add`, this method can be used to add clusters of icons to the control container.
+
+The `add` method accepts a single object or an array of objects with the following properties.
+
+```js
+[
+	{
+		/**
+		 * The text for the button, css compatible.
+		 */
+		text: '1',
+		/**
+		 * The method called when the button is clicked.
+		 */
+		click: function() {},
+		/**
+		 * Optional object for disabling the button
+		 */
+		disabled: {
+			// The event that triggers a disable re-evaluate
+			event: 'level_changed',
+			// @returns {Boolean} - If the button should be disabled or not
+			callback: function() {}
+		}
+	},
+	{
+		text: '\2605', // ★
+		click: function() {
+			console.log('★');
+		},
+		disabled: {
+			event: 'level_changed',
+			callback: function() {
+				// Disable the button is the level is 0
+				return mapi.api.levels().current == 0;
+			}
+		}
+	}
+]
+```
+Each array of objects will form a cluster onderneath the zoom and or home controls.
+
+##### example
+
+```js
+var levels = [];
+map.api.levels().levels.forEach(function(level) {
+	levels.push({
+		'text': level.level,
+		'click': level.changeTo
+	});
+});
+map.api.controls.add(levels);
+```
+The code in the example will add a cluster of all levels to the control container and when they're clicked the map will change to that level.
 
 ### addEventListener
 The `addEventListener` method is used to add an eventListener to an event.
 
 ```js
 /**
- * @param {level} level - The level that has been drawn
+ * @param {Level} level - The level that has been drawn
  */
 var logEventId = map.addEventListener("level_drawn", function(level) {
 	console.log(level.level);
@@ -286,14 +366,14 @@ Since it’s possible to have multiple maps run on one page we have implemented 
 `“level_loaded”`
 
 This event will be called when all tiles (images) of a level have been downloaded.
-One argument will be passed to the listener, the level object of the level that has been loaded.
+One argument will be passed to the listener, the `level` object of the level that has been loaded.
 
 --------
 
 `“level_drawn”`
 
 This event will be called when a level has been drawn on the canvas.
-One argument will be passed to the listener, the level object of the level that has been drawn.
+One argument will be passed to the listener, the `level` object of the level that has been drawn.
 
 Note: this will be called on every move made by the user and/or API.
 
@@ -302,21 +382,21 @@ Note: this will be called on every move made by the user and/or API.
 `“level_changed”`
 
 This event will be called when the currently displayed level has changed.
-One argument will be passed to the listener, the level object of the level that the map has changed to.
+One argument will be passed to the listener, the `level` object of the level that the map has changed to.
 
 -------
 
 `“popup_shown”`
 
 This event will be called when a popup has been displayed on screen.
-One argument will be passed to the listener, the popup object of the popup that has been shown.
+One argument will be passed to the listener, the `popup` object of the popup that has been shown.
 
 -------
 
 `“popup_hidden”`
 
 This event will be called when a popup has been hidden.
-One argument will be passed to the listener, the popup object of the popup that has been hidden.
+One argument will be passed to the listener, the `popup` object of the popup that has been hidden.
 
 ## Misc
 
@@ -328,7 +408,7 @@ It's also possible to generate an iframe version of the map via the Maps4News to
 ```
 Customization of the iframe map is done via the get variables in the url. There are a total of 4 parameters that can be added to the url.
 
-1. __path__. Same of the inline version.
+1. __path__. Same as the inline version.
 2. __env__. (optional; default "online") Same as the environment for the inline version (note that you should also change the subdomain).
   - The download environment is not available for iframe maps, if you wish to host your own iframe map you should create your own HTML document with an inline map inside, as described above.
 3. __id__. (optional) A specific id for the container.
@@ -338,7 +418,7 @@ The iframe map does not allow eventListeners due to limitations with DOM.
 
 
 ### Style Overwriting
-The Interactive Map adds its own `style.css` file to your page head, if you wish to overwrite certain styles used in the map. you can add a `link` tag to your head with the id `m4n-style-custom`. The map will look for this id when setting up its HTML elements and will remove and re-add this tag so that the styles defined in your css file will have priority over the ones in our main `style.css` file.
+The Interactive Map adds its own `style.css` file to your page head. If you wish to overwrite certain styles used in the map, you can add a `link` tag to your head with the id `m4n-style-custom`. The map will look for this id when setting up its HTML elements and will remove and re-add this tag so that the styles defined in your css file will have priority over the ones in our main `style.css` file.
 
 ```html
 <link id="m4n-style-custom" href="path/to/style.css" type="text/css" rel="stylesheet"/>
