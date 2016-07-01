@@ -167,18 +167,18 @@ main.api = {
 
 				// If disabled properties are given
 				if(object.hasOwnProperty('disabled')) {
-					// If the object want to listen to an event
-					if(object.disabled.hasOwnProperty('event')) {
-						addEventListener(object.disabled.event, checkDisabled);
-					}
-
-					function checkDisabled() {
+					var checkDisabled = function() {
 						isDisabled = object.disabled.callback();
 						if(isDisabled) {
 							control.classList.add('disabled');
 						} else if(control.classList.contains('disabled')) {
 							control.classList.remove('disabled');
 						}
+					};
+
+					// If the object want to listen to an event
+					if(object.disabled.hasOwnProperty('event')) {
+						addEventListener(object.disabled.event, checkDisabled);
 					}
 				}
 
