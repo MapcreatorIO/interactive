@@ -1,6 +1,6 @@
 {
   "name": "m4n-interactive",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Maps4News Interactive Map",
   "main": "dist/m4n.min.js",
   "scripts": {

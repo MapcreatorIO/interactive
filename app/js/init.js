@@ -12,7 +12,7 @@
 	main.zoomControls = typeof options.zoomControls !== 'undefined' ? options.zoomControls : true;
 	main.homeButton = typeof options.homeButton !== 'undefined' ? options.homeButton : true;
 
-	main.version = { map: '2.0', code: '2.0.4' }; // TODO Add version to json for verification
+	main.version = { map: '2.0', code: '2.0.5' }; // TODO Add version to json for verification
 
 	main.dev = main.environment == 'development' || (options.debug && options.debug == "true");
 

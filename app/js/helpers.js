@@ -94,41 +94,6 @@ var helpers = {
 	},
 
 	/**
-	 * Set the interact time
-	 *
-	 * @param {number} [listenerId]
-	 */
-	setInteractTime: function(listenerId) {
-		if(main.interact === "smart") {
-			var setNotInteracting = function() {
-				if(!main.globals.isDown) {
-					var popup = main.object.popups.getCurrent();
-					if(popup === null) {
-						main.globals.interact.isInteracting = false;
-						helpers.showTimeoutOverlay();
-						if(listenerId !== undefined) {
-							removeEventListener("popup_hidden", listenerId);
-						}
-					} else {
-						var eventId = addEventListener("popup_hidden", function() {
-							helpers.setInteractTime(eventId);
-							removeEventListener("popup_hidden", eventId);
-						});
-					}
-				} else {
-					if(main.dev) { console.log("Finger or mouse is down"); }
-				}
-			};
-
-			clearTimeout(main.globals.interact.timer);
-			main.globals.interact = {
-				isInteracting: true,
-				timer: setTimeout(setNotInteracting, 3000)
-			};
-		}
-	},
-
-	/**
 	 * If the user has interacted with the map in the last 3 seconds
 	 */
 	isInteracting: function() {
@@ -140,6 +105,15 @@ var helpers = {
 	 */
 	showTimeoutOverlay: function() {
 		main.timeoutOverlay.style.display = "block";
+		main.globals.interact.isInteracting = false;
+	},
+
+	/**
+	 * Hide the timeout overlay
+	 */
+	hideTimeoutOverlay: function() {
+		main.timeoutOverlay.style.display = "none";
+		main.globals.interact.isInteracting = true;
 	},
 
 	/**
@@ -153,5 +127,15 @@ var helpers = {
 			(a.x > b.x -2 && a.x < b.x +2) &&
 			(a.y > b.y -2 && a.y < b.y +2)
 		);
+	},
+
+	/**
+	 *
+	 */
+	clickedInCanvas: function(target) {
+		while (target = target.parentElement) {
+			if (target.classList.contains('m4n-container')) { return true }
+		}
+		return false;
 	}
 };

@@ -154,14 +154,40 @@ main.api = {
 
 		/**
 		 * Array of controls to add
-		 * @param {Array} objects
+		 * @param {Array|Object} objects
 		 */
 		add: function(objects) {
+			if(!Array.isArray(objects)) {
+				objects = [objects];
+			}
 			var control_container = helpers.createElement('div', 'm4n-custom-control-container');
 			objects.forEach(function(object) {
+
+				var isDisabled = false;
+
+				// If disabled properties are given
+				if(object.hasOwnProperty('disabled')) {
+					// If the object want to listen to an event
+					if(object.disabled.hasOwnProperty('event')) {
+						addEventListener(object.disabled.event, checkDisabled);
+					}
+
+					function checkDisabled() {
+						isDisabled = object.disabled.callback();
+						if(isDisabled) {
+							control.classList.add('disabled');
+						} else if(control.classList.contains('disabled')) {
+							control.classList.remove('disabled');
+						}
+					}
+				}
+
 				var control = helpers.createElement('div', 'm4n-control-button', {
-					'click': object.click
+					'click': function() {
+						if(!isDisabled) { object.click(); }
+					}
 				});
+
 				control.setAttribute('data-content', object.text);
 				control_container.appendChild(control);
 			});

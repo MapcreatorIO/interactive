@@ -182,7 +182,7 @@ In the API you will find a number of functions which can be used to interact wit
 		 */
 		down: function(factor) {}
 	},
-	
+
 	controls: {
 		/**
 		 * Array of controls to add
@@ -286,7 +286,7 @@ The API `levels` function will return an array of all `level` objects as describ
 #### controls
 The API `controls` namespace has one method: `add`, this method can be used to add clusters of icons to the control container.
 
-The `add` method accepts an array of objects with this following properties.
+The `add` method accepts a single object or an array of objects with the following properties.
 
 ```js
 [
@@ -298,19 +298,35 @@ The `add` method accepts an array of objects with this following properties.
 		/**
 		 * The method called when the button is clicked.
 		 */
-		click: function() {}
+		click: function() {},
+		/**
+		 * Optional object for disabling the button
+		 */
+		disabled: {
+			// The event that triggers a disable re-evaluate
+			event: 'level_changed',
+			// @returns {Boolean} - If the button should be disabled or not
+			callback: function() {}
+		}
 	},
 	{
-		text: '2',
+		text: '\2605', // ★
 		click: function() {
-			console.log('2');
+			console.log('★');
+		},
+		disabled: {
+			event: 'level_changed',
+			callback: function() {
+				// Disable the button is the level is 0
+				return mapi.api.levels().current == 0;
+			}
 		}
 	}
 ]
 ```
-each array of objects will form a cluster onderneath the zoom or home controls.
+Each array of objects will form a cluster onderneath the zoom and or home controls.
 
-#####example
+##### example
 
 ```js
 var levels = [];
@@ -322,7 +338,7 @@ map.api.levels().levels.forEach(function(level) {
 });
 map.api.controls.add(levels);
 ```
-This will add a cluster of all levels to the control container and when they're clicked the map will change to that level.
+The code in the example will add a cluster of all levels to the control container and when they're clicked the map will change to that level.
 
 ### addEventListener
 The `addEventListener` method is used to add an eventListener to an event.

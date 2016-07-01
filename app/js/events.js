@@ -61,21 +61,26 @@ var events = {
 	 * @param e - The event object
 	 */
 	mouseUp: function(e) {
-		e.preventDefault();
-		main.globals.isDown = false;
-		main.object.canvas.classList.remove('grabbing');
-		if(e.target.id == main.canvas) {
-			helpers.setInteractTime();
-			if(e.pageX == main.globals.clickStart.x && e.pageY == main.globals.clickStart.y) {
-				var point = main.object.levels.getCurrent().points.hitAPoint(e.layerX, e.layerY);
-				if(point !== null && e.which === 1) {
-					main.object.popups.get(point.number).show();
-				} else {
-					if(main.globals.doubleTap === true) {
-						events.dblclick(e);
-						main.globals.doubleTap = null;
+		if(helpers.isInteracting() && !helpers.clickedInCanvas(e.target) && !main.globals.isDown) {
+			helpers.showTimeoutOverlay();
+		}
+
+		if(main.globals.isDown) {
+			e.preventDefault();
+			main.globals.isDown = false;
+			main.object.canvas.classList.remove('grabbing');
+			if(helpers.clickedInCanvas(e.target)) {
+				if(e.pageX == main.globals.clickStart.x && e.pageY == main.globals.clickStart.y) {
+					var point = main.object.levels.getCurrent().points.hitAPoint(e.layerX, e.layerY);
+					if(point !== null && e.which === 1) {
+						main.object.popups.get(point.number).show();
 					} else {
-						main.object.popups.hideAll();
+						if(main.globals.doubleTap === true) {
+							events.dblclick(e);
+							main.globals.doubleTap = null;
+						} else {
+							main.object.popups.hideAll();
+						}
 					}
 				}
 			}
@@ -87,54 +92,59 @@ var events = {
 	 * @param e - The event object
 	 */
 	touchEnd: function(e) {
-		e.preventDefault();
-		main.globals.isDown = false;
-		if(e.target.id == main.canvas) {
-			helpers.setInteractTime();
-			if(helpers.validateTouchMoveClickMargin(main.globals.clickStart, main.globals.dragPosition) && !main.globals.isScaling) {
-				var point = main.object.levels.getCurrent()
-					.points.hitAPoint(main.globals.dragPosition.x, main.globals.dragPosition.y);
-				if(point !== null && !main.globals.isScaling) {
-					main.object.popups.get(point.number).show();
-				} else {
-					if(main.globals.doubleTap === true) {
-						events.dbltap(e);
-						main.globals.doubleTap = null;
-					} else {
-						main.object.popups.hideAll();
-					}
-				}
-			} else {
-				if(main.globals.doubleTap === true) {
-					main.globals.doubleTap = null;
-				}
-			}
+		if(helpers.isInteracting() && !helpers.clickedInCanvas(e.target) && !main.globals.isDown) {
+			helpers.showTimeoutOverlay();
 		}
 
-		if(main.globals.isScaling) {
-			var difference = main.globals.newDistance - main.globals.startDistance;
-			var steps = Math.round(Math.abs(difference) / 100);
-
-			var currentLevel = main.object.levels.getCurrent();
-			var newLevel = main.object.levels.getLevel(currentLevel.level + function() {
-					if(difference > 0) { return steps; }
-					else { return -steps; }
-				}()) || currentLevel;
-
-			if(steps > 0) {
-				var pinchCentre = { x: main.globals.lastPos.x, y: main.globals.lastPos.y };
-
-				main.globals.offset.changeTo(
-					pinchCentre.x - (newLevel.size.width / currentLevel.size.width) * (pinchCentre.x - main.globals.offset.get().x),
-					pinchCentre.y - (newLevel.size.height / currentLevel.size.height) * (pinchCentre.y - main.globals.offset.get().y)
-				);
-				main.object.levels.change(newLevel.level);
-
-				main.globals.startDistance = 0;
-				main.globals.isScaling = false;
+		if(main.globals.isDown) {
+			e.preventDefault();
+			main.globals.isDown = false;
+			if(helpers.clickedInCanvas(e.target)) {
+				if(helpers.validateTouchMoveClickMargin(main.globals.clickStart, main.globals.dragPosition) && !main.globals.isScaling) {
+					var point = main.object.levels.getCurrent()
+						.points.hitAPoint(main.globals.dragPosition.x, main.globals.dragPosition.y);
+					if(point !== null && !main.globals.isScaling) {
+						main.object.popups.get(point.number).show();
+					} else {
+						if(main.globals.doubleTap === true) {
+							events.dbltap(e);
+							main.globals.doubleTap = null;
+						} else {
+							main.object.popups.hideAll();
+						}
+					}
+				} else {
+					if(main.globals.doubleTap === true) {
+						main.globals.doubleTap = null;
+					}
+				}
 			}
-			main.object.context.setTransform(1, 0, 0, 1, 0, 0);
-			newLevel.draw();
+
+			if(main.globals.isScaling) {
+				var difference = main.globals.newDistance - main.globals.startDistance;
+				var steps = Math.round(Math.abs(difference) / 100);
+
+				var currentLevel = main.object.levels.getCurrent();
+				var newLevel = main.object.levels.getLevel(currentLevel.level + function() {
+							if(difference > 0) { return steps; }
+							else { return -steps; }
+						}()) || currentLevel;
+
+				if(steps > 0) {
+					var pinchCentre = { x: main.globals.lastPos.x, y: main.globals.lastPos.y };
+
+					main.globals.offset.changeTo(
+						pinchCentre.x - (newLevel.size.width / currentLevel.size.width) * (pinchCentre.x - main.globals.offset.get().x),
+						pinchCentre.y - (newLevel.size.height / currentLevel.size.height) * (pinchCentre.y - main.globals.offset.get().y)
+					);
+					main.object.levels.change(newLevel.level);
+
+					main.globals.startDistance = 0;
+					main.globals.isScaling = false;
+				}
+				main.object.context.setTransform(1, 0, 0, 1, 0, 0);
+				newLevel.draw();
+			}
 		}
 	},
 
@@ -145,7 +155,6 @@ var events = {
 	mouseMove: function(e) {
 		var currentLevel = main.object.levels.getCurrent();
 		if(main.globals.isDown && helpers.isInteracting()) {
-			helpers.setInteractTime();
 			e.preventDefault();
 
 			main.object.canvas.classList.remove('pointing');
@@ -161,7 +170,7 @@ var events = {
 			main.object.context.fillRect(e.pageX - 5, e.pageY -5, 10, 10);
 
 			currentLevel.draw();
-		} else if(e.target.id == main.canvas) {
+		} else if(helpers.clickedInCanvas(e.target)) {
 			var point = currentLevel.points.hitAPoint(e.layerX, e.layerY);
 
 			if(point !== null) {
@@ -187,8 +196,6 @@ var events = {
 	touchMove: function(e) { // TODO not preventdefault when interacting
 		if(main.globals.isDown && helpers.isInteracting()) {
 			e.preventDefault();
-
-			helpers.setInteractTime();
 
 			var fingers = e.touches;
 			var currentLevel = main.object.levels.getCurrent();
@@ -265,8 +272,7 @@ var events = {
 			}
 		})();
 
-		if(e.target.id == main.canvas && willScroll) {
-			helpers.setInteractTime();
+		if(helpers.clickedInCanvas(e.target) && willScroll) {
 			clearTimeout(main.globals.scroll.timeout);
 			e.preventDefault();
 
@@ -301,11 +307,10 @@ var events = {
 	 */
 	dblclick: function(e) {
 		if(
-			e.target.id == main.canvas &&
+			helpers.clickedInCanvas(e.target) &&
 			main.object.levels.getCurrent().isOn(e.layerX, e.layerY) &&
 			helpers.isInteracting()
 		) {
-			helpers.setInteractTime();
 			var currentLevel = main.object.levels.getCurrent();
 			var newLevel = main.object.levels.getLevel(currentLevel.level + function() {
 					return e.which == 1 ? 1 : -1;
@@ -326,8 +331,7 @@ var events = {
 	 * @param e - The event object
 	 */
 	dbltap: function(e) {
-		if(e.target.id == main.canvas && main.object.levels.isOn(main.globals.dragPosition.x, main.globals.dragPosition.y)) {
-			helpers.setInteractTime();
+		if(helpers.clickedInCanvas(e.target) && main.object.levels.isOn(main.globals.dragPosition.x, main.globals.dragPosition.y)) {
 			var levels = main.object.levels.getLevels([main.object.levels.current, main.object.levels.current + 1]);
 			if(levels[1] !== null) {
 				main.globals.offset.changeTo(
