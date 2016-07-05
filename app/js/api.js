@@ -11,10 +11,7 @@ main.api = {
 	 */
 	popup: function(i) {
 		var popup = main.object.popups.get(i);
-		if(popup === null) {
-			throw "Popup " + i + " not found";
-		}
-		return popup.getApiObject();
+		return popup.getApiObject() || null;
 	},
 
 	/**
@@ -93,14 +90,14 @@ main.api = {
 		 * Zoom in 1 level
 		 */
 		in: function() {
-			this.to(main.object.levels.current + 1);
+			main.api.zoom.to(main.object.levels.current + 1);
 		},
 
 		/**
 		 * Zoom out 1 level
 		 */
 		out: function() {
-			this.to(main.object.levels.current - 1);
+			main.api.zoom.to(main.object.levels.current - 1);
 		}
 	},
 
@@ -154,14 +151,14 @@ main.api = {
 
 		/**
 		 * Array of controls to add
-		 * @param {Array|Object} objects
+		 * @param {Array|Object} buttons
 		 */
-		add: function(objects) {
-			if(!Array.isArray(objects)) {
-				objects = [objects];
+		add: function(buttons) {
+			if(!Array.isArray(buttons)) {
+				buttons = [buttons];
 			}
 			var control_container = helpers.createElement('div', 'm4n-custom-control-container');
-			objects.forEach(function(object) {
+			buttons.forEach(function(object) {
 
 				var isDisabled = false;
 
