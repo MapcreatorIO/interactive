@@ -23,16 +23,40 @@ function initializeM4n(mapJson) {
 	main.object = revive(mapJson);
 
 	main.controlContainer = helpers.createElement('div', 'm4n-control-container');
+	main.controlContainer.style.zIndex = main.object.canvas.style.zIndex +1;
 
 	if(main.object.levels.count() > 1 && main.zoomControls) {
-		createZoomControls();
+		main.api.controls.add([
+			{
+				text: '+',
+				click: main.api.zoom.in,
+				disabled: {
+					event: 'level_changed',
+					callback: function() {
+						return main.object.levels.current == main.object.levels.getLowest().level;
+					}
+				}
+			},
+			{
+				text: "\u2013",
+				click: main.api.zoom.out,
+				disabled: {
+					event: 'level_changed',
+					callback: function() {
+						return main.object.levels.current == main.object.levels.getHighest().level;
+					}
+				}
+			}
+		]);
 	}
 
 	if(main.homeButton) {
-		createHomeButton();
+		main.api.controls.add({
+			'text': "\u2302",
+			'click': main.api.reset
+		});
 	}
 
-	main.controlContainer.style.zIndex = main.object.canvas.style.zIndex +1;
 	container.appendChild(main.controlContainer);
 
 	if(!container.hasPredefinedHeight) {
