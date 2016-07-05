@@ -32,9 +32,11 @@ var helpers = {
 	 * Help set value of double (tap|click)
 	 */
 	doubleTap: function() {
-		main.globals.doubleTap =
-			main.globals.doubleTap !== null && new Date().getTime() - main.globals.doubleTap <= 250 ?
-				true : new Date().getTime();
+		if(main.globals.doubleTap !== null && new Date().getTime() - main.globals.doubleTap <= 250) {
+			main.globals.doubleTap = true;
+		} else {
+			main.globals.doubleTap = new Date().getTime();
+		}
 	},
 
 	/**
@@ -74,7 +76,7 @@ var helpers = {
 	/**
 	 * Create an html element
 	 * @param {string} tag - the tag of the element
-	 * @param {string|string[]} classes - the classes for the element
+	 * @param {string|Array} [classes] - the classes for the element
 	 * @param {Object|null} [events] - the event listeners
 	 * @returns {Element} the new element
 	 */
@@ -82,7 +84,13 @@ var helpers = {
 		var element = document.createElement(tag);
 
 		if(classes !== null) {
-			element.classList.add(classes);
+			if(!Array.isArray(classes)) {
+				classes = [classes];
+			}
+
+			classes.forEach(function(item) {
+				element.classList.add(item);
+			});
 		}
 
 		for(var event in events) {
@@ -90,6 +98,7 @@ var helpers = {
 				element.addEventListener(event, events[event]);
 			}
 		}
+
 		return element;
 	},
 
@@ -120,21 +129,24 @@ var helpers = {
 	 * Checks if the finger moved with a margin of 2 pixels
 	 * @param {object} a
 	 * @param {object} b
-	 * @returns {boolean}
+	 * @returns {boolean} if the click was within the margin
 	 */
 	validateTouchMoveClickMargin: function(a, b) {
-		return(
+		return (
 			(a.x > b.x -2 && a.x < b.x +2) &&
 			(a.y > b.y -2 && a.y < b.y +2)
 		);
 	},
 
 	/**
-	 *
+	 * Checks if the clicked object is a sibling of m4n-container
+	 * @returns {boolean} if one of the parents is the m4n-container
 	 */
 	clickedInCanvas: function(target) {
-		while (target = target.parentElement) {
-			if (target.classList.contains('m4n-container')) { return true }
+		while(target = target.parentElement) {
+			if(target.classList.contains('m4n-container')) {
+				return true;
+			}
 		}
 		return false;
 	}
