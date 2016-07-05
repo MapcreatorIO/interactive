@@ -55,7 +55,7 @@ Popup.prototype.show = function(center) {
 		var point = main.object.levels.getCurrent().points.get(this.number);
 
 		// Center the map
-		if(center === true) {
+		if(center) {
 			helpers.moveTo(point.position.left + (point.size.width / 2), point.position.top + (point.size.height / 2));
 		} else {
 			var object = { x: 0, y: 0 };
@@ -169,9 +169,9 @@ Popup.prototype.onHide = function(force) {
  */
 Popup.prototype.toggle = function(center, force) {
 	if(this.on_screen) {
-		this.hide(force);
+		this.hide(force || false);
 	} else {
-		this.show(center);
+		this.show(center || false);
 	}
 };
 
@@ -229,7 +229,7 @@ Popup.prototype.startVideo = function() {
 Popup.prototype.generateHTML = function() {
 	var title = typeof this.title !== "undefined" ? this.title : "";
 	var media = typeof this.media !== "undefined" ? this.media : null;
-	var info = typeof this.info !== "undefined" ? this.info : null;
+	var info = typeof this.info !== "undefined" ? this.info : "";
 
 	var popup = document.createElement("div");
 	popup.id = this.html_id;
@@ -369,26 +369,26 @@ Popup.prototype.generatePopover = function(popup, title_html, info_html, media_h
 		var show = {
 			above: function() {
 				triangle.classList.add("bottom");
-				popup.style.top = main.globals.offset.get().y + point.position.top - popup.clientHeight - heightTriangle + 'px';
+				popup.style.top = main.globals.offset.get().y + point.position.top - popup.clientHeight - heightTriangle + 10 + 'px';
 				popup.style.left = main.globals.offset.get().x + point.position.left + (point.size.width / 2) - (popup.clientWidth * left) + 'px';
 				triangle.style.left = (left * 100) + "%";
 			},
 			beneath: function() {
 				triangle.classList.add("top");
-				popup.style.top = main.globals.offset.get().y + point.position.top + point.size.height + heightTriangle + 'px';
+				popup.style.top = main.globals.offset.get().y + point.position.top + point.size.height + heightTriangle - 10 + 'px';
 				popup.style.left = main.globals.offset.get().x + point.position.left + (point.size.width / 2) - (popup.clientWidth * left) + 'px';
 				triangle.style.left = (left * 100) + "%";
 			},
 			left: function() {
 				triangle.classList.add("right");
 				popup.style.top = (main.globals.offset.get().y + point.position.top + (point.size.height / 2) - (popup.clientHeight * top) - 10) + 'px';
-				popup.style.left = main.globals.offset.get().x + point.position.left - popup.clientWidth - heightTriangle + 'px';
+				popup.style.left = main.globals.offset.get().x + point.position.left - popup.clientWidth - heightTriangle - 10 + 'px';
 				triangle.style.top = (top * 100) + "%";
 			},
 			right: function() {
 				triangle.classList.add("left");
 				popup.style.top = (main.globals.offset.get().y + point.position.top + (point.size.height / 2) - (popup.clientHeight * top) - 10) + 'px';
-				popup.style.left = main.globals.offset.get().x + point.position.left + point.size.width + heightTriangle + 'px';
+				popup.style.left = main.globals.offset.get().x + point.position.left + point.size.width + heightTriangle + 10 + 'px';
 				triangle.style.top = (top * 100) + "%";
 			}
 		};
