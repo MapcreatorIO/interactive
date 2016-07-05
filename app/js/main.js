@@ -8,7 +8,7 @@ var M4nInteractive = (function(options, container, callback) {
 	"use strict";
 	var main = this;
 
-	"<!= init !>";
+	"<!= options !>";
 
 	"<!= external_apis !>";
 

@@ -12,9 +12,14 @@
 	main.zoomControls = typeof options.zoomControls !== 'undefined' ? options.zoomControls : true;
 	main.homeButton = typeof options.homeButton !== 'undefined' ? options.homeButton : true;
 
-	main.version = { map: '2.0', code: '2.0.5' }; // TODO Add version to json for verification
+	main.version = { map: '2.0', code: '2.0.5' };
 
-	main.dev = main.environment == 'development' || (options.debug && options.debug == "true");
+	main.dev = (function() {
+		if(typeof options.debug !== 'undefined') {
+			return options.debug;
+		}
+		return main.environment === 'development';
+	})();
 
 	main.isMobile = /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 	main.isIframe = window.location !== window.parent.location;
