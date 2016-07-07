@@ -382,13 +382,13 @@ Popup.prototype.generatePopover = function(popup, title_html, info_html, media_h
 			left: function() {
 				triangle.classList.add("right");
 				popup.style.top = (main.globals.offset.get().y + point.position.top + (point.size.height / 2) - (popup.clientHeight * top) - 10) + 'px';
-				popup.style.left = main.globals.offset.get().x + point.position.left - popup.clientWidth - heightTriangle - 10 + 'px';
+				popup.style.left = main.globals.offset.get().x + point.position.left - popup.clientWidth - heightTriangle + 10 + 'px';
 				triangle.style.top = (top * 100) + "%";
 			},
 			right: function() {
 				triangle.classList.add("left");
 				popup.style.top = (main.globals.offset.get().y + point.position.top + (point.size.height / 2) - (popup.clientHeight * top) - 10) + 'px';
-				popup.style.left = main.globals.offset.get().x + point.position.left + point.size.width + heightTriangle + 10 + 'px';
+				popup.style.left = main.globals.offset.get().x + point.position.left + point.size.width + heightTriangle - 10 + 'px';
 				triangle.style.top = (top * 100) + "%";
 			}
 		};
