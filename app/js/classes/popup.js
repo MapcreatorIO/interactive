@@ -114,7 +114,7 @@ Popup.prototype.show = function(center) {
  */
 Popup.prototype.onShowMobile = function(point) {
 	// Overwrite with popup specific code
-	return false;
+	return this.onShowDesktop();
 };
 
 /**
@@ -451,7 +451,7 @@ Popup.prototype.generateOverlay = function(popup, title_html, info_html, media_h
 		return true;
 	};
 
-	this.onShowDesktop = this.onShowMobile = function() {
+	this.onShowDesktop = function() {
 		popup.style.display = "block";
 		popup.style.left = main.object.canvas.clientLeft + "px";
 		popup.style.top = main.object.canvas.clientTop + "px";
@@ -547,7 +547,7 @@ Popup.prototype.generateSidebar = function(popup, title_html, info_html, media_h
 		return false;
 	};
 
-	this.onShowDesktop = this.onShowMobile = function() {
+	this.onShowDesktop = function() {
 		popup.style.removeProperty("display");
 		return true;
 	};
