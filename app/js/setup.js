@@ -6,7 +6,7 @@ request.open('GET', main.json, true);
 request.onreadystatechange = function() {
 	if(request.readyState == 4 && request.status == 200) {
 		initializeM4n(request.responseText);
-	} else if(request.status !== 200) {
+	} else if([0, 200].indexOf(request.status) == -1) {
 		console.error("Something went wrong!", request);
 	}
 };
