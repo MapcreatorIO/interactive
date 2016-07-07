@@ -186,9 +186,9 @@ In the API you will find a number of functions which can be used to interact wit
 	controls: {
 		/**
 		 * Array of controls to add
-		 * @param {Array} objects - The array object
+		 * @param {Array|Object} buttons - The button or array of buttons to add
 		 */
-		add: function(objects) {}
+		add: function(buttons) {}
 	}
 }
 ```
