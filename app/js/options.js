@@ -11,6 +11,7 @@
 	main.environment = options.environment || "online";
 	main.zoomControls = typeof options.zoomControls !== 'undefined' ? options.zoomControls : true;
 	main.homeButton = typeof options.homeButton !== 'undefined' ? options.homeButton : true;
+	main.inlineObject = main.environment === 'development' && typeof options.object !== 'undefined';
 
 	main.version = { map: '2.0', code: '2.0.5' };
 
@@ -30,7 +31,7 @@
 	switch(main.environment) {
 		case 'development':
 			main.url = location.href.split("/").slice(0, -1).join("/") + '/output/' + options.path + '/';
-			main.json = main.url + 'map.json';
+			main.json = main.inlineObject ? options.object : main.url + 'map.json';
 			break;
 		case 'local':
 			main.url = options.path.replace(/\/$/, '') + '/'; // Path to images

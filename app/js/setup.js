@@ -1,16 +1,25 @@
 /**
  * Download the JSON file
  */
-var request = new XMLHttpRequest();
-request.open('GET', main.json, true);
-request.onreadystatechange = function() {
-	if(request.readyState == 4 && request.status == 200) {
-		initializeM4n(request.responseText);
-	} else if([0, 200].indexOf(request.status) == -1) {
-		console.error("Something went wrong!", request);
+if(main.inlineObject) {
+	if(typeof main.json !== "string") {
+		main.json = JSON.stringify(main.json);
 	}
-};
-request.send();
+	setTimeout(function() {
+		initializeM4n(main.json);
+	}, 0); // I'm lovin' it.
+} else {
+	var request = new XMLHttpRequest();
+	request.open('GET', main.json, true);
+	request.onreadystatechange = function() {
+		if(request.readyState == 4 && request.status == 200) {
+			initializeM4n(request.responseText);
+		} else if([0, 200].indexOf(request.status) == -1) {
+			console.error("Something went wrong!", request);
+		}
+	};
+	request.send();
+}
 
 /**
  * Initialize the map
