@@ -15,7 +15,7 @@
   display: none;
 }
 
-.m4n-popover .m4n-title {
+.m4n-popover .m4n-popover-header {
   font-size: 14px;
   line-height: 1.5;
   padding: 10px;
@@ -83,4 +83,22 @@
   background: white;
   box-shadow: -1.5px 1.5px 3px 0 rgba(0, 0, 0, 0.2);
   z-index: -1;
+}
+
+.m4n-popover-close {
+  float: right;
+  color: #888;
+  text-align: center;
+  font-family: "Arial", serif;
+  font-weight: bold;
+  cursor: pointer;
+  top: 0;
+}
+
+.m4n-popover-close:hover {
+  color: #555;
+}
+
+.m4n-popover-close::before {
+  content: '✕';
 }

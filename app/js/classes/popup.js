@@ -303,9 +303,17 @@ Popup.prototype.generatePopover = function(popup, title_html, info_html, media_h
 	popup.classList.add("m4n-popover");
 
 	var triangle = helpers.createElement("div", "m4n-popover-triangle");
+	var header = helpers.createElement("div", "m4n-popover-header");
+	var close = helpers.createElement("div", "m4n-popover-close", {
+		"click": function() { this.hide(true); }.bind(this),
+		"touchend": function() { this.hide(true); }.bind(this)
+	});
+
+	header.appendChild(close);
+	header.appendChild(title_html);
 
 	popup.appendChild(triangle);
-	popup.appendChild(title_html);
+	popup.appendChild(header);
 	popup.appendChild(media_html);
 	popup.appendChild(info_html);
 
