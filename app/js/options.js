@@ -15,17 +15,17 @@
 	main.environment = options.environment || "online";
 	main.zoomControls = typeof options.zoomControls !== 'undefined' ? options.zoomControls : true;
 	main.homeButton = typeof options.homeButton !== 'undefined' ? options.homeButton : true;
-	main.inlineObject = main.environment === 'development' && typeof options.object !== 'undefined';
 
 	main.version = { map: '2.0', code: '2.0.5' };
 
 	main.dev = (function() {
 		if(typeof options.debug !== 'undefined') {
-			return options.debug;
+			return !!options.debug;
 		}
 		return main.environment === 'development';
 	})();
 
+	main.inlineObject = main.dev && typeof options.object !== 'undefined';
 	main.isMobile = /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 	main.isIframe = window.location !== window.parent.location;
 
