@@ -42,7 +42,7 @@ function removeEventListener(event, id) {
 		throw "unknown event";
 	}
 
-	var listener = main.dispatchEvents[event][id -1];
+	var listener = main.dispatchEvents[event][id - 1];
 	if(!listener) {
 		throw "unknown listener";
 	}
@@ -51,7 +51,7 @@ function removeEventListener(event, id) {
 		console.log("Event listener for event \"" + event + "\" removed", listener);
 	}
 
-	delete main.dispatchEvents[event][id -1];
+	delete main.dispatchEvents[event][id - 1];
 }
 
 /**

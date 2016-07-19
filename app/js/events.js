@@ -101,8 +101,7 @@ var events = {
 			main.globals.isDown = false;
 			if(helpers.clickedInCanvas(e.target)) {
 				if(helpers.validateTouchMoveClickMargin(main.globals.clickStart, main.globals.dragPosition) && !main.globals.isScaling) {
-					var point = main.object.levels.getCurrent()
-						.points.hitAPoint(main.globals.dragPosition.x, main.globals.dragPosition.y);
+					var point = main.object.levels.getCurrent().points.hitAPoint(main.globals.dragPosition.x, main.globals.dragPosition.y);
 					if(point !== null && !main.globals.isScaling) {
 						main.object.popups.get(point.number).show();
 					} else {
@@ -166,8 +165,7 @@ var events = {
 			);
 			main.globals.dragPosition = { x: e.pageX, y: e.pageY };
 
-
-			main.object.context.fillRect(e.pageX - 5, e.pageY -5, 10, 10);
+			main.object.context.fillRect(e.pageX - 5, e.pageY - 5, 10, 10);
 
 			currentLevel.draw();
 		} else if(helpers.clickedInCanvas(e.target)) {
@@ -242,9 +240,9 @@ var events = {
 					};
 
 					if(!(
-						(currentLevel.level == main.object.levels.getLowest().level && !pinching) ||
-						(currentLevel.level == main.object.levels.getHighest().level && pinching)
-					)) {
+							(currentLevel.level == main.object.levels.getLowest().level && !pinching) ||
+							(currentLevel.level == main.object.levels.getHighest().level && pinching)
+						)) {
 						gPz = helpers.gesturePinchZoom(e) / 40;
 					}
 					if(gPz < 1 && gPz > -1) {
@@ -380,7 +378,11 @@ var events = {
 		}
 
 		if(!fullscreen) {
-			main.globals.videoFullscreen = { value: false, date: new Date().getTime(), noEvents: main.globals.videoFullscreen.noEvents+1 };
+			main.globals.videoFullscreen = {
+				value: false,
+				date: new Date().getTime(),
+				noEvents: main.globals.videoFullscreen.noEvents + 1
+			};
 		}
 	}
 };

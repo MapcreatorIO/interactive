@@ -32,7 +32,7 @@ function initializeM4n(mapJson) {
 	main.object = revive(mapJson);
 
 	main.controlContainer = helpers.createElement('div', 'm4n-control-container');
-	main.controlContainer.style.zIndex = main.object.canvas.style.zIndex +1;
+	main.controlContainer.style.zIndex = main.object.canvas.style.zIndex + 1;
 
 	if(main.object.levels.count() > 1 && main.zoomControls) {
 		main.api.controls.add([
@@ -84,7 +84,9 @@ function initializeM4n(mapJson) {
 	main.object.popups.generateHTML();
 	main.api.reset();
 
-	if(typeof callback === 'function') callback(returnObject);
+	if(typeof callback === 'function') {
+		callback(returnObject);
+	}
 
 	main.endTime = new Date().getTime();
 	if(main.dev) {
@@ -119,7 +121,7 @@ function enableEventListeners() {
  * @param {object} ctx - the context
  */
 function trackTransforms(ctx) {
-	var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
+	var svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 	var xform = svg.createSVGMatrix();
 	ctx.getTransform = function() { return xform; };
 
@@ -180,7 +182,8 @@ function trackTransforms(ctx) {
 
 	var pt = svg.createSVGPoint();
 	ctx.transformedPoint = function(x, y) {
-		pt.x = x; pt.y = y;
+		pt.x = x;
+		pt.y = y;
 		return pt.matrixTransform(xform.inverse());
 	};
 }

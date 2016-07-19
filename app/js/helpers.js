@@ -144,8 +144,8 @@ var helpers = {
 	 */
 	validateTouchMoveClickMargin: function(a, b) {
 		return (
-			(a.x > b.x -2 && a.x < b.x +2) &&
-			(a.y > b.y -2 && a.y < b.y +2)
+			(a.x > b.x - 2 && a.x < b.x + 2) &&
+			(a.y > b.y - 2 && a.y < b.y + 2)
 		);
 	},
 

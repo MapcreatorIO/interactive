@@ -1,46 +1,46 @@
 // Icon container position and styling
 .m4n-control-container {
-  position: absolute;
-  top: 20px;
-  right: 10px;
-  font-size: 15px;
-  font-weight: bold;
-  font-family: "Arial", serif;
-  color: #555555;
-  text-align: center;
-  pointer-events: none;
+	position: absolute;
+	top: 20px;
+	right: 10px;
+	font-size: 15px;
+	font-weight: bold;
+	font-family: "Arial", serif;
+	color: #555555;
+	text-align: center;
+	pointer-events: none;
 }
 
 .m4n-control-container > div:not(.m4n-control-separator) {
-  border-bottom: 0;
+	border-bottom: 0;
 }
 
 // Separator
 .m4n-control-container .m4n-control-separator {
-  height: 10px;
-  pointer-events: none;
+	height: 10px;
+	pointer-events: none;
 }
 
 .m4n-control-button {
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
-  cursor: pointer;
-  border: 1px solid #CCCCCC;
-  background-color: #FFFFFF;
-  pointer-events: all;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	cursor: pointer;
+	border: 1px solid #CCCCCC;
+	background-color: #FFFFFF;
+	pointer-events: all;
 }
 
 .m4n-control-button:hover {
-  background: #EFEFEF;
+	background: #EFEFEF;
 }
 
 .m4n-control-button.disabled {
-  background: #DDDDDD;
-  color: #AAAAAA;
-  cursor: not-allowed;
+	background: #DDDDDD;
+	color: #AAAAAA;
+	cursor: not-allowed;
 }
 
 .m4n-custom-control-container div.m4n-control-button::before {
-  content: attr(data-content);
+	content: attr(data-content);
 }

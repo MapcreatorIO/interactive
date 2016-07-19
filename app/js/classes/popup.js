@@ -233,7 +233,7 @@ Popup.prototype.generateHTML = function() {
 
 	var popup = document.createElement("div");
 	popup.id = this.html_id;
-	popup.style.zIndex = main.object.canvas.style.zIndex +1;
+	popup.style.zIndex = main.object.canvas.style.zIndex + 2;
 
 	var title_html = helpers.createElement("div", "m4n-title");
 	title_html.innerHTML = title;
@@ -302,18 +302,14 @@ Popup.prototype.generateHTML = function() {
 Popup.prototype.generatePopover = function(popup, title_html, info_html, media_html) {
 	popup.classList.add("m4n-popover");
 
-	var triangle = helpers.createElement("div", "m4n-popover-triangle");
-	var header = helpers.createElement("div", "m4n-popover-header");
-	var close = helpers.createElement("div", "m4n-popover-close", {
-		"click": function() { this.hide(true); }.bind(this),
-		"touchend": function() { this.hide(true); }.bind(this)
-	});
-
-	header.appendChild(close);
-	header.appendChild(title_html);
-
-	popup.appendChild(triangle);
-	popup.appendChild(header);
+	popup.appendChild(helpers.createElement("div", "m4n-popover-triangle"));
+	popup.appendChild(helpers.createElement("div", "m4n-popover-header", null, [
+		helpers.createElement("div", "m4n-popover-close", {
+			"click": this.hide.bind(this),
+			"touchend": this.hide.bind(this)
+		}),
+		title_html
+	]));
 	popup.appendChild(media_html);
 	popup.appendChild(info_html);
 
@@ -435,24 +431,17 @@ Popup.prototype.generatePopover = function(popup, title_html, info_html, media_h
 Popup.prototype.generateOverlay = function(popup, title_html, info_html, media_html) {
 	popup.classList.add("m4n-overlay");
 
-	var info_container = document.createElement("div");
-	info_container.appendChild(title_html);
-	info_container.appendChild(media_html);
-	info_container.appendChild(info_html);
-
-	var cell = document.createElement("div");
-	var aligner = document.createElement("div");
-
-	var close_button = helpers.createElement("span", "close_overlay", {
-		"click": function() { this.hide(); }.bind(this),
-		"touchend": function() { this.hide(); }.bind(this)
-	});
-
-	aligner.appendChild(info_container);
-	cell.appendChild(aligner);
-
-	popup.appendChild(cell);
-	popup.appendChild(close_button);
+	// Content
+	popup.appendChild(helpers.createElement("div", null, null, [
+		helpers.createElement("div", null, null, [
+			helpers.createElement("div", null, null, [title_html, media_html, info_html])
+		])
+	]));
+	// Close button
+	popup.appendChild(helpers.createElement("span", "close-overlay", {
+		"click": this.hide.bind(this),
+		"touchend": this.hide.bind(this)
+	}));
 
 	this.onHide = function() {
 		popup.style.display = "none";
@@ -485,65 +474,54 @@ Popup.prototype.generateSidebar = function(popup, title_html, info_html, media_h
 
 	popup.classList.add("m4n-sidebar-container");
 
-	var sidebar = helpers.createElement("div", "m4n-sidebar");
-	var header = helpers.createElement("div", "m4n-sidebar-header");
-	var close = helpers.createElement("div", "m4n-sidebar-close", {
-		"click": function() { this.hide(true); }.bind(this),
-		"touchend": function() { this.hide(true); }.bind(this)
-	});
-
-	header.appendChild(close);
-	header.appendChild(title_html);
-
-	var content = helpers.createElement("div", "m4n-sidebar-content");
-	content.appendChild(media_html);
-	content.appendChild(info_html);
-
-	var footer = helpers.createElement("div", "m4n-sidebar-footer");
-	var pagination = helpers.createElement("ul", "m4n-pagination");
-
-	var previous = helpers.createElement("li", null, {
-		"click": function() {
-			this.hide(true);
-			var new_popup;
-			if(this.number != main.object.popups.getFirst().number) {
-				new_popup = main.api.popup(this.number -1);
-			} else {
-				new_popup = main.api.popup(main.object.popups.getLast().number);
-			}
-			if(new_popup !== null) {
-				new_popup.show(true);
-			}
-		}.bind(this)
-	});
-
-	var next = helpers.createElement("li", null, {
-		"click": function() {
-			this.hide(true);
-			var new_popup;
-			if(this.number != main.object.popups.getLast().number) {
-				new_popup = main.api.popup(this.number + 1);
-			} else {
-				new_popup = main.api.popup(main.object.popups.getFirst().number);
-			}
-			if(new_popup !== null) {
-				new_popup.show(true);
-			}
-		}.bind(this)
-	});
-
-	var clear = document.createElement("div");
-	clear.style.clear = "both";
-
-	pagination.appendChild(previous);
-	pagination.appendChild(next);
-
-	footer.appendChild(pagination);
-	footer.appendChild(clear);
-
-	sidebar.appendChild(header);
-	sidebar.appendChild(content);
-	sidebar.appendChild(footer);
+	var sidebar = helpers.createElement("div", "m4n-sidebar", null, [
+		// Header
+		helpers.createElement("div", "m4n-sidebar-header", null, [
+			// Close button
+			helpers.createElement("div", "m4n-sidebar-close", {
+				"click": function() { this.hide(true); }.bind(this),
+				"touchend": function() { this.hide(true); }.bind(this)
+			}),
+			// Title
+			title_html
+		]),
+		// Content
+		helpers.createElement("div", "m4n-sidebar-content", null, [media_html, info_html]),
+		// Footer
+		helpers.createElement("div", "m4n-sidebar-footer", null, [
+			// Pagination
+			helpers.createElement("ul", "m4n-pagination", null, [
+				// Previous
+				helpers.createElement("li", null, {
+					"click": function() {
+						this.hide(true);
+						var new_popup;
+						if(this.number != main.object.popups.getFirst().number) {
+							new_popup = main.api.popup(this.number - 1);
+						} else {
+							new_popup = main.api.popup(main.object.popups.getLast().number);
+						}
+						if(!!new_popup) {
+							new_popup.show(true);
+						}
+					}.bind(this)
+				}),
+				// Next
+				helpers.createElement("li", null, {
+					"click": function() {
+						this.hide(true);
+						var new_popup;
+						if(this.number != main.object.popups.getLast().number) {
+							new_popup = main.api.popup(this.number + 1);
+						} else {
+							new_popup = main.api.popup(main.object.popups.getFirst().number);
+						}
+						if(!!new_popup) { new_popup.show(true); }
+					}.bind(this)
+				})
+			])
+		])
+	]);
 
 	popup.appendChild(sidebar);
 
