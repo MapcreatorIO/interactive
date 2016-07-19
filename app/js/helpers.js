@@ -78,12 +78,13 @@ var helpers = {
 	 * @param {string} tag - the tag of the element
 	 * @param {string|Array} [classes] - the classes for the element
 	 * @param {Object|null} [events] - the event listeners
+	 * @param {Array} [children] - array of child elements
 	 * @returns {Element} the new element
 	 */
-	createElement: function(tag, classes, events) {
+	createElement: function(tag, classes, events, children) {
 		var element = document.createElement(tag);
 
-		if(classes !== null) {
+		if(!!classes) {
 			if(!Array.isArray(classes)) {
 				classes = [classes];
 			}
@@ -93,9 +94,19 @@ var helpers = {
 			});
 		}
 
-		for(var event in events) {
-			if(events.hasOwnProperty(event)) {
-				element.addEventListener(event, events[event]);
+		if(!!events) {
+			for(var event in events) {
+				if(events.hasOwnProperty(event)) {
+					element.addEventListener(event, events[event]);
+				}
+			}
+		}
+
+		if(!!children) {
+			for(var child in children) {
+				if(children.hasOwnProperty(child)) {
+					element.appendChild(children[child]);
+				}
 			}
 		}
 
