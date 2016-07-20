@@ -57,43 +57,14 @@ Popup.prototype.show = function(center) {
 		// Center the map
 		if(center) {
 			helpers.moveTo(point.position.left + (point.size.width / 2), point.position.top + (point.size.height / 2));
-		} else {
-			var object = { x: 0, y: 0 };
-
-			var location = point.location();
-
-			if(location.location.x !== "center" || location.location.y !== "center") {
-				// Check if popup isn't wider than the canvas
-				if(!(location.left <= 5 && location.right <= 5)) {
-					if(location.left < 5) {
-						object.x = 5 - location.left;
-					} else if(location.right < 5) {
-						object.x = -(5 - location.right);
-					}
-				}
-
-				// Check if the popup isn't higher than the canvas
-				if(!(location.top <= 5 && location.bottom <= 5)) {
-					if(location.top < 5) {
-						object.y = 5 - location.top;
-					} else if(location.bottom < 5) {
-						object.y = -(5 - location.bottom);
-					}
-				}
-
-				if(object.x !== 0 || object.y !== 0) {
-					helpers.moveBy(object.x, object.y);
-				}
-			}
 		}
 
-		var wasShown = (function() {
-			if(main.isMobile) {
-				return this.onShowMobile(point);
-			} else {
-				return this.onShowDesktop(point);
-			}
-		}.bind(this))();
+		var wasShown;
+		if(main.isMobile) {
+			wasShown = this.onShowMobile(point);
+		} else {
+			wasShown = this.onShowDesktop(point);
+		}
 
 		if(wasShown) {
 			this.startVideo();
@@ -340,8 +311,8 @@ Popup.prototype.generatePopover = function(popup, title_html, info_html, media_h
 		var triangle = popup.getElementsByClassName("m4n-popover-triangle")[0];
 
 		// Position for triangle
-		var left = Math.max(0.15, Math.min(0.85, ((point.position.left + main.globals.offset.get().x) / main.object.canvas.clientWidth)));
-		var top = Math.max(0.05, Math.min(0.85, ((point.position.top + main.globals.offset.get().y) / main.object.canvas.clientHeight)));
+		var left = Math.max(0.10, Math.min(0.90, ((point.position.left + main.globals.offset.get().x) / main.object.canvas.clientWidth)));
+		var top = Math.max(0.10, Math.min(0.90, ((point.position.top + main.globals.offset.get().y) / main.object.canvas.clientHeight)));
 
 		// Bounding Client Rect of the canvas
 		var boundingRect = main.object.canvas.getBoundingClientRect();
@@ -355,19 +326,18 @@ Popup.prototype.generatePopover = function(popup, title_html, info_html, media_h
 		};
 
 		// Booleans for where the popup fits
-		var fits = {
-			onCanvas: {
-				above: formulas.above > popup.clientHeight,
-				beneath: formulas.beneath > popup.clientHeight,
-				left: formulas.left > popup.clientWidth,
-				right: formulas.right > popup.clientWidth
-			},
-			onScreen: {
-				above: (formulas.above + boundingRect.top) > popup.clientHeight,
-				beneath: (formulas.beneath + (window.innerHeight - boundingRect.height - boundingRect.top)) > popup.clientHeight,
-				left: (formulas.left + boundingRect.left) > popup.clientWidth,
-				right: (formulas.right + (window.innerWidth - boundingRect.width - boundingRect.left)) > popup.clientWidth
-			}
+		var onCanvas = {
+			above: formulas.above > popup.clientHeight,
+			beneath: formulas.beneath > popup.clientHeight,
+			left: formulas.left > popup.clientWidth,
+			right: formulas.right > popup.clientWidth
+		};
+
+		var onScreen = {
+			above: (formulas.above + boundingRect.top) > popup.clientHeight && !(formulas.left < 5 || formulas.right < 5),
+			beneath: (formulas.beneath + (window.innerHeight - boundingRect.height - boundingRect.top)) > popup.clientHeight && !(formulas.left < 5 || formulas.right < 5),
+			left: (formulas.left + boundingRect.left) > popup.clientWidth,
+			right: (formulas.right + (window.innerWidth - boundingRect.width - boundingRect.left)) > popup.clientWidth
 		};
 
 		var show = {
@@ -397,15 +367,15 @@ Popup.prototype.generatePopover = function(popup, title_html, info_html, media_h
 			}
 		};
 
-		if(fits.onCanvas.above && fits.onScreen.above) {
+		if(onCanvas.above && onScreen.above) {
 			show.above();
-		} else if(fits.onCanvas.beneath && fits.onScreen.beneath) {
+		} else if(onCanvas.beneath && onScreen.beneath) {
 			show.beneath();
 		} else {
 
-			if(fits.onCanvas.left && fits.onScreen.left) {
+			if(onCanvas.left && onScreen.left) {
 				show.left();
-			} else if(fits.onCanvas.right && fits.onScreen.right) {
+			} else if(onCanvas.right && onScreen.right) {
 				show.right();
 			} else {
 				show.above();
@@ -501,9 +471,7 @@ Popup.prototype.generateSidebar = function(popup, title_html, info_html, media_h
 						} else {
 							new_popup = main.api.popup(main.object.popups.getLast().number);
 						}
-						if(!!new_popup) {
-							new_popup.show(true);
-						}
+						if(!!new_popup) { new_popup.show(true); }
 					}.bind(this)
 				}),
 				// Next
