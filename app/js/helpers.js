@@ -124,16 +124,20 @@ var helpers = {
 	 * Show the timeout overlay
 	 */
 	showTimeoutOverlay: function() {
-		main.timeoutOverlay.style.display = "block";
-		main.globals.interact.isInteracting = false;
+		if(main.environment === 'smart') {
+			main.timeoutOverlay.style.display = "block";
+			main.globals.interact.isInteracting = false;
+		}
 	},
 
 	/**
 	 * Hide the timeout overlay
 	 */
 	hideTimeoutOverlay: function() {
-		main.timeoutOverlay.style.display = "none";
-		main.globals.interact.isInteracting = true;
+		if(main.environment === 'smart') {
+			main.timeoutOverlay.style.display = "none";
+			main.globals.interact.isInteracting = true;
+		}
 	},
 
 	/**
