@@ -295,14 +295,6 @@ Popup.prototype.generatePopover = function(popup, title_html, info_html, media_h
 		return true;
 	};
 
-	this.onShowMobile = function() {
-		popup.style.display = "block";
-		popup.style.left = (main.object.canvas.clientWidth / 2) - (popup.clientWidth / 2) - main.object.canvas.getBoundingClientRect().left + "px";
-		popup.style.top = (main.object.canvas.clientHeight / 2) - (popup.clientHeight / 2) - main.object.canvas.getBoundingClientRect().top + "px";
-
-		return true;
-	};
-
 	this.onShowDesktop = function(point) {
 		popup.style.display = "block";
 
