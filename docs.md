@@ -75,7 +75,7 @@ The M4nInteractive class accepts the following parameters:
 
   - __homeButton__. (optional; default true) Enable or disable the home button
 
-  - __debug__. (not recommended) true or false, this allows the map object to be returned from the browser's console.
+  - __debug__. (enables development mode) true or false, this allows the map object to be returned from the browser's console.
   - __object__. (only in development mode) Add your map object inline for debugging without a webserver.
 
 2. The div container node (in this case the `div` with id `m4n-map`).
@@ -318,7 +318,7 @@ The `add` method accepts a single object or an array of objects with the followi
 		disabled: {
 			event: 'level_changed',
 			callback: function() {
-				// Disable the button is the level is 0
+				// Disable the button if the level is 0
 				return mapi.api.levels().current == 0;
 			}
 		}
