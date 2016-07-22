@@ -1,4 +1,6 @@
-.m4n-container *, .m4n-container *:after, .m4n-container *:before {
+.m4n-container *,
+.m4n-container *:after,
+.m4n-container *:before {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -11,10 +13,6 @@
 
 .m4n-container::after {
 	clear: both;
-}
-
-.m4n-container img {
-	max-width: 100%;
 }
 
 .m4n-canvas {
@@ -52,6 +50,18 @@
 	z-index: 2;
 	cursor: pointer;
 	display: block;
+}
+
+// Default popup settings
+.m4n-container img {
+	max-width: 100%;
+}
+
+.m4n-container .m4n-media embed,
+.m4n-container .m4n-media object,
+.m4n-container .m4n-media video,
+.m4n-container .m4n-media iframe {
+	max-width: 100%;
 }
 
 @import "popups/popover";
