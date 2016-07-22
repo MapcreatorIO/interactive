@@ -1,71 +1,70 @@
 .m4n-overlay {
-  position: absolute;
-  top: 0;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  text-align: center;
-  width: 100%;
-  height: 100%;
-  z-index: 10;
-  overflow-y: auto;
-  display: none;
+	position: absolute;
+	top: 0;
+	background: rgba(0, 0, 0, 0.8);
+	color: white;
+	text-align: center;
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+	display: none;
 }
 
 .m4n-overlay > div {
-  display: table;
-  width: 100%;
-  height: 100%;
+	display: table;
+	width: 100%;
+	height: 100%;
 }
 
 .m4n-overlay > div > div {
-  display: table-cell;
-  vertical-align: middle;
+	display: table-cell;
+	vertical-align: middle;
 }
 
 .m4n-overlay > div > div > div {
-  margin-left: auto;
-  margin-right: auto;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .m4n-overlay .m4n-title,
 .m4n-overlay .m4n-media,
 .m4n-overlay .m4n-info {
-  max-width: 90%;
-  margin: 0 auto;
+	max-width: 90%;
+	margin: 0 auto;
 }
 
 .m4n-overlay .m4n-title {
-  font-size: 13px;
-  font-weight: bold;
-  line-height: 1.5;
-  padding-bottom: 8px;
+	font-size: 13px;
+	font-weight: bold;
+	line-height: 1.5;
+	padding-bottom: 8px;
 }
 
 .m4n-overlay .m4n-media img,
 .m4n-overlay .m4n-media iframe {
-  max-width: 100%;
-  max-height: 100%;
+	max-width: 100%;
+	max-height: 100%;
 }
 
 .m4n-overlay .m4n-info {
-  font-size: 12px;
-  font-weight: normal;
-  line-height: 1.5;
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 1.5;
 }
 
-.close_overlay::before {
-  content: '✕';
+.m4n-overlay .close-overlay::before {
+	content: "\2715";
 }
 
-.close_overlay {
-  position: absolute;
-  top: 0;
-  right: 5px;
-  font-weight: bold;
-  font-size: 20px;
-  cursor: pointer;
+.m4n-overlay .close-overlay {
+	position: absolute;
+	top: 0;
+	right: 5px;
+	font-weight: bold;
+	font-size: 20px;
+	cursor: pointer;
 }
 
-.close_overlay:hover {
-  color: grey;
+.m4n-overlay .close-overlay:hover {
+	color: grey;
 }

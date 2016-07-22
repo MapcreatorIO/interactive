@@ -60,7 +60,6 @@ Level.prototype.checkLoaded = function() {
 Level.prototype.draw = function() {
 	main.object.popups.hideAll();
 
-
 	main.object.context.save();
 	main.object.context.setTransform(1, 0, 0, 1, 0, 0);
 

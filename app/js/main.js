@@ -2,13 +2,13 @@
  * @file Maps4News Interactive Map
  * @copyright Maps4News 2016
  *
- * M4nInteractive 2.0.5
+ * M4nInteractive 2.0.5-1
  */
 var M4nInteractive = (function(options, container, callback) {
 	"use strict";
 	var main = this;
 
-	"<!= init !>";
+	"<!= options !>";
 
 	"<!= external_apis !>";
 

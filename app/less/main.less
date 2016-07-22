@@ -1,52 +1,67 @@
-.m4n-container *, .m4n-container *:after, .m4n-container *:before {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+.m4n-container *,
+.m4n-container *:after,
+.m4n-container *:before {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 .m4n-container {
-  position: relative;
-  display: inline-block;
+	position: relative;
+	display: inline-block;
 }
 
 .m4n-container::after {
-  clear: both;
+	clear: both;
 }
 
 .m4n-canvas {
-  float: left;
-  cursor: grab;
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
+	float: left;
+	cursor: grab;
+	cursor: -moz-grab;
+	cursor: -webkit-grab;
 }
 
 .m4n-canvas.grabbing {
-  cursor: grabbing;
-  cursor: -moz-grabbing;
-  cursor: -webkit-grabbing;
+	cursor: move;
+	cursor: grabbing;
+	cursor: -moz-grabbing;
+	cursor: -webkit-grabbing;
 }
 
 .m4n-canvas.pointing {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 .m4n-video::-webkit-media-controls-current-time-display,
 .m4n-video::-webkit-media-controls-time-remaining-display,
 .m4n-video::-webkit-media-controls-toggle-closed-captions-button,
 .m4n-video::-webkit-media-controls-volume-slider {
-  display:none;
+	display: none;
 }
 
 .m4n-timeout-overlay {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 2;
-  cursor: pointer;
-  display: block;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(0, 0, 0, 0.3);
+	z-index: 2;
+	cursor: pointer;
+	display: block;
+}
+
+// Default popup settings
+.m4n-container img {
+	max-width: 100%;
+}
+
+.m4n-container .m4n-media embed,
+.m4n-container .m4n-media object,
+.m4n-container .m4n-media video,
+.m4n-container .m4n-media iframe {
+	max-width: 100%;
 }
 
 @import "popups/popover";

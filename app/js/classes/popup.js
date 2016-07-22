@@ -55,45 +55,16 @@ Popup.prototype.show = function(center) {
 		var point = main.object.levels.getCurrent().points.get(this.number);
 
 		// Center the map
-		if(center === true) {
+		if(center) {
 			helpers.moveTo(point.position.left + (point.size.width / 2), point.position.top + (point.size.height / 2));
-		} else {
-			var object = { x: 0, y: 0 };
-
-			var location = point.location();
-
-			if(location.location.x !== "center" || location.location.y !== "center") {
-				// Check if popup isn't wider than the canvas
-				if(!(location.left <= 5 && location.right <= 5)) {
-					if(location.left < 5) {
-						object.x = 5 - location.left;
-					} else if(location.right < 5) {
-						object.x = -(5 - location.right);
-					}
-				}
-
-				// Check if the popup isn't higher than the canvas
-				if(!(location.top <= 5 && location.bottom <= 5)) {
-					if(location.top < 5) {
-						object.y = 5 - location.top;
-					} else if(location.bottom < 5) {
-						object.y = -(5 - location.bottom);
-					}
-				}
-
-				if(object.x !== 0 || object.y !== 0) {
-					helpers.moveBy(object.x, object.y);
-				}
-			}
 		}
 
-		var wasShown = (function() {
-			if(main.isMobile) {
-				return this.onShowMobile(point);
-			} else {
-				return this.onShowDesktop(point);
-			}
-		}.bind(this))();
+		var wasShown;
+		if(main.isMobile) {
+			wasShown = this.onShowMobile(point);
+		} else {
+			wasShown = this.onShowDesktop(point);
+		}
 
 		if(wasShown) {
 			this.startVideo();
@@ -114,7 +85,7 @@ Popup.prototype.show = function(center) {
  */
 Popup.prototype.onShowMobile = function(point) {
 	// Overwrite with popup specific code
-	return false;
+	return this.onShowDesktop();
 };
 
 /**
@@ -169,9 +140,9 @@ Popup.prototype.onHide = function(force) {
  */
 Popup.prototype.toggle = function(center, force) {
 	if(this.on_screen) {
-		this.hide(force);
+		this.hide(force || false);
 	} else {
-		this.show(center);
+		this.show(center || false);
 	}
 };
 
@@ -229,11 +200,11 @@ Popup.prototype.startVideo = function() {
 Popup.prototype.generateHTML = function() {
 	var title = typeof this.title !== "undefined" ? this.title : "";
 	var media = typeof this.media !== "undefined" ? this.media : null;
-	var info = typeof this.info !== "undefined" ? this.info : null;
+	var info = typeof this.info !== "undefined" ? this.info : "";
 
 	var popup = document.createElement("div");
 	popup.id = this.html_id;
-	popup.style.zIndex = main.object.canvas.style.zIndex +1;
+	popup.style.zIndex = main.object.canvas.style.zIndex + 2;
 
 	var title_html = helpers.createElement("div", "m4n-title");
 	title_html.innerHTML = title;
@@ -302,10 +273,14 @@ Popup.prototype.generateHTML = function() {
 Popup.prototype.generatePopover = function(popup, title_html, info_html, media_html) {
 	popup.classList.add("m4n-popover");
 
-	var triangle = helpers.createElement("div", "m4n-popover-triangle");
-
-	popup.appendChild(triangle);
-	popup.appendChild(title_html);
+	popup.appendChild(helpers.createElement("div", "m4n-popover-triangle"));
+	popup.appendChild(helpers.createElement("div", "m4n-popover-header", null, [
+		helpers.createElement("div", "m4n-popover-close", {
+			"click": this.hide.bind(this),
+			"touchend": this.hide.bind(this)
+		}),
+		title_html
+	]));
 	popup.appendChild(media_html);
 	popup.appendChild(info_html);
 
@@ -320,30 +295,22 @@ Popup.prototype.generatePopover = function(popup, title_html, info_html, media_h
 		return true;
 	};
 
-	this.onShowMobile = function() {
-		popup.style.display = "block";
-		popup.style.left = (main.object.canvas.clientWidth / 2) - (popup.clientWidth / 2) - main.object.canvas.getBoundingClientRect().left + "px";
-		popup.style.top = (main.object.canvas.clientHeight / 2) - (popup.clientHeight / 2) - main.object.canvas.getBoundingClientRect().top + "px";
-
-		return true;
-	};
-
 	this.onShowDesktop = function(point) {
 		popup.style.display = "block";
 
 		// Triangle
-		var heightTriangle = 16.97056274847714; // 24 = width of a triangle plus the border
 		var triangle = popup.getElementsByClassName("m4n-popover-triangle")[0];
-
-		// Position for triangle
-		var left = Math.max(0.15, Math.min(0.85, ((point.position.left + main.globals.offset.get().x) / main.object.canvas.clientWidth)));
-		var top = Math.max(0.05, Math.min(0.85, ((point.position.top + main.globals.offset.get().y) / main.object.canvas.clientHeight)));
+		var heightTriangle = Math.sqrt(triangle.clientHeight * triangle.clientHeight + triangle.clientWidth * triangle.clientWidth);
 
 		// Bounding Client Rect of the canvas
 		var boundingRect = main.object.canvas.getBoundingClientRect();
 
+		// Position for triangle
+		var top = Math.max(0.05, Math.min(0.85, ((point.position.top + main.globals.offset.get().y) / main.object.canvas.clientHeight)));
+		var left = Math.max(0.15, Math.min(0.85, ((point.position.left + main.globals.offset.get().x) / main.object.canvas.clientWidth)));
+
 		// Formulas for where the popup fits
-		var formulas = {
+		var sides = {
 			above: main.globals.offset.get().y + point.position.top - heightTriangle,
 			beneath: boundingRect.height - (main.globals.offset.get().y + point.position.top + point.size.height) - heightTriangle,
 			left: main.globals.offset.get().x + point.position.left - heightTriangle,
@@ -351,59 +318,81 @@ Popup.prototype.generatePopover = function(popup, title_html, info_html, media_h
 		};
 
 		// Booleans for where the popup fits
-		var fits = {
-			onCanvas: {
-				above: formulas.above > popup.clientHeight,
-				beneath: formulas.beneath > popup.clientHeight,
-				left: formulas.left > popup.clientWidth,
-				right: formulas.right > popup.clientWidth
-			},
-			onScreen: {
-				above: (formulas.above + boundingRect.top) > popup.clientHeight,
-				beneath: (formulas.beneath + (window.innerHeight - boundingRect.height - boundingRect.top)) > popup.clientHeight,
-				left: (formulas.left + boundingRect.left) > popup.clientWidth,
-				right: (formulas.right + (window.innerWidth - boundingRect.width - boundingRect.left)) > popup.clientWidth
-			}
+		var fitsOnCanvas = {
+			above: sides.above > popup.clientHeight,
+			beneath: sides.beneath > popup.clientHeight,
+			left: sides.left > popup.clientWidth,
+			right: sides.right > popup.clientWidth
+		};
+
+		var fitsOnScreen = {
+			above: (sides.above + boundingRect.top) > popup.clientHeight,
+			beneath: (sides.beneath + (window.innerHeight - boundingRect.height - boundingRect.top)) > popup.clientHeight,
+			left: (sides.left + boundingRect.left) > popup.clientWidth,
+			right: (sides.right + (window.innerWidth - boundingRect.width - boundingRect.left)) > popup.clientWidth
 		};
 
 		var show = {
 			above: function() {
 				triangle.classList.add("bottom");
-				popup.style.top = main.globals.offset.get().y + point.position.top - popup.clientHeight - heightTriangle + 'px';
+				popup.style.top = main.globals.offset.get().y + point.position.top - popup.clientHeight - (heightTriangle / 2) + main.hotspotMargin + 'px';
 				popup.style.left = main.globals.offset.get().x + point.position.left + (point.size.width / 2) - (popup.clientWidth * left) + 'px';
 				triangle.style.left = (left * 100) + "%";
 			},
 			beneath: function() {
 				triangle.classList.add("top");
-				popup.style.top = main.globals.offset.get().y + point.position.top + point.size.height + heightTriangle + 'px';
+				popup.style.top = main.globals.offset.get().y + point.position.top + point.size.height + (heightTriangle / 2) - main.hotspotMargin + 'px';
 				popup.style.left = main.globals.offset.get().x + point.position.left + (point.size.width / 2) - (popup.clientWidth * left) + 'px';
 				triangle.style.left = (left * 100) + "%";
 			},
 			left: function() {
 				triangle.classList.add("right");
 				popup.style.top = (main.globals.offset.get().y + point.position.top + (point.size.height / 2) - (popup.clientHeight * top) - 10) + 'px';
-				popup.style.left = main.globals.offset.get().x + point.position.left - popup.clientWidth - heightTriangle + 'px';
+				popup.style.left = main.globals.offset.get().x + point.position.left - popup.clientWidth - (heightTriangle / 2) + main.hotspotMargin + 'px';
 				triangle.style.top = (top * 100) + "%";
 			},
 			right: function() {
 				triangle.classList.add("left");
 				popup.style.top = (main.globals.offset.get().y + point.position.top + (point.size.height / 2) - (popup.clientHeight * top) - 10) + 'px';
-				popup.style.left = main.globals.offset.get().x + point.position.left + point.size.width + heightTriangle + 'px';
+				popup.style.left = main.globals.offset.get().x + point.position.left + point.size.width + (heightTriangle / 2) - main.hotspotMargin + 'px';
 				triangle.style.top = (top * 100) + "%";
 			}
 		};
 
-		if(fits.onCanvas.above && fits.onScreen.above) {
+		var lowest = (function() {
+			var object = null;
+			for(var side in sides) {
+				if(sides.hasOwnProperty(side) && (object == null || object.value > sides[side])) {
+					object = { key: side, value: sides[side] }
+				}
+			}
+
+			return object;
+		})();
+
+		// Placement logic
+		if(lowest.value < 0) {
+			if(lowest.key == "above") {
+				show.beneath();
+			} else if(lowest.key == "beneath") {
+				show.above();
+			} else if(lowest.key == "left") {
+				show.right();
+			} else if(lowest.key == "right") {
+				show.left();
+			}
+		} else if(fitsOnCanvas.above && fitsOnScreen.above) {
 			show.above();
-		} else if(fits.onCanvas.beneath && fits.onScreen.beneath) {
+		} else if(fitsOnCanvas.beneath && fitsOnScreen.beneath) {
 			show.beneath();
 		} else {
 
-			if(fits.onCanvas.left && fits.onScreen.left) {
+			if(fitsOnCanvas.left && fitsOnScreen.left) {
 				show.left();
-			} else if(fits.onCanvas.right && fits.onScreen.right) {
+			} else if(fitsOnCanvas.right && fitsOnScreen.right) {
 				show.right();
 			} else {
+				// TODO move map to fit popup
 				show.above();
 			}
 
@@ -427,31 +416,24 @@ Popup.prototype.generatePopover = function(popup, title_html, info_html, media_h
 Popup.prototype.generateOverlay = function(popup, title_html, info_html, media_html) {
 	popup.classList.add("m4n-overlay");
 
-	var info_container = document.createElement("div");
-	info_container.appendChild(title_html);
-	info_container.appendChild(media_html);
-	info_container.appendChild(info_html);
-
-	var cell = document.createElement("div");
-	var aligner = document.createElement("div");
-
-	var close_button = helpers.createElement("span", "close_overlay", {
-		"click": function() { this.hide(); }.bind(this),
-		"touchend": function() { this.hide(); }.bind(this)
-	});
-
-	aligner.appendChild(info_container);
-	cell.appendChild(aligner);
-
-	popup.appendChild(cell);
-	popup.appendChild(close_button);
+	// Content
+	popup.appendChild(helpers.createElement("div", null, null, [
+		helpers.createElement("div", null, null, [
+			helpers.createElement("div", null, null, [title_html, media_html, info_html])
+		])
+	]));
+	// Close button
+	popup.appendChild(helpers.createElement("span", "close-overlay", {
+		"click": this.hide.bind(this),
+		"touchend": this.hide.bind(this)
+	}));
 
 	this.onHide = function() {
 		popup.style.display = "none";
 		return true;
 	};
 
-	this.onShowDesktop = this.onShowMobile = function() {
+	this.onShowDesktop = function() {
 		popup.style.display = "block";
 		popup.style.left = main.object.canvas.clientLeft + "px";
 		popup.style.top = main.object.canvas.clientTop + "px";
@@ -477,65 +459,52 @@ Popup.prototype.generateSidebar = function(popup, title_html, info_html, media_h
 
 	popup.classList.add("m4n-sidebar-container");
 
-	var sidebar = helpers.createElement("div", "m4n-sidebar");
-	var header = helpers.createElement("div", "m4n-sidebar-header");
-	var close = helpers.createElement("div", "m4n-sidebar-close", {
-		"click": function() { this.hide(true); }.bind(this),
-		"touchend": function() { this.hide(true); }.bind(this)
-	});
-
-	header.appendChild(close);
-	header.appendChild(title_html);
-
-	var content = helpers.createElement("div", "m4n-sidebar-content");
-	content.appendChild(media_html);
-	content.appendChild(info_html);
-
-	var footer = helpers.createElement("div", "m4n-sidebar-footer");
-	var pagination = helpers.createElement("ul", "m4n-pagination");
-
-	var previous = helpers.createElement("li", null, {
-		"click": function() {
-			this.hide(true);
-			var new_popup;
-			if(this.number != main.object.popups.getFirst().number) {
-				new_popup = main.api.popup(this.number -1);
-			} else {
-				new_popup = main.api.popup(main.object.popups.getLast().number);
-			}
-			if(new_popup !== null) {
-				new_popup.show(true);
-			}
-		}.bind(this)
-	});
-
-	var next = helpers.createElement("li", null, {
-		"click": function() {
-			this.hide(true);
-			var new_popup;
-			if(this.number != main.object.popups.getLast().number) {
-				new_popup = main.api.popup(this.number + 1);
-			} else {
-				new_popup = main.api.popup(main.object.popups.getFirst().number);
-			}
-			if(new_popup !== null) {
-				new_popup.show(true);
-			}
-		}.bind(this)
-	});
-
-	var clear = document.createElement("div");
-	clear.style.clear = "both";
-
-	pagination.appendChild(previous);
-	pagination.appendChild(next);
-
-	footer.appendChild(pagination);
-	footer.appendChild(clear);
-
-	sidebar.appendChild(header);
-	sidebar.appendChild(content);
-	sidebar.appendChild(footer);
+	var sidebar = helpers.createElement("div", "m4n-sidebar", null, [
+		// Header
+		helpers.createElement("div", "m4n-sidebar-header", null, [
+			// Close button
+			helpers.createElement("div", "m4n-sidebar-close", {
+				"click": function() { this.hide(true); }.bind(this),
+				"touchend": function() { this.hide(true); }.bind(this)
+			}),
+			// Title
+			title_html
+		]),
+		// Content
+		helpers.createElement("div", "m4n-sidebar-content", null, [media_html, info_html]),
+		// Footer
+		helpers.createElement("div", "m4n-sidebar-footer", null, [
+			// Pagination
+			helpers.createElement("ul", "m4n-pagination", null, [
+				// Previous
+				helpers.createElement("li", null, {
+					"click": function() {
+						this.hide(true);
+						var new_popup;
+						if(this.number != main.object.popups.getFirst().number) {
+							new_popup = main.api.popup(this.number - 1);
+						} else {
+							new_popup = main.api.popup(main.object.popups.getLast().number);
+						}
+						if(!!new_popup) { new_popup.show(true); }
+					}.bind(this)
+				}),
+				// Next
+				helpers.createElement("li", null, {
+					"click": function() {
+						this.hide(true);
+						var new_popup;
+						if(this.number != main.object.popups.getLast().number) {
+							new_popup = main.api.popup(this.number + 1);
+						} else {
+							new_popup = main.api.popup(main.object.popups.getFirst().number);
+						}
+						if(!!new_popup) { new_popup.show(true); }
+					}.bind(this)
+				})
+			])
+		])
+	]);
 
 	popup.appendChild(sidebar);
 
@@ -547,7 +516,7 @@ Popup.prototype.generateSidebar = function(popup, title_html, info_html, media_h
 		return false;
 	};
 
-	this.onShowDesktop = this.onShowMobile = function() {
+	this.onShowDesktop = function() {
 		popup.style.removeProperty("display");
 		return true;
 	};

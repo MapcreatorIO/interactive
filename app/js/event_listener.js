@@ -5,12 +5,21 @@
  * @returns {number} The listener id
  */
 function addEventListener(event, callback) {
-	if(typeof event !== 'string') { throw "event must be a string; " + event + " given"; }
-	if(typeof callback !== 'function') { throw "callback must be a function"; }
+	if(typeof event !== 'string') {
+		throw "event must be a string; " + event + " given";
+	}
 
-	if(!main.dispatchEvents[event]) { main.dispatchEvents[event] = []; }
+	if(typeof callback !== 'function') {
+		throw "callback must be a function";
+	}
 
-	if(main.dev) { console.log("Event listener for event \"" + event + "\" added", callback); }
+	if(!main.dispatchEvents[event]) {
+		main.dispatchEvents[event] = [];
+	}
+
+	if(main.dev) {
+		console.debug("Event listener for event \"" + event + "\" added", callback);
+	}
 
 	return main.dispatchEvents[event].push(callback);
 }
@@ -21,21 +30,34 @@ function addEventListener(event, callback) {
  * @param {number} id - the id of the listener
  */
 function removeEventListener(event, id) {
-	if(typeof event !== 'string') { throw "event must be a string; " + event + " given"; }
-	if(typeof id !== 'number') { throw "id must be a number; " + id + " given"; }
+	if(typeof event !== 'string') {
+		throw "event must be a string; " + event + " given";
+	}
 
-	if(!main.dispatchEvents[event]) { throw "unknown event"; }
-	if(!main.dispatchEvents[event][id -1]) { throw "unknown listener"; }
+	if(typeof id !== 'number') {
+		throw "id must be a number; " + id + " given";
+	}
 
-	if(main.dev) { console.log("Event listener for event \"" + event + "\" removed", main.dispatchEvents[event][id -1]); }
+	if(!main.dispatchEvents[event]) {
+		throw "unknown event";
+	}
 
-	delete main.dispatchEvents[event][id -1];
+	var listener = main.dispatchEvents[event][id - 1];
+	if(!listener) {
+		throw "unknown listener";
+	}
+
+	if(main.dev) {
+		console.debug("Event listener for event \"" + event + "\" removed", listener);
+	}
+
+	delete main.dispatchEvents[event][id - 1];
 }
 
 /**
  * Trigger a custom event
  * @param {string} event - the name of the event that should be triggered
- * @param {object} object - the parameter for the callback function
+ * @param {object} object - the parameter for the listener
  */
 function triggerEvent(event, object) {
 	if(main.dispatchEvents[event]) {

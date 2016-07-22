@@ -1,16 +1,25 @@
 /**
  * Download the JSON file
  */
-var request = new XMLHttpRequest();
-request.open('GET', main.json, true);
-request.onreadystatechange = function() {
-	if(request.readyState == 4 && request.status == 200) {
-		initializeM4n(request.responseText);
-	} else if(request.status !== 200) {
-		console.error("Something went wrong!", request);
+if(main.inlineObject) {
+	if(typeof main.json !== "string") {
+		main.json = JSON.stringify(main.json);
 	}
-};
-request.send();
+	setTimeout(function() {
+		initializeM4n(main.json);
+	}, 0); // I'm lovin' it.
+} else {
+	var request = new XMLHttpRequest();
+	request.open('GET', main.json, true);
+	request.onreadystatechange = function() {
+		if(request.readyState == 4 && request.status == 200) {
+			initializeM4n(request.responseText);
+		} else if([0, 200].indexOf(request.status) == -1) {
+			console.error("Something went wrong!", request);
+		}
+	};
+	request.send();
+}
 
 /**
  * Initialize the map
@@ -23,16 +32,40 @@ function initializeM4n(mapJson) {
 	main.object = revive(mapJson);
 
 	main.controlContainer = helpers.createElement('div', 'm4n-control-container');
+	main.controlContainer.style.zIndex = main.object.canvas.style.zIndex + 1;
 
 	if(main.object.levels.count() > 1 && main.zoomControls) {
-		createZoomControls();
+		main.api.controls.add([
+			{
+				text: '+',
+				click: main.api.zoom.in,
+				disabled: {
+					event: 'level_changed',
+					callback: function() {
+						return main.object.levels.current == main.object.levels.getLowest().level;
+					}
+				}
+			},
+			{
+				text: "\u2013",
+				click: main.api.zoom.out,
+				disabled: {
+					event: 'level_changed',
+					callback: function() {
+						return main.object.levels.current == main.object.levels.getHighest().level;
+					}
+				}
+			}
+		]);
 	}
 
 	if(main.homeButton) {
-		createHomeButton();
+		main.api.controls.add({
+			'text': "\u2302",
+			'click': main.api.reset
+		});
 	}
 
-	main.controlContainer.style.zIndex = main.object.canvas.style.zIndex +1;
 	container.appendChild(main.controlContainer);
 
 	if(!container.hasPredefinedHeight) {
@@ -51,7 +84,9 @@ function initializeM4n(mapJson) {
 	main.object.popups.generateHTML();
 	main.api.reset();
 
-	if(typeof callback === 'function') callback(returnObject);
+	if(typeof callback === 'function') {
+		callback(returnObject);
+	}
 
 	main.endTime = new Date().getTime();
 	if(main.dev) {
@@ -86,9 +121,9 @@ function enableEventListeners() {
  * @param {object} ctx - the context
  */
 function trackTransforms(ctx) {
-	var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
+	var svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 	var xform = svg.createSVGMatrix();
-	ctx.getTransform = function(){ return xform; };
+	ctx.getTransform = function() { return xform; };
 
 	var savedTransforms = [];
 	var save = ctx.save;
@@ -147,7 +182,8 @@ function trackTransforms(ctx) {
 
 	var pt = svg.createSVGPoint();
 	ctx.transformedPoint = function(x, y) {
-		pt.x = x; pt.y = y;
+		pt.x = x;
+		pt.y = y;
 		return pt.matrixTransform(xform.inverse());
 	};
 }
@@ -221,7 +257,33 @@ function createHtmlElements() {
 		document.head.appendChild(style);
 	}
 
-	"<!= custom_style !>";
+	// Reload custom css file
+	var customStyle = document.getElementById("m4n-style-custom");
+	if(customStyle !== null) {
+		var newCustomStyle = document.createElement("link");
+		newCustomStyle.id = "m4n-style-custom";
+		newCustomStyle.rel = "stylesheet";
+		newCustomStyle.type = "text/css";
+		newCustomStyle.href = customStyle.href;
+
+		document.head.removeChild(customStyle);
+		document.head.appendChild(newCustomStyle);
+	}
+
+	// Create the canvas
+	var canvas = document.getElementById(main.canvas);
+	if(canvas !== null) {
+		if(canvas.classList.contains("m4n-canvas")) {
+			throw "Map already initialized for " + main.canvas;
+		} else {
+			main.canvas = main.canvas + "-" + Math.random().toString(36).substring(7);
+			canvas = helpers.createElement("canvas", "m4n-canvas");
+			canvas.id = main.canvas;
+		}
+	} else {
+		canvas = helpers.createElement("canvas", "m4n-canvas");
+		canvas.id = main.canvas;
+	}
 
 	"<!= smart_overlay !>";
 
@@ -240,9 +302,5 @@ function createHtmlElements() {
 	canvas.height = container.clientHeight;
 	canvas.width = container.clientWidth;
 }
-
-"<!= zoom_controls !>";
-
-"<!= home_button !>";
 
 "<!= event_listener !>";

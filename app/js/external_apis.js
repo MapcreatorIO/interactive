@@ -50,5 +50,11 @@ document.addEventListener("onYouTubeIframeAPIReady", externalAPIs.youtube.enable
  * "onYouTubeIframeAPIReady" is a core function from the youtube api
  */
 window.onYouTubeIframeAPIReady = function() {
-	document.dispatchEvent(new CustomEvent("onYouTubeIframeAPIReady", null));
+	if(document.createEvent) {
+		var event = document.createEvent("Event");
+		event.initEvent("onYouTubeIframeAPIReady", false, false);
+		document.dispatchEvent(event);
+	} else {
+		document.dispatchEvent(new Event("onYouTubeIframeAPIReady"));
+	}
 };

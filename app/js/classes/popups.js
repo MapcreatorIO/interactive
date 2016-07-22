@@ -67,7 +67,7 @@ Popups.prototype.getFirst = function() {
  * @returns {Popup}
  */
 Popups.prototype.getLast = function() {
-	return this.list[this.list.length -1];
+	return this.list[this.list.length - 1];
 };
 
 /**

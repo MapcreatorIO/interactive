@@ -1,110 +1,108 @@
 .m4n-sidebar-container {
-  display: inline-block;
-  position: absolute;
-  pointer-events: none;
-  width: 230px;
-  top: 20px;
-  bottom: 20px;
-  left: 20px;
-  font-size: 12px;
-  max-height: 100%;
-  z-index: 10;
+	display: inline-block;
+	position: absolute;
+	pointer-events: none;
+	width: 230px;
+	top: 20px;
+	bottom: 20px;
+	left: 20px;
+	font-size: 12px;
+	max-height: 100%;
 }
 
 .m4n-sidebar {
-  max-height: inherit;
-  position: relative;
-  background: white;
-  box-shadow: 0 0 4px 0 #aaa;
-  pointer-events: auto;
+	max-height: inherit;
+	position: relative;
+	background: white;
+	box-shadow: 0 0 4px 0 #AAAAAA;
+	pointer-events: auto;
 }
 
 .m4n-sidebar > div {
-  display: inline-block;
+	display: inline-block;
 }
 
 .m4n-sidebar-header {
-  top: 0;
-  font-size: 16px;
-  font-weight: bold;
-  width: 100%;
-  padding: 10px 10px;
-  background: inherit;
+	top: 0;
+	font-size: 16px;
+	font-weight: bold;
+	width: 100%;
+	padding: 10px 10px;
+	background: inherit;
 }
 
 .m4n-sidebar-footer {
-  height: 40px;
-  background: #ddd;
-  width: 100%;
-  padding: 0;
+	height: 40px;
+	background: #DDDDDD;
+	width: 100%;
+	padding: 0;
 }
 
 .m4n-sidebar-content {
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: ~"calc(100% - 119px)";
-  padding: 10px;
-  width: 100%;
-  background: inherit;
-  word-break: break-all;
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-height: ~"calc(100% - 119px)";
+	padding: 10px;
+	width: 100%;
+	background: inherit;
+	word-break: break-all;
 }
 
 .m4n-sidebar .m4n-title {
-  margin-top: 4px;
+	margin-top: 4px;
 }
 
 .m4n-sidebar .m4n-media {
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .m4n-sidebar .m4n-media iframe,
 .m4n-sidebar .m4n-media img {
-  max-width: 100%;
-  margin-bottom: 5px;
+	margin-bottom: 5px;
 }
 
 .m4n-sidebar-close {
-  float: right;
-  color: #ccc;
-  text-align: center;
-  font-family: "Arial", serif;
-  font-weight: bold;
-  font-size: 20px;
-  cursor: pointer;
-  top: 0;
+	float: right;
+	color: #CCCCCC;
+	text-align: center;
+	font-family: "Arial", serif;
+	font-weight: bold;
+	font-size: 20px;
+	cursor: pointer;
+	top: 0;
 }
 
 .m4n-sidebar-close:hover {
-  color: #aaa;
+	color: #AAAAAA;
 }
 
 .m4n-sidebar-close::before {
-  content: '✕';
+	content: "\2715";
 }
 
 .m4n-pagination {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  color: #333;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	color: #333333;
 }
 
 .m4n-pagination li {
-  display: inline-block;
-  cursor: pointer;
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOYAAAAoCAYAAADqiIZ/AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNrs3Mtpw0AUBVBJFbgEl+ASrBK0DJgUFwJZTglJCS7BJbgES2YCIUTIiwRe5p0Dwsg7c+cyHyx1HQAAAAAAAAAA8P/0mX7sy+vbbv44ztfH8+npKn6ZRTUkC/h9vsryWe+RmRkzQMCHL1+f52s0c8rMjBkn4K7eFxUIq6xklmLmHJKW8tPe+A9rLZsU5RwSl3JZDk3Gf1hTzShlOfvEpVz2KmfjP3SOh5rjWgGb3XP2SolyKqZSopwJ95hFKdtTMxs39pxNnbAPYgfF/GtTXdb85L7Mrcsi2lvKNnXC7vAH+0vFVE6UMm0xlVMp7TGDqoGNG3tO/5WNq2QtZdPFfLCcF+M/rEvWUjZfzI1yNneS15hpJbMUj32leYPBtz2nZzFlppjBgj52Xi0iMwAAAAAAAAAAgF93E2AAKdG+bRyMOEsAAAAASUVORK5CYII=") no-repeat;
-  width: 50%;
-  height: 40px;
+	display: inline-block;
+	cursor: pointer;
+	background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOYAAAAoCAYAAADqiIZ/AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNrs3Mtpw0AUBVBJFbgEl+ASrBK0DJgUFwJZTglJCS7BJbgES2YCIUTIiwRe5p0Dwsg7c+cyHyx1HQAAAAAAAAAA8P/0mX7sy+vbbv44ztfH8+npKn6ZRTUkC/h9vsryWe+RmRkzQMCHL1+f52s0c8rMjBkn4K7eFxUIq6xklmLmHJKW8tPe+A9rLZsU5RwSl3JZDk3Gf1hTzShlOfvEpVz2KmfjP3SOh5rjWgGb3XP2SolyKqZSopwJ95hFKdtTMxs39pxNnbAPYgfF/GtTXdb85L7Mrcsi2lvKNnXC7vAH+0vFVE6UMm0xlVMp7TGDqoGNG3tO/5WNq2QtZdPFfLCcF+M/rEvWUjZfzI1yNneS15hpJbMUj32leYPBtz2nZzFlppjBgj52Xi0iMwAAAAAAAAAAgF93E2AAKdG+bRyMOEsAAAAASUVORK5CYII=") no-repeat;
+	width: 50%;
+	height: 40px;
 }
 
 .m4n-pagination li:hover {
-  background-color: rgb(230,230,230);
+	background-color: rgb(230, 230, 230);
 }
 
 .m4n-pagination li:first-child {
-  background-position: 0 0;
+	background-position: 0 0;
 }
 
 .m4n-pagination li:last-child {
-  background-position: -115px 0;
+	background-position: -115px 0;
 }

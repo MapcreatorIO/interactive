@@ -15,12 +15,12 @@ var Point = function(point) {
 	}
 
 	this.position = {
-		left: Math.min.apply(null, this.shape.map(function(item) { return item.x })) - 10,
-		top: Math.min.apply(null, this.shape.map(function(item) { return item.y })) - 10
+		left: Math.min.apply(null, this.shape.map(function(item) { return item.x })) - main.hotspotMargin,
+		top: Math.min.apply(null, this.shape.map(function(item) { return item.y })) - main.hotspotMargin
 	};
 	this.size = {
-		width: Math.max.apply(null, this.shape.map(function(item) { return item.x })) - this.position.left + 10,
-		height: Math.max.apply(null, this.shape.map(function(item) { return item.y })) - this.position.top + 10
+		width: Math.max.apply(null, this.shape.map(function(item) { return item.x })) - this.position.left + main.hotspotMargin,
+		height: Math.max.apply(null, this.shape.map(function(item) { return item.y })) - this.position.top + main.hotspotMargin
 	};
 };
 
@@ -49,38 +49,4 @@ Point.prototype.isOn = function(x, y) {
 		y > this.position.top + main.globals.offset.get().y &&
 		y < this.position.top + this.size.height + main.globals.offset.get().y
 	);
-};
-
-/**
- * Get info about the current position of a point
- * @returns {object}
- */
-Point.prototype.location = function() {
-	var object = {
-		left: this.position.left + main.globals.offset.get().x,
-		top: this.position.top + main.globals.offset.get().y,
-		right: -(this.position.left + main.globals.offset.get().x - main.object.canvas.clientWidth + this.size.width),
-		bottom: -(this.position.top + main.globals.offset.get().y - main.object.canvas.clientHeight + this.size.height)
-	};
-
-	object.location = {
-		x: (function() {
-			if(object.left < 5) {
-				return "left";
-			} else if(object.right < 5) {
-				return "right";
-			}
-			return "center";
-		})(),
-		y: (function() {
-			if(object.top < 5) {
-				return "above";
-			} else if(object.bottom < 5) {
-				return "beneath";
-			}
-			return "center";
-		})()
-	};
-
-	return object;
 };
