@@ -18,7 +18,7 @@ function addEventListener(event, callback) {
 	}
 
 	if(main.dev) {
-		console.log("Event listener for event \"" + event + "\" added", callback);
+		console.debug("Event listener for event \"" + event + "\" added", callback);
 	}
 
 	return main.dispatchEvents[event].push(callback);
@@ -48,7 +48,7 @@ function removeEventListener(event, id) {
 	}
 
 	if(main.dev) {
-		console.log("Event listener for event \"" + event + "\" removed", listener);
+		console.debug("Event listener for event \"" + event + "\" removed", listener);
 	}
 
 	delete main.dispatchEvents[event][id - 1];
