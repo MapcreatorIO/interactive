@@ -17,7 +17,7 @@
 	main.homeButton = typeof options.homeButton !== 'undefined' ? options.homeButton : true;
 	main.hotspotMargin = parseInt(options.hotspotMargin) || 10;
 
-	main.version = { map: '2.0', code: '2.0.5' };
+	main.version = { map: '2.0', code: '2.0.5-1' };
 
 	main.dev = (function() {
 		if(typeof options.debug !== 'undefined') {
