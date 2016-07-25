@@ -10,10 +10,10 @@ var events = {
 	 */
 	mouseDown: function(e) {
 		e.preventDefault();
-		if(main.object.levels.getCurrent().isOn(e.layerX, e.layerY)) {
+		if(main.object.levels.getCurrent().isOn(e.offsetX, e.offsetY)) {
 			helpers.doubleTap();
-			main.globals.clickStart = { x: e.pageX, y: e.pageY };
-			main.globals.dragPosition = { x: e.pageX, y: e.pageY };
+			main.globals.clickStart = { x: e.offsetX, y: e.offsetY };
+			main.globals.dragPosition = { x: e.offsetX, y: e.offsetY };
 			if(e.which === 1) {
 				main.globals.isDown = true;
 				main.object.canvas.classList.add('grabbing');
@@ -27,20 +27,24 @@ var events = {
 	 */
 	touchStart: function(e) {
 		e.preventDefault();
-		if(main.object.levels.getCurrent().isOn(e.touches[0].clientX, e.touches[0].clientY)) {
+		helpers.setMobileOffset(e);
+
+		var fingers = e.touches;
+
+		if(main.object.levels.getCurrent().isOn(fingers[0].offsetX, fingers[0].offsetY)) {
 			helpers.doubleTap();
 			main.globals.isDown = true;
-			main.globals.dragPosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-			main.globals.clickStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+			main.globals.dragPosition = { x: fingers[0].offsetX, y: fingers[0].offsetY };
+			main.globals.clickStart = { x: fingers[0].offsetX, y: fingers[0].offsetY };
 		}
 
 		// Pinch to zoom
 		if(e.touches.length == 2) {
 			main.globals.isScaling = true;
-			// main.object.context.save();
 			main.globals.startDistance = Math.sqrt(
-				(e.touches[0].pageX - e.touches[1].pageX) * (e.touches[0].pageX - e.touches[1].pageX) +
-				(e.touches[0].pageY - e.touches[1].pageY) * (e.touches[0].pageY - e.touches[1].pageY));
+				(fingers[0].offsetX - fingers[1].offsetX) * (fingers[0].offsetX - fingers[1].offsetX) +
+				(fingers[0].offsetY - fingers[1].offsetY) * (fingers[0].offsetY - fingers[1].offsetY)
+			);
 		}
 
 		// Android zoom
@@ -50,8 +54,8 @@ var events = {
 		// 	main.globals.startDistance = 1;
 		//
 		// 	main.globals.lastPos = {
-		// 		x: (main.globals.clickStart.x + e.touches[0].pageX) / 2,
-		// 		y: (main.globals.clickStart.y + e.touches[0].pageY) / 2
+		// 		x: (main.globals.clickStart.x + fingers[0].offsetX) / 2,
+		// 		y: (main.globals.clickStart.y + fingers[0].offsetY) / 2
 		// 	};
 		// }
 	},
@@ -63,15 +67,13 @@ var events = {
 	mouseUp: function(e) {
 		if(helpers.isInteracting() && !helpers.clickedInCanvas(e.target) && !main.globals.isDown) {
 			helpers.showTimeoutOverlay();
-		}
-
-		if(main.globals.isDown) {
+		} else if(main.globals.isDown) {
 			e.preventDefault();
 			main.globals.isDown = false;
 			main.object.canvas.classList.remove('grabbing');
 			if(helpers.clickedInCanvas(e.target)) {
-				if(e.pageX == main.globals.clickStart.x && e.pageY == main.globals.clickStart.y) {
-					var point = main.object.levels.getCurrent().points.hitAPoint(e.layerX, e.layerY);
+				if(e.offsetX == main.globals.clickStart.x && e.offsetY == main.globals.clickStart.y) {
+					var point = main.object.levels.getCurrent().points.hitAPoint(e.offsetX, e.offsetY);
 					if(point !== null && e.which === 1) {
 						main.object.popups.get(point.number).show();
 					} else {
@@ -94,11 +96,10 @@ var events = {
 	touchEnd: function(e) {
 		if(helpers.isInteracting() && !helpers.clickedInCanvas(e.target) && !main.globals.isDown) {
 			helpers.showTimeoutOverlay();
-		}
-
-		if(main.globals.isDown) {
+		} else if(main.globals.isDown) {
 			e.preventDefault();
 			main.globals.isDown = false;
+
 			if(helpers.clickedInCanvas(e.target)) {
 				if(helpers.validateTouchMoveClickMargin(main.globals.clickStart, main.globals.dragPosition) && !main.globals.isScaling) {
 					var point = main.object.levels.getCurrent().points.hitAPoint(main.globals.dragPosition.x, main.globals.dragPosition.y);
@@ -160,16 +161,14 @@ var events = {
 			main.object.canvas.classList.add('grabbing');
 
 			main.globals.offset.changeBy(
-				e.pageX - main.globals.dragPosition.x,
-				e.pageY - main.globals.dragPosition.y
+				e.offsetX - main.globals.dragPosition.x,
+				e.offsetY - main.globals.dragPosition.y
 			);
-			main.globals.dragPosition = { x: e.pageX, y: e.pageY };
-
-			main.object.context.fillRect(e.pageX - 5, e.pageY - 5, 10, 10);
+			main.globals.dragPosition = { x: e.offsetX, y: e.offsetY };
 
 			currentLevel.draw();
 		} else if(helpers.clickedInCanvas(e.target)) {
-			var point = currentLevel.points.hitAPoint(e.layerX, e.layerY);
+			var point = currentLevel.points.hitAPoint(e.offsetX, e.offsetY);
 
 			if(point !== null) {
 				main.object.canvas.classList.add('pointing');
@@ -191,7 +190,9 @@ var events = {
 	 * When the user moves his/her finger
 	 * @param e - The event object
 	 */
-	touchMove: function(e) { // TODO not preventdefault when interacting
+	touchMove: function(e) {
+		helpers.setMobileOffset(e);
+
 		if(main.globals.isDown && helpers.isInteracting()) {
 			e.preventDefault();
 
@@ -202,14 +203,19 @@ var events = {
 			if(fingers.length === 1) {
 				var finger = fingers[0];
 				var new_offset = {
-					x: main.globals.offset.get().x + finger.clientX - main.globals.dragPosition.x,
-					y: main.globals.offset.get().y + finger.clientY - main.globals.dragPosition.y
+					x: main.globals.offset.get().x + finger.offsetX - main.globals.dragPosition.x,
+					y: main.globals.offset.get().y + finger.offsetY - main.globals.dragPosition.y
 				};
-				if(new_offset.x !== main.globals.offset.get().x && new_offset.y !== main.globals.offset.get().y) {
-					if(main.globals.doubleTap === true && main.globals.isScaling) { // if the user has double tapped and is holding down his/her finger
+
+				if(
+					new_offset.x !== main.globals.offset.get().x &&
+					new_offset.y !== main.globals.offset.get().y
+				) {
+					// if the user has double tapped and is holding down his/her finger
+					if(main.globals.doubleTap === true && main.globals.isScaling) {
 						main.globals.newDistance = Math.sqrt(
-							(main.globals.clickStart.x - fingers[0].pageX) * (main.globals.clickStart.x - fingers[0].pageX) +
-							(main.globals.clickStart.y - fingers[0].pageY) * (main.globals.clickStart.y - fingers[0].pageY)
+							(main.globals.clickStart.x - fingers[0].offsetX) * (main.globals.clickStart.x - fingers[0].offsetX) +
+							(main.globals.clickStart.y - fingers[0].offsetY) * (main.globals.clickStart.y - fingers[0].offsetY)
 						);
 
 						gPz = helpers.gesturePinchZoom(e) / 40;
@@ -221,22 +227,22 @@ var events = {
 						main.globals.offset.changeTo(new_offset.x, new_offset.y);
 						currentLevel.draw();
 					}
-					main.globals.dragPosition = { x: finger.clientX, y: finger.clientY };
+					main.globals.dragPosition = { x: finger.offsetX, y: finger.offsetY };
 				}
 			} else if(fingers.length === 2) {
 				if(main.globals.isScaling === true) {
 					// Todo: improve delta calculation
 					var newDistance = Math.sqrt(
-						(fingers[0].pageX - fingers[1].pageX) * (fingers[0].pageX - fingers[1].pageX) +
-						(fingers[0].pageY - fingers[1].pageY) * (fingers[0].pageY - fingers[1].pageY)
+						(fingers[0].offsetX - fingers[1].offsetX) * (fingers[0].offsetX - fingers[1].offsetX) +
+						(fingers[0].offsetY - fingers[1].offsetY) * (fingers[0].offsetY - fingers[1].offsetY)
 					);
 
 					var pinching = newDistance < main.globals.newDistance;
 
 					main.globals.newDistance = newDistance;
 					main.globals.lastPos = {
-						x: (fingers[0].pageX + fingers[1].pageX) / 2,
-						y: (fingers[0].pageY + fingers[1].pageY) / 2
+						x: (fingers[0].offsetX + fingers[1].offsetX) / 2,
+						y: (fingers[0].offsetY + fingers[1].offsetY) / 2
 					};
 
 					if(!(
@@ -290,8 +296,8 @@ var events = {
 
 				if(levels[1] !== null) {
 					main.globals.offset.changeTo(
-						e.layerX - (levels[1].size.width / levels[0].size.width) * (e.layerX - main.globals.offset.get().x),
-						e.layerY - (levels[1].size.height / levels[0].size.height) * (e.layerY - main.globals.offset.get().y)
+						e.offsetX - (levels[1].size.width / levels[0].size.width) * (e.offsetX - main.globals.offset.get().x),
+						e.offsetY - (levels[1].size.height / levels[0].size.height) * (e.offsetY - main.globals.offset.get().y)
 					);
 					main.object.levels.change(levels[0].level + direction);
 				}
@@ -306,7 +312,7 @@ var events = {
 	dblclick: function(e) {
 		if(
 			helpers.clickedInCanvas(e.target) &&
-			main.object.levels.getCurrent().isOn(e.layerX, e.layerY) &&
+			main.object.levels.getCurrent().isOn(e.offsetX, e.offsetY) &&
 			helpers.isInteracting()
 		) {
 			var currentLevel = main.object.levels.getCurrent();
@@ -316,8 +322,8 @@ var events = {
 
 			if(newLevel !== null) {
 				main.globals.offset.changeTo(
-					e.layerX - (newLevel.size.width / currentLevel.size.width) * (e.layerX - main.globals.offset.get().x),
-					e.layerY - (newLevel.size.height / currentLevel.size.height) * (e.layerY - main.globals.offset.get().y)
+					e.offsetX - (newLevel.size.width / currentLevel.size.width) * (e.offsetX - main.globals.offset.get().x),
+					e.offsetY - (newLevel.size.height / currentLevel.size.height) * (e.offsetY - main.globals.offset.get().y)
 				);
 				main.object.levels.change(newLevel.level);
 			}
@@ -329,7 +335,11 @@ var events = {
 	 * @param e - The event object
 	 */
 	dbltap: function(e) {
-		if(helpers.clickedInCanvas(e.target) && main.object.levels.isOn(main.globals.dragPosition.x, main.globals.dragPosition.y)) {
+		if(
+			helpers.clickedInCanvas(e.target) &&
+			main.object.levels.getCurrent().isOn(main.globals.dragPosition.x, main.globals.dragPosition.y) &&
+			helpers.isInteracting()
+		) {
 			var levels = main.object.levels.getLevels([main.object.levels.current, main.object.levels.current + 1]);
 			if(levels[1] !== null) {
 				main.globals.offset.changeTo(

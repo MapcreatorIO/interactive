@@ -164,5 +164,16 @@ var helpers = {
 			}
 		}
 		return false;
+	},
+
+	setMobileOffset: function(event) {
+		var boundingRect = event.target.getBoundingClientRect();
+
+		for(var touch in event.touches) {
+			if(event.touches.hasOwnProperty(touch)) {
+				event.touches[touch].offsetX = event.touches[touch].pageX - boundingRect.left;
+				event.touches[touch].offsetY = event.touches[touch].pageY - boundingRect.top;
+			}
+		}
 	}
 };
