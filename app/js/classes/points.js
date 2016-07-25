@@ -28,11 +28,12 @@ Points.prototype.draw = function() {
  * Returns the point a user clicked on
  * @param {number} x - The x value from the user
  * @param {number} y - The y value from the user
+ * @param {number} [r] - The radius for a touch
  * @returns {Point|null} The point the user clicked on
  */
-Points.prototype.hitAPoint = function(x, y) {
+Points.prototype.hitAPoint = function(x, y, r) {
 	for(var i = 0; i < this.list.length; i++) {
-		if(this.list[i].isOn(x, y)) {
+		if(this.list[i].isOn(x, y, r)) {
 			return this.list[i];
 		}
 	}

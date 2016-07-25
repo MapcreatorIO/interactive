@@ -102,7 +102,7 @@ var events = {
 
 			if(helpers.clickedInCanvas(e.target)) {
 				if(helpers.validateTouchMoveClickMargin(main.globals.clickStart, main.globals.dragPosition) && !main.globals.isScaling) {
-					var point = main.object.levels.getCurrent().points.hitAPoint(main.globals.dragPosition.x, main.globals.dragPosition.y);
+					var point = main.object.levels.getCurrent().points.hitAPoint(main.globals.dragPosition.x, main.globals.dragPosition.y, 10);
 					if(point !== null && !main.globals.isScaling) {
 						main.object.popups.get(point.number).show();
 					} else {

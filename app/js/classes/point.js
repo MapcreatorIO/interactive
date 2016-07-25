@@ -40,13 +40,33 @@ Point.prototype.draw = function() {
  * Check if the user clicked on a specific point
  * @param {number} x - The x value from the user
  * @param {number} y - The y value from the user
+ * @param {number} [r] - The radius for a touch
  * @returns {boolean} Did the user click on a point?
  */
-Point.prototype.isOn = function(x, y) {
-	return (
-		x > this.position.left + main.globals.offset.get().x &&
-		x < this.position.left + this.size.width + main.globals.offset.get().x &&
-		y > this.position.top + main.globals.offset.get().y &&
-		y < this.position.top + this.size.height + main.globals.offset.get().y
-	);
+Point.prototype.isOn = function(x, y, r) {
+	var circle = {
+		x: x,
+		y: y,
+		r: r || 1
+	};
+	var rect = {
+		x: this.position.left + main.globals.offset.get().x,
+		y: this.position.top + main.globals.offset.get().y,
+		w: this.size.width,
+		h: this.size.height
+	};
+
+	var distX = Math.abs(circle.x - rect.x - rect.w / 2);
+	var distY = Math.abs(circle.y - rect.y - rect.h / 2);
+
+	if(distX > (rect.w / 2 + circle.r)) { return false; }
+	if(distY > (rect.h / 2 + circle.r)) { return false; }
+
+	if(distX <= (rect.w / 2)) { return true; }
+	if(distY <= (rect.h / 2)) { return true; }
+
+	var dx = distX - rect.w / 2;
+	var dy = distY - rect.h / 2;
+
+	return (dx * dx + dy * dy <= (circle.r * circle.r));
 };

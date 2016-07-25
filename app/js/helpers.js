@@ -166,6 +166,10 @@ var helpers = {
 		return false;
 	},
 
+	/**
+	 * Calculates the offset(X/Y) for TouchEvents
+	 * @param event - The event object
+	 */
 	setMobileOffset: function(event) {
 		var boundingRect = event.target.getBoundingClientRect();
 
