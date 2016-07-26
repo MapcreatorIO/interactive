@@ -56,6 +56,10 @@ module.exports = function(grunt) {
 						cwd: 'include/',
 						src: '**',
 						dest: 'dist/'
+					},
+					{
+						src: 'readme.txt',
+						dest: 'dist/'
 					}
 				]
 			}
