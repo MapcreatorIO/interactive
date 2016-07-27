@@ -27,20 +27,24 @@ var events = {
 	 */
 	touchStart: function(e) {
 		e.preventDefault();
-		if(main.object.levels.getCurrent().isOn(e.touches[0].clientX, e.touches[0].clientY)) {
-			helpers.doubleTap();
+
+		var bRect = e.target.getBoundingClientRect();
+
+		if(main.object.levels.getCurrent().isOn(e.touches[0].clientX - bRect.left, e.touches[0].clientY - bRect.top, e.target)) {
 			main.globals.isDown = true;
+			helpers.doubleTap();
+
 			main.globals.dragPosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
 			main.globals.clickStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-		}
 
-		// Pinch to zoom
-		if(e.touches.length == 2) {
-			main.globals.isScaling = true;
-			// main.object.context.save();
-			main.globals.startDistance = Math.sqrt(
-				(e.touches[0].pageX - e.touches[1].pageX) * (e.touches[0].pageX - e.touches[1].pageX) +
-				(e.touches[0].pageY - e.touches[1].pageY) * (e.touches[0].pageY - e.touches[1].pageY));
+			// Pinch to zoom
+			if(e.touches.length == 2) {
+				main.globals.isScaling = true;
+				// main.object.context.save();
+				main.globals.startDistance = Math.sqrt(
+					(e.touches[0].pageX - e.touches[1].pageX) * (e.touches[0].pageX - e.touches[1].pageX) +
+					(e.touches[0].pageY - e.touches[1].pageY) * (e.touches[0].pageY - e.touches[1].pageY));
+			}
 		}
 
 		// Android zoom
@@ -329,7 +333,7 @@ var events = {
 	 * @param e - The event object
 	 */
 	dbltap: function(e) {
-		if(helpers.clickedInCanvas(e.target) && main.object.levels.isOn(main.globals.dragPosition.x, main.globals.dragPosition.y)) {
+		if(helpers.clickedInCanvas(e.target) && main.object.levels.getCurrent().isOn(main.globals.dragPosition.x, main.globals.dragPosition.y)) {
 			var levels = main.object.levels.getLevels([main.object.levels.current, main.object.levels.current + 1]);
 			if(levels[1] !== null) {
 				main.globals.offset.changeTo(
