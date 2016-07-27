@@ -164,5 +164,25 @@ var helpers = {
 			}
 		}
 		return false;
+	},
+
+	/**
+	 * Calculates the offset(X/Y) for TouchEvents
+	 * @param event - The event object
+	 */
+	setMobileOffset: function(event) {
+		var offset = {};
+		var boundingRect = event.target.getBoundingClientRect();
+
+		for(var touch in event.touches) {
+			if(event.touches.hasOwnProperty(touch)) {
+				offset[touch] = {
+					x: event.touches[touch].pageX - boundingRect.left,
+					y: event.touches[touch].pageY - boundingRect.top
+				};
+			}
+		}
+
+		return offset;
 	}
 };
