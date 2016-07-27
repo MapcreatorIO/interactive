@@ -30,32 +30,19 @@ var events = {
 		var offset = helpers.setMobileOffset(e);
 
 		if(main.object.levels.getCurrent().isOn(offset[0].x, offset[0].y)) {
-			helpers.doubleTap();
 			main.globals.isDown = true;
 			main.globals.dragPosition = { x: offset[0].x, y: offset[0].y };
 			main.globals.clickStart = { x: offset[0].x, y: offset[0].y };
-		}
 
-		// Pinch to zoom
-		if(e.touches.length == 2) {
-			main.globals.isScaling = true;
-			main.globals.startDistance = Math.sqrt(
-				(offset[0].x - offset[1].x) * (offset[0].x - offset[1].x) +
-				(offset[0].y - offset[1].y) * (offset[0].y - offset[1].y)
-			);
+			// Pinch to zoom
+			if(e.touches.length == 2) {
+				main.globals.isScaling = true;
+				main.globals.startDistance = Math.sqrt(
+					(offset[0].x - offset[1].x) * (offset[0].x - offset[1].x) +
+					(offset[0].y - offset[1].y) * (offset[0].y - offset[1].y)
+				);
+			}
 		}
-
-		// Android zoom
-		// if(e.touches.length == 1 && main.globals.doubleTap === true) {
-		// 	main.globals.isScaling = true;
-		// 	// main.object.context.save();
-		// 	main.globals.startDistance = 1;
-		//
-		// 	main.globals.lastPos = {
-		// 		x: (main.globals.clickStart.x + fingers[0].offsetX) / 2,
-		// 		y: (main.globals.clickStart.y + fingers[0].offsetY) / 2
-		// 	};
-		// }
 	},
 
 	/**

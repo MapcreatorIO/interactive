@@ -177,8 +177,8 @@ var helpers = {
 		for(var touch in event.touches) {
 			if(event.touches.hasOwnProperty(touch)) {
 				offset[touch] = {
-					x: event.touches[touch].pageX - boundingRect.left,
-					y: event.touches[touch].pageY - boundingRect.top
+					x: event.touches[touch].clientX - boundingRect.left,
+					y: event.touches[touch].clientY - boundingRect.top
 				};
 			}
 		}
