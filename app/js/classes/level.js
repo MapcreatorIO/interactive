@@ -98,11 +98,13 @@ Level.prototype.load = function() {
  * @returns {boolean} Is the cursor on the map?
  */
 Level.prototype.isOn = function(x, y) {
+	var offset = main.globals.offset.get();
+
 	return (
-		x > main.globals.offset.get().x &&
-		x < this.size.width + main.globals.offset.get().x &&
-		y > main.globals.offset.get().y &&
-		y < this.size.height + main.globals.offset.get().y
+		x > offset.x &&
+		x < this.size.width + offset.x &&
+		y > offset.y &&
+		y < this.size.height + offset.y
 	);
 };
 
