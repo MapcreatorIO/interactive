@@ -329,7 +329,7 @@ var events = {
 	 * @param e - The event object
 	 */
 	dbltap: function(e) {
-		if(helpers.clickedInCanvas(e.target) && main.object.levels.isOn(main.globals.dragPosition.x, main.globals.dragPosition.y)) {
+		if(helpers.clickedInCanvas(e.target) && main.object.levels.getCurrent().isOn(main.globals.dragPosition.x, main.globals.dragPosition.y)) {
 			var levels = main.object.levels.getLevels([main.object.levels.current, main.object.levels.current + 1]);
 			if(levels[1] !== null) {
 				main.globals.offset.changeTo(
