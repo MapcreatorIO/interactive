@@ -85,7 +85,7 @@ Popup.prototype.show = function(center) {
  */
 Popup.prototype.onShowMobile = function(point) {
 	// Overwrite with popup specific code
-	return this.onShowDesktop();
+	return this.onShowDesktop(point);
 };
 
 /**
