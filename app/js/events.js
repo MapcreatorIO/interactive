@@ -27,23 +27,21 @@ var events = {
 	 */
 	touchStart: function(e) {
 		e.preventDefault();
-		helpers.setMobileOffset(e);
+		var offset = helpers.setMobileOffset(e);
 
-		var fingers = e.touches;
-
-		if(main.object.levels.getCurrent().isOn(fingers[0].offsetX, fingers[0].offsetY)) {
+		if(main.object.levels.getCurrent().isOn(offset[0].x, offset[0].y)) {
 			helpers.doubleTap();
 			main.globals.isDown = true;
-			main.globals.dragPosition = { x: fingers[0].offsetX, y: fingers[0].offsetY };
-			main.globals.clickStart = { x: fingers[0].offsetX, y: fingers[0].offsetY };
+			main.globals.dragPosition = { x: offset[0].x, y: offset[0].y };
+			main.globals.clickStart = { x: offset[0].x, y: offset[0].y };
 		}
 
 		// Pinch to zoom
 		if(e.touches.length == 2) {
 			main.globals.isScaling = true;
 			main.globals.startDistance = Math.sqrt(
-				(fingers[0].offsetX - fingers[1].offsetX) * (fingers[0].offsetX - fingers[1].offsetX) +
-				(fingers[0].offsetY - fingers[1].offsetY) * (fingers[0].offsetY - fingers[1].offsetY)
+				(offset[0].x - offset[1].x) * (offset[0].x - offset[1].x) +
+				(offset[0].y - offset[1].y) * (offset[0].y - offset[1].y)
 			);
 		}
 
@@ -191,20 +189,18 @@ var events = {
 	 * @param e - The event object
 	 */
 	touchMove: function(e) {
-		helpers.setMobileOffset(e);
+		var offset = helpers.setMobileOffset(e);
 
 		if(main.globals.isDown && helpers.isInteracting()) {
 			e.preventDefault();
 
-			var fingers = e.touches;
 			var currentLevel = main.object.levels.getCurrent();
 
 			var gPz;
-			if(fingers.length === 1) {
-				var finger = fingers[0];
+			if(event.touches.length === 1) {
 				var new_offset = {
-					x: main.globals.offset.get().x + finger.offsetX - main.globals.dragPosition.x,
-					y: main.globals.offset.get().y + finger.offsetY - main.globals.dragPosition.y
+					x: main.globals.offset.get().x + offset[0].x - main.globals.dragPosition.x,
+					y: main.globals.offset.get().y + offset[0].y - main.globals.dragPosition.y
 				};
 
 				if(
@@ -214,8 +210,8 @@ var events = {
 					// if the user has double tapped and is holding down his/her finger
 					if(main.globals.doubleTap === true && main.globals.isScaling) {
 						main.globals.newDistance = Math.sqrt(
-							(main.globals.clickStart.x - fingers[0].offsetX) * (main.globals.clickStart.x - fingers[0].offsetX) +
-							(main.globals.clickStart.y - fingers[0].offsetY) * (main.globals.clickStart.y - fingers[0].offsetY)
+							(main.globals.clickStart.x - offset[0].x) * (main.globals.clickStart.x - offset[0].x) +
+							(main.globals.clickStart.y - offset[0].y) * (main.globals.clickStart.y - offset[0].y)
 						);
 
 						gPz = helpers.gesturePinchZoom(e) / 40;
@@ -227,22 +223,22 @@ var events = {
 						main.globals.offset.changeTo(new_offset.x, new_offset.y);
 						currentLevel.draw();
 					}
-					main.globals.dragPosition = { x: finger.offsetX, y: finger.offsetY };
+					main.globals.dragPosition = { x: offset[0].x, y: offset[0].y };
 				}
-			} else if(fingers.length === 2) {
+			} else if(event.touches.length === 2) {
 				if(main.globals.isScaling === true) {
 					// Todo: improve delta calculation
 					var newDistance = Math.sqrt(
-						(fingers[0].offsetX - fingers[1].offsetX) * (fingers[0].offsetX - fingers[1].offsetX) +
-						(fingers[0].offsetY - fingers[1].offsetY) * (fingers[0].offsetY - fingers[1].offsetY)
+						(offset[0].x - offset[1].x) * (offset[0].x - offset[1].x) +
+						(offset[0].y - offset[1].y) * (offset[0].y - offset[1].y)
 					);
 
 					var pinching = newDistance < main.globals.newDistance;
 
 					main.globals.newDistance = newDistance;
 					main.globals.lastPos = {
-						x: (fingers[0].offsetX + fingers[1].offsetX) / 2,
-						y: (fingers[0].offsetY + fingers[1].offsetY) / 2
+						x: (offset[0].x + offset[1].x) / 2,
+						y: (offset[0].y + offset[1].y) / 2
 					};
 
 					if(!(

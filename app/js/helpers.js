@@ -171,13 +171,18 @@ var helpers = {
 	 * @param event - The event object
 	 */
 	setMobileOffset: function(event) {
+		var offset = {};
 		var boundingRect = event.target.getBoundingClientRect();
 
 		for(var touch in event.touches) {
 			if(event.touches.hasOwnProperty(touch)) {
-				event.touches[touch].offsetX = event.touches[touch].pageX - boundingRect.left;
-				event.touches[touch].offsetY = event.touches[touch].pageY - boundingRect.top;
+				offset[touch] = {
+					x: event.touches[touch].pageX - boundingRect.left,
+					y: event.touches[touch].pageY - boundingRect.top
+				};
 			}
 		}
+
+		return offset;
 	}
 };
