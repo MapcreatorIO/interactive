@@ -4,7 +4,8 @@
   "description": "Maps4News Interactive Map",
   "main": "dist/m4n.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "grunt --file production && nodeunit test/buildFilesTest.js"
   },
   "keywords": [
     "map"
@@ -20,6 +21,7 @@
     "grunt-contrib-template": "^1.0",
     "grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-jsbeautifier": "^0.2.10"
+    "grunt-jsbeautifier": "^0.2.10",
+    "nodeunit": "latest"
   }
 }
