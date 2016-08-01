@@ -30,6 +30,7 @@ var events = {
 		var offset = helpers.setMobileOffset(e);
 
 		if(main.object.levels.getCurrent().isOn(offset[0].x, offset[0].y)) {
+			helpers.doubleTap();
 			main.globals.isDown = true;
 			main.globals.dragPosition = { x: offset[0].x, y: offset[0].y };
 			main.globals.clickStart = { x: offset[0].x, y: offset[0].y };
