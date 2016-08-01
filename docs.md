@@ -75,7 +75,6 @@ The M4nInteractive class accepts the following parameters:
   - __homeButton__. (optional; default true) Enable or disable the home button
   - __debug__. (enables development mode) true or false, this allows the map object to be returned from the browser's console.
   - __object__. (only in development mode) Add your map object inline for debugging without a webserver.
-  - __hotspotMargin__. (optional; default 10) The number of pixels of margin to add to the hotspots.
 
 2. The div container node (in this case the `div` with id `m4n-map`).
 3. The callback (optional), this will be called after the map has finished initializing. Best used for subscribing to custom events. The callback function has 1 parameter, the map object, as described below.

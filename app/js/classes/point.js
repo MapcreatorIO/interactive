@@ -15,12 +15,12 @@ var Point = function(point) {
 	}
 
 	this.position = {
-		left: Math.min.apply(null, this.shape.map(function(item) { return item.x })) - main.hotspotMargin,
-		top: Math.min.apply(null, this.shape.map(function(item) { return item.y })) - main.hotspotMargin
+		left: Math.min.apply(null, this.shape.map(function(item) { return item.x })),
+		top: Math.min.apply(null, this.shape.map(function(item) { return item.y }))
 	};
 	this.size = {
-		width: Math.max.apply(null, this.shape.map(function(item) { return item.x })) - this.position.left + main.hotspotMargin,
-		height: Math.max.apply(null, this.shape.map(function(item) { return item.y })) - this.position.top + main.hotspotMargin
+		width: Math.max.apply(null, this.shape.map(function(item) { return item.x })) - this.position.left,
+		height: Math.max.apply(null, this.shape.map(function(item) { return item.y })) - this.position.top
 	};
 };
 

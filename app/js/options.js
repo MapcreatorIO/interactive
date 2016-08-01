@@ -15,7 +15,6 @@
 	main.environment = options.environment || "online";
 	main.zoomControls = typeof options.zoomControls !== 'undefined' ? options.zoomControls : true;
 	main.homeButton = typeof options.homeButton !== 'undefined' ? options.homeButton : true;
-	main.hotspotMargin = parseInt(options.hotspotMargin) || 10;
 
 	main.version = { map: '2.0', code: '2.0.5-2' };
 
