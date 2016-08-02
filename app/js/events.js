@@ -114,12 +114,11 @@ var events = {
 
 				var currentLevel = main.object.levels.getCurrent();
 				var newLevel = main.object.levels.getLevel(currentLevel.level + function() {
-							if(difference > 0) { return steps; }
-							else { return -steps; }
+							return (difference > 0) ? steps : -steps;
 						}()) || currentLevel;
 
 				if(steps > 0) {
-					var pinchCentre = { x: main.globals.lastPos.x, y: main.globals.lastPos.y };
+					var pinchCentre = main.globals.lastPos;
 
 					main.globals.offset.changeTo(
 						pinchCentre.x - (newLevel.size.width / currentLevel.size.width) * (pinchCentre.x - main.globals.offset.get().x),

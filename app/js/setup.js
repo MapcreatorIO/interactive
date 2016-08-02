@@ -61,8 +61,8 @@ function initializeM4n(mapJson) {
 
 	if(main.homeButton) {
 		main.api.controls.add({
-			'text': "\u2302",
-			'click': main.api.reset
+			text: "\u2302",
+			click: main.api.reset
 		});
 	}
 
