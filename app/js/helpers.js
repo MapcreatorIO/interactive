@@ -5,6 +5,18 @@
 var helpers = {
 
 	/**
+	 * Start the drawing of the map 60FPS
+	 */
+	startDrawing: function() {
+		requestAnimationFrame(function() {
+			main.object.levels.getCurrent().draw();
+			if(main.globals.isDown) {
+				helpers.startDrawing();
+			}
+		});
+	},
+
+	/**
 	 * Moves the canvas to a specific location
 	 * @param {number} x - the x value (map offset)
 	 * @param {number} y - the y value (map offset)

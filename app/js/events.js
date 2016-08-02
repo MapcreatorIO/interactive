@@ -15,6 +15,7 @@ var events = {
 			main.globals.clickStart = { x: e.offsetX, y: e.offsetY };
 			main.globals.dragPosition = { x: e.offsetX, y: e.offsetY };
 			if(e.which === 1) {
+				helpers.startDrawing();
 				main.globals.isDown = true;
 				main.object.canvas.classList.add('grabbing');
 			}
@@ -30,6 +31,7 @@ var events = {
 		var offset = helpers.setMobileOffset(e);
 
 		if(main.object.levels.getCurrent().isOn(offset[0].x, offset[0].y)) {
+			helpers.startDrawing();
 			helpers.doubleTap();
 			main.globals.isDown = true;
 			main.globals.dragPosition = { x: offset[0].x, y: offset[0].y };
@@ -129,7 +131,6 @@ var events = {
 					main.globals.isScaling = false;
 				}
 				main.object.context.setTransform(1, 0, 0, 1, 0, 0);
-				newLevel.draw();
 			}
 		}
 	},
@@ -143,6 +144,8 @@ var events = {
 		if(main.globals.isDown && helpers.isInteracting()) {
 			e.preventDefault();
 
+			main.object.popups.hideAll();
+
 			main.object.canvas.classList.remove('pointing');
 			main.object.canvas.classList.add('grabbing');
 
@@ -151,8 +154,6 @@ var events = {
 				e.offsetY - main.globals.dragPosition.y
 			);
 			main.globals.dragPosition = { x: e.offsetX, y: e.offsetY };
-
-			currentLevel.draw();
 		} else if(helpers.clickedInCanvas(e.target)) {
 			var point = currentLevel.points.hitAPoint(e.offsetX, e.offsetY);
 
@@ -208,8 +209,8 @@ var events = {
 							helpers.zoom(gPz);
 						}
 					} else { // Drag the map
+						main.object.popups.hideAll();
 						main.globals.offset.changeTo(new_offset.x, new_offset.y);
-						currentLevel.draw();
 					}
 					main.globals.dragPosition = { x: offset[0].x, y: offset[0].y };
 				}
@@ -233,6 +234,7 @@ var events = {
 							(currentLevel.level == main.object.levels.getLowest().level && !pinching) ||
 							(currentLevel.level == main.object.levels.getHighest().level && pinching)
 						)) {
+						main.object.popups.hideAll();
 						gPz = helpers.gesturePinchZoom(e) / 40;
 					}
 					if(gPz < 1 && gPz > -1) {
@@ -368,6 +370,7 @@ var events = {
 				-((current.w - main.object.canvas.width) / 2),
 				-((current.h - main.object.canvas.height) / 2)
 			);
+			main.object.popups.hideAll();
 			currentLevel.draw();
 		}
 

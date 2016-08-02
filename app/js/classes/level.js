@@ -58,8 +58,6 @@ Level.prototype.checkLoaded = function() {
  * Draws a level on screen
  */
 Level.prototype.draw = function() {
-	main.object.popups.hideAll();
-
 	main.object.context.save();
 	main.object.context.setTransform(1, 0, 0, 1, 0, 0);
 
