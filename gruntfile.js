@@ -4,15 +4,11 @@ module.exports = function(grunt) {
 
 		watch: {
 			javascript: {
-				files: [
-					'app/**/*.js'
-				],
+				files: ['app/**/*.js'],
 				tasks: ['template', 'jsbeautifier']
 			},
 			less: {
-				files: [
-					'app/**/*.less'
-				],
+				files: ['app/**/*.less'],
 				tasks: ['less']
 			}
 		},
@@ -55,10 +51,6 @@ module.exports = function(grunt) {
 						expand: true,
 						cwd: 'include/',
 						src: '**',
-						dest: 'dist/'
-					},
-					{
-						src: 'readme.txt',
 						dest: 'dist/'
 					}
 				]

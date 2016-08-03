@@ -181,6 +181,7 @@ Levels.prototype.change = function(level) {
 				}
 			});
 		} else {
+			main.object.popups.hideAll();
 			changeTo(levels[0]);
 		}
 

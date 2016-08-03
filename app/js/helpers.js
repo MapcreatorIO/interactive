@@ -5,6 +5,18 @@
 var helpers = {
 
 	/**
+	 * Start the drawing of the map 60FPS
+	 */
+	startDrawing: function() {
+		requestAnimationFrame(function() {
+			main.object.levels.getCurrent().draw();
+			if(main.globals.isDown) {
+				helpers.startDrawing();
+			}
+		});
+	},
+
+	/**
 	 * Moves the canvas to a specific location
 	 * @param {number} x - the x value (map offset)
 	 * @param {number} y - the y value (map offset)
@@ -164,5 +176,25 @@ var helpers = {
 			}
 		}
 		return false;
+	},
+
+	/**
+	 * Calculates the offset(X/Y) for TouchEvents
+	 * @param event - The event object
+	 */
+	setMobileOffset: function(event) {
+		var offset = {};
+		var boundingRect = event.target.getBoundingClientRect();
+
+		for(var touch in event.touches) {
+			if(event.touches.hasOwnProperty(touch)) {
+				offset[touch] = {
+					x: event.touches[touch].clientX - boundingRect.left,
+					y: event.touches[touch].clientY - boundingRect.top
+				};
+			}
+		}
+
+		return offset;
 	}
 };
