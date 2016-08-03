@@ -2,7 +2,7 @@
  * @file Maps4News Interactive Map
  * @copyright Maps4News 2016
  *
- * M4nInteractive 2.0.5-2
+ * M4nInteractive 2.0.6
  */
 var M4nInteractive = (function(options, container, callback) {
 	"use strict";

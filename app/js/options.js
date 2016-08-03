@@ -16,7 +16,7 @@
 	main.zoomControls = typeof options.zoomControls !== 'undefined' ? options.zoomControls : true;
 	main.homeButton = typeof options.homeButton !== 'undefined' ? options.homeButton : true;
 
-	main.version = { map: '2.0', code: '2.0.5-2' };
+	main.version = { map: '2.0', code: '2.0.6' };
 
 	main.dev = (function() {
 		if(typeof options.debug !== 'undefined') {
