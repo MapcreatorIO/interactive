@@ -7,6 +7,7 @@ node('npm && grunt') {
 	}
 
 	stage('build') {
+		sh 'npm install'
 		sh 'grunt production'
 	}
 
