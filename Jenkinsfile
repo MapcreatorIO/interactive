@@ -11,7 +11,7 @@ node('npm && grunt') {
 	}
 
 	if(BRANCH_NAME in ['develop', 'master']) {
-		def deploy = new Deplpoy(steps)
+		def deploy = new Deploy(steps)
 
 		deploy.initialize(
 			'/var/www/',
