@@ -9,6 +9,7 @@ node('npm && grunt') {
 	stage('build') {
 		sh 'npm install'
 		sh 'grunt production'
+		sh 'rm -rf node_modules'
 	}
 
 	if(BRANCH_NAME in ['develop', 'master']) {
