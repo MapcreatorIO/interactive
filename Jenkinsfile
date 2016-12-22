@@ -26,7 +26,6 @@ node('npm && grunt') {
 			false
 		)
 
-		deploy.unStash()
 		deploy.prepare()
 		deploy.copy('./*')
 
