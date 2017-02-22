@@ -22,7 +22,7 @@ node('npm && grunt') {
 			BUILD_NUMBER,
 			'f206c873-8c0b-481e-9c72-1ecb97a5213a',
 			'deploy',
-			BRANCH_NAME == 'master' ? 'online.maps4news.com' : '10.58.32.50',
+			BRANCH_NAME == 'master' ? '34.251.19.253' : '10.58.32.50',
 			false
 		)
 
