@@ -11,7 +11,7 @@ if (preg_match('/\W/', $valid) || strlen($valid) !== 32) {
 }
 
 $path = "/mnt/data/output/";
-if(preg_match("/^bleeding\\.maps4news\\.com$/i", $_SERVER['HTTP_HOST'])) {
+if(preg_match("/bleeding\\.maps4news\\.com$/i", $_SERVER['HTTP_HOST'])) {
 	$path = "/var/ace/output/";
 }
 
