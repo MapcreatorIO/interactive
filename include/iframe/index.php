@@ -11,8 +11,8 @@ if(isset($_GET['style'])) {
 }
 
 $id = isset($_GET['id']) ? htmlentities($_GET['id']) : "m4n-" . str_shuffle("withlovefrommaps4news");
-
 $env = isset($_GET['env']) ? htmlentities($_GET['env']) : "online";
+$interact = isset($_GET['interact']) ? htmlentities($_GET['interact']) : "scroll";
 
 ?>
 <html>
@@ -33,7 +33,8 @@ $env = isset($_GET['env']) ? htmlentities($_GET['env']) : "online";
 				<script type="text/javascript">
 					var map = new M4nInteractive({
 							"path": "<?=$path;?>",
-							"environment": "<?=$env;?>"
+							"environment": "<?=$env;?>",
+							"interact": "<?=$interact;?>"
 						}, document.getElementById("<?=$id;?>"));
 				</script>
 			</div>
