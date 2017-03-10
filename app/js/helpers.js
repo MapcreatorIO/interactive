@@ -136,7 +136,7 @@ var helpers = {
 	 * Show the timeout overlay
 	 */
 	showTimeoutOverlay: function() {
-		if(main.environment === 'smart') {
+		if(main.interact === 'smart') {
 			main.timeoutOverlay.style.display = "block";
 			main.globals.interact.isInteracting = false;
 		}
@@ -146,7 +146,7 @@ var helpers = {
 	 * Hide the timeout overlay
 	 */
 	hideTimeoutOverlay: function() {
-		if(main.environment === 'smart') {
+		if(main.interact === 'smart') {
 			main.timeoutOverlay.style.display = "none";
 			main.globals.interact.isInteracting = true;
 		}
