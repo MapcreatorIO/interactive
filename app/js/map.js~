@@ -11,7 +11,6 @@ var Map = function(value) {
 	this.canvas = document.getElementById(main.canvas);
 
 	this.context = this.canvas.getContext("2d");
-	this.context.imageSmoothingEnabled = false;
 
 	trackTransforms(this.context);
 
