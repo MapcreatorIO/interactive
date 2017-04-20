@@ -14,6 +14,9 @@
           <option name="USE_CHAINED_CALLS_GROUP_INDENTS" value="true" />
           <option name="CHAINED_CALL_DOT_ON_NEW_LINE" value="false" />
         </JSCodeStyleSettings>
+        <MarkdownNavigatorCodeStyleSettings>
+          <option name="RIGHT_MARGIN" value="72" />
+        </MarkdownNavigatorCodeStyleSettings>
         <XML>
           <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
         </XML>
