@@ -12,7 +12,7 @@
 	<script src="https://unpkg.com/leaflet.markercluster@1.0.4/dist/leaflet.markercluster.js"></script>
 
 	<style>
-		#mapContainer {
+		.mapcontainer {
 			height: 500px;
 		}
 		body {
@@ -22,11 +22,21 @@
 	</style>
 </head>
 <body>
-<div id='mapContainer'></div>
+<div class="mapcontainer" id='map1'></div>
+<div class="mapcontainer" id='map2'></div>
 <script src="charlotte.js" type="text/javascript"></script>
 <script src ="maps4news.js"></script>
 <script type="text/javascript">
-	M4nInteractive.init();
+	var m4n = M4nInteractive({
+		container: 'map1',
+		job_id: "charlotte",
+		location: "d3vdg4r0bnfb5l",
+	});
+	var m4n2 = M4nInteractive({
+		container: 'map2',
+		job_id: 'charlotte',
+		location: "d3vdg4r0bnfb5l",
+	});
 </script>
 </body>
 </html>
