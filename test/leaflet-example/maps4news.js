@@ -5,21 +5,19 @@
  * M4nInteractive 3.0.0 alpha
  */
 var M4nInteractive = (function( options ) {
-  // waveTo: function( name ) {
-  //  console.log('Hi' + name );
-  // };
   var _map;
-  var _mapStatus;
-  
-  _init();
-  
-  function _init () {
+  var _options = {
+    // All map options here
+    // Exend base props with new default props
+  };
+  var _enabled = false;
+  var _features = [];
+  // Self invoking init
+  (function () {    
     _loadJob( options, {
       done: function( data ) {
         _createMap( data.properties );
-        _createFeatures( data.features ); 
-        // var j = new Job("job 1");
-        // console.log ( j.report() );
+        _createFeatures( data.features );
       },
       fail: function(e){
         // Create Error Dialog
@@ -27,7 +25,17 @@ var M4nInteractive = (function( options ) {
         console.log( 'Failed initializing your Maps4News map. Please contact us about this issue.' ); 
       }
     });
+  }) ();
+  function enable() {
+    _toggleHandlers( true );
   }
+  function disable() {
+    _toggleHandlers( false  );
+  }
+  function enabled() {
+    return _enabled;
+  }
+
   function _loadJob( options, result ) {
     var request = new XMLHttpRequest();
     request.open("GET", "/" +options.job_id +".json", true);
@@ -48,38 +56,41 @@ var M4nInteractive = (function( options ) {
 
   function _createMap( properties ) {
     var p = properties;
-    var tL = L.tileLayer('https://'+options.location+'.cloudfront.net/tiles/{z}_{x}_{y}.png', {
+    var tL = L.tileLayer('https://'+ options.cdn_id+'.cloudfront.net/tiles/{z}_{x}_{y}.png', {
       attribution: '<a target="_blank" href="https://maps4news.com">Maps4News &copy;</a>',
-      maxNativeZoom: properties.maxZoom,
-      minZoom: properties.minZoom,
+      maxNativeZoom: p.zoom.max,
+      minZoom: p.zoom.min,
       // maxBounds: - ; // Bounds are focussed around Features
     });
 
     // Construct map & events //
-    var center = L.latLngBounds( p.bottomLeft, p.topRight ).getCenter();
+    var center = L.latLngBounds( 
+      [p.boundingBox.downLeft.lat, p.boundingBox.downLeft.lon], 
+      [p.boundingBox.upRight.lat, p.boundingBox.upRight.lon] ).getCenter();
     _map = L.map( options.container, {
         center: center,
         layers: tL
       })
       .on('mousedown', function(e) {
-        if( !_mapStatus.isEnabled() ) {
-          _mapStatus.enable();
+        if(! enabled() ) {
+          enable();
         }
       })
       .on('contextmenu', function(e) {
-        if( _mapStatus.isEnabled() ) {
-          _mapStatus.disable();
+        if( enabled() ) {
+          disable();
         }
       }
     );
-
     // Mobile Map Settings //
     if(L.Browser.mobile) {
       _map.zoomControl.setPosition( 'bottomright' );
       _map.attributionControl.setPosition( 'topright' );
     }
+    
     _addControllers();
-
+    _toggleHandlers( false  );
+    
   }
   function _createFeatures( geojson ) {
     // Base marker layer
@@ -107,6 +118,7 @@ var M4nInteractive = (function( options ) {
     // Build GEOJSON data
     var gJ = L.geoJSON( geojson, {
       onEachFeature: function(feature, layer) {
+        _features.push(layer)
         if( feature.properties.html ) {
           var popupContent = feature.properties.html;
           layer.bindPopup(popupContent);
@@ -138,61 +150,55 @@ var M4nInteractive = (function( options ) {
     _map.setMaxBounds ( markerCluster.getBounds().pad( Math.sqrt(2) / 2) ); // Little bit of extra room
   }
   function _addControllers() {
-    // Shows map status
-    _mapStatus = L.control( {
-      position: 'bottomleft',
-    });
-    _mapStatus.onAdd = function ( map ) {
-      this._div = L.DomUtil.create('div', 'touch-info');
-      return this._div;
-    };
-    _mapStatus.enable = function() {
-      var action = L.Browser.mobile ? 'Hold' : 'Right click';
-      this.enabled = true;
-      this._div.innerHTML = '<i class="touch-info-icon enabled"></i>'+action+' to deactivate';
-      _toggleHandlers();
-      return this;
-    }
-    _mapStatus.disable = function() {
-      var action = L.Browser.mobile ? 'Tap' : 'Click';
-      this.enabled = false;
-      this._div.innerHTML = '<i class="touch-info-icon disabled"></i>'+action+' to activate';
-      _toggleHandlers();
-      // if(_map.touchZoom) { _map.touchZoom.disable() };
-      // if(_map.scrollWheelZoom) { _map.scrollWheelZoom.disable() };
-      // if(_map.dragging) { _map.dragging.disable() };
-      // if(_map.scrollZoom) { _map.scrollZoom.disable() };
-      // if(_map.tap) { _map.tap.disable() };
-      return this;
-    }
-    _mapStatus.isEnabled = function() {
-      return this.enabled;
-    }
-    _mapStatus.addTo( _map ).disable();
+    _map.mapStatus = new L.Control.MapStatus();
+    _map.addControl( _map.mapStatus );
   }
-  function _toggleHandlers() {
-    var handlers = [_map.touchZoom, _map.scrollWheelZoom, _map.dragging, _map.scrollZoom, _map.tap];
-
+  function _toggleHandlers( enabled ) {
+    // Toggle all handlers & update map status controller
+    var handlers = [_map.mapStatus, _map.touchZoom, _map.scrollWheelZoom, _map.dragging, _map.scrollZoom, _map.tap];
     for (var i = handlers.length - 1; i >= 0; i--) {
       if(handlers[i]) {
-
-        handlers[i].enabled() ? handlers[i].disable() : handlers[i].enable();
-        // debugger;
+        enabled ? handlers[i].enable() : handlers[i].disable();
       }
     }
-  }
-  // function _disableMap() {
-
-  // }
-  function getMap() {
-    return _map;
+    _enabled = enabled;
   }
   return {
-    
-    getMap
+    enable,
+    disable,
+    enabled,
   };
 });
 
+L.Control.MapStatus = L.Control.extend({
+  options: {
+    position: 'bottomleft',
+    icon: L.Browser.mobile ? 'touch' : 'desktop'
+  },
+  onAdd: function (map) {
+    this._div = L.DomUtil.create('div', 'touch-info');
+    return this._div;
+  },
+  enable: function() {
+    var action = L.Browser.mobile ? 'Hold' : 'Right click';
+    this._div.innerHTML = '<i class="touch-info-icon '+this.options.icon+'-enabled"></i>'+action+' to deactivate';
+    this._enabled = true;
+    return this;
+  },
+  disable: function() {
+    var action = L.Browser.mobile ? 'Tap' : 'Click';
+    this._div.innerHTML = '<i class="touch-info-icon '+this.options.icon+'-disabled"></i>'+action+' to activate';
+    this._enabled = false;
+    return this;
+  },
+  enabled: function() {
+    return this._enabled;
+  }
+});
+
+// L.control.mapstatus = function () {
+//   return new L.Control.MapStatus();
+// };
 var Job = (function(name) {
     // var _name = name;
     
@@ -206,184 +212,6 @@ var Job = (function(name) {
         report
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

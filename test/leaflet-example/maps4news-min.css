@@ -1,17 +1,16 @@
 .leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {
   -webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
-  -moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
-  -o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
+  -webkit-transition: opacity 0.3s ease-in, -webkit-transform 0.3s ease-out;
+  transition: opacity 0.3s ease-in, -webkit-transform 0.3s ease-out;
   transition: transform 0.3s ease-out, opacity 0.3s ease-in;
-}
+  transition: transform 0.3s ease-out, opacity 0.3s ease-in, -webkit-transform 0.3s ease-out; }
 
 .leaflet-cluster-spider-leg {
   /* stroke-dashoffset (duration and function) should match with leaflet-marker-icon transform in order to track it exactly */
   -webkit-transition: -webkit-stroke-dashoffset 0.3s ease-out, -webkit-stroke-opacity 0.3s ease-in;
-  -moz-transition: -moz-stroke-dashoffset 0.3s ease-out, -moz-stroke-opacity 0.3s ease-in;
-  -o-transition: -o-stroke-dashoffset 0.3s ease-out, -o-stroke-opacity 0.3s ease-in;
-  transition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in;
-}
+  -webkit-transition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in;
+  transition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in; }
+
 .marker-cluster {
   text-align: center;
   border-radius: 50%;
@@ -22,27 +21,26 @@
   color: white;
   border: 2px solid white;
   background-color: #BF4341;
-  box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
-}
-.marker-cluster span{
-  line-height: inherit;
-}
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.16); }
 
-.marker-cluster-small{
+.marker-cluster span {
+  line-height: inherit; }
+
+.marker-cluster-small {
   width: 30px;
   height: 30px;
-  line-height: 30px;
-}
-.marker-cluster-medium{
+  line-height: 30px; }
+
+.marker-cluster-medium {
   width: 35px;
   height: 35px;
-  line-height: 35px;
-}
-.marker-cluster-large{
+  line-height: 35px; }
+
+.marker-cluster-large {
   width: 40px;
   height: 40px;
-  line-height: 40px;
-}
+  line-height: 40px; }
+
 /*.zoom-controls{
   position: absolute;
   bottom: 10px;
@@ -61,22 +59,27 @@
 .zoom-controls li.out{ background-position: -90px -0; }
 .zoom-controls li:hover{ background-color: #f6f6f6; }*/
 /*.zoom-controls li,*/
-
-.touch-info{
+.touch-info {
   line-height: 20px;
   font-family: "Arial", Helvetica, sans-serif;
-  font-size: 13px;
-}
+  font-size: 13px; }
+
 .touch-info-icon {
-  background: url('map-icons.png') no-repeat center;
+  background: url("map-icons.png") no-repeat center;
   width: 30px;
   height: 30px;
   vertical-align: bottom;
   display: inline-block;
-  cursor: pointer;
-}
-.touch-info-icon.touch-enabled { background-position: 0 0; }
-.touch-info-icon.touch-disabled { background-position: -30px 0; }
+  cursor: pointer; }
 
-.touch-info-icon.desktop-enabled { background-position: -120px 0; }
-.touch-info-icon.desktop-disabled { background-position: -150px 0; }
+.touch-info-icon.touch-enabled {
+  background-position: 0 0; }
+
+.touch-info-icon.touch-disabled {
+  background-position: -30px 0; }
+
+.touch-info-icon.desktop-enabled {
+  background-position: -120px 0; }
+
+.touch-info-icon.desktop-disabled {
+  background-position: -150px 0; }

@@ -7,8 +7,9 @@
 	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
 	<link rel="stylesheet" href="maps4news.css" />
-
-	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+	<!-- <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script> -->
+	<script src="leaflet-src.js"></script>
 	<script src="https://unpkg.com/leaflet.markercluster@1.0.4/dist/leaflet.markercluster.js"></script>
 
 	<style>
@@ -30,12 +31,12 @@
 	var m4n = M4nInteractive({
 		container: 'map1',
 		job_id: "charlotte",
-		location: "d3vdg4r0bnfb5l",
+		cdn_id: "d3vdg4r0bnfb5l",
 	});
 	var m4n2 = M4nInteractive({
 		container: 'map2',
 		job_id: 'charlotte',
-		location: "d3vdg4r0bnfb5l",
+		cdn_id: "d3vdg4r0bnfb5l",
 	});
 </script>
 </body>
