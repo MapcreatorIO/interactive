@@ -4,17 +4,21 @@
  *
  * M4nInteractive 3.0.0 alpha
  */
-var M4nInteractive = (function( options ) {
+
+var M4nInteractive = (function( customOptions ) {
   var _map;
-  var _options = {
-    // All map options here
-    // Exend base props with new default props
+  var _defaultOption = {
+    // Custom options
+    startEnabled: false
   };
-  var _enabled = false;
+  var _options = L.extend(_defaultOption, customOptions);
   var _features = [];
+  var _handlers = [];
+
+  var _enabled = _options.startEnabled;
   // Self invoking init
-  (function () {    
-    _loadJob( options, {
+  (function () {
+    _loadJob({
       done: function( data ) {
         _createMap( data.properties );
         _createFeatures( data.features );
@@ -25,20 +29,34 @@ var M4nInteractive = (function( options ) {
         console.log( 'Failed initializing your Maps4News map. Please contact us about this issue.' ); 
       }
     });
+  // });
   }) ();
   function enable() {
-    _toggleHandlers( true );
+    _enabled = true;
+    _toggleHandlers();
   }
   function disable() {
-    _toggleHandlers( false  );
+    _enabled = false;
+    _toggleHandlers();
   }
+  
   function enabled() {
     return _enabled;
   }
 
-  function _loadJob( options, result ) {
+  function _loadExternalScripts( callback ) {
+    var script = document.createElement('script');
+    script.onreadystatechange = function() {
+      if (script.readyState == 'loaded') {
+        callback.done();
+      }
+    };
+    script.src = 'leaflet-src.js';
+    document.body.appendChild(script);
+  }
+  function _loadJob( result ) {
     var request = new XMLHttpRequest();
-    request.open("GET", "/" +options.job_id +".json", true);
+    request.open("GET", "//" +_options.json_id +"/map.json", true);
     request.onload = function (e) {
       if (request.readyState === 4) {
         if (request.status === 200) {
@@ -56,32 +74,35 @@ var M4nInteractive = (function( options ) {
 
   function _createMap( properties ) {
     var p = properties;
-    var tL = L.tileLayer('https://'+ options.cdn_id+'.cloudfront.net/tiles/{z}_{x}_{y}.png', {
+    var tL = L.tileLayer('//'+ _options.tile_id+'/{z}_{x}_{y}.png', {
       attribution: '<a target="_blank" href="https://maps4news.com">Maps4News &copy;</a>',
       maxNativeZoom: p.zoom.max,
       minZoom: p.zoom.min,
       // maxBounds: - ; // Bounds are focussed around Features
-    });
+    })
+
+    var bounds = L.latLngBounds( 
+      [p.boundingBox.downLeft.lat, p.boundingBox.downLeft.lon], 
+      [p.boundingBox.upRight.lat, p.boundingBox.upRight.lon]
+    );
+
+    var center = bounds.getCenter();  
 
     // Construct map & events //
-    var center = L.latLngBounds( 
-      [p.boundingBox.downLeft.lat, p.boundingBox.downLeft.lon], 
-      [p.boundingBox.upRight.lat, p.boundingBox.upRight.lon] ).getCenter();
-    _map = L.map( options.container, {
+    _map = L.map( _options.container, {
         center: center,
-        layers: tL
+        layers: tL,
+        zoom: 10
       })
       .on('mousedown', function(e) {
-        if(! enabled() ) {
           enable();
-        }
       })
       .on('contextmenu', function(e) {
-        if( enabled() ) {
           disable();
-        }
       }
+      // .setMaxBounds ( bounds )
     );
+
     // Mobile Map Settings //
     if(L.Browser.mobile) {
       _map.zoomControl.setPosition( 'bottomright' );
@@ -89,79 +110,42 @@ var M4nInteractive = (function( options ) {
     }
     
     _addControllers();
-    _toggleHandlers( false  );
+    _addHandlers();
+
+    _toggleHandlers();
     
   }
   function _createFeatures( geojson ) {
-    // Base marker layer
-    var markerCluster = L.markerClusterGroup({
-      showCoverageOnHover: false,
-      maxClusterRadius: 50,
-      iconCreateFunction: function (cluster) {
-        var childCount = cluster.getChildCount();
-        var c = ' marker-cluster-';
-        var s = 0;
-        if (childCount < 10) {
-          c += 'small';
-          s = 30;
-        } else if (childCount < 15) {
-          c += 'medium';
-          s = 35;
-        } else {
-          c += 'large';
-          s = 40;
-        }
-        return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(s,s) });
-      },
-    }).addTo(_map);
-
-    // Build GEOJSON data
-    var gJ = L.geoJSON( geojson, {
-      onEachFeature: function(feature, layer) {
-        _features.push(layer)
-        if( feature.properties.html ) {
-          var popupContent = feature.properties.html;
-          layer.bindPopup(popupContent);
-        }
-      },
-      pointToLayer: function (feature, latlng) {
-        if( feature.properties.svg ) {
-          // Custom icon from data
-          var svgString = feature.properties.svg;
-          var svgURL = "data:image/svg+xml;base64," + btoa(svgString);
-          var svgIcon = L.icon({
-            iconUrl: svgURL,
-            iconSize: [40, 60],
-            iconAnchor: [20, 30],
-          });
-          return L.marker(latlng, {
-            icon: svgIcon
-          });
-        } else {
-          return L.marker(latlng);
-          // Default icon
-          // var svgIcon = 
-        }
-      }
-    }).addTo(markerCluster);
+    // Cluster to which our features will be added
+    var markerCluster = L.markerClusterGroup.Custom().addTo( _map );
+    
+    // geoJSON feature group
+    var geoJSON = L.geoJSON.Custom( geojson ).addTo(markerCluster);
     
     // Reset boundries around features
     _map.fitBounds( markerCluster.getBounds() );
-    _map.setMaxBounds ( markerCluster.getBounds().pad( Math.sqrt(2) / 2) ); // Little bit of extra room
+    
+    // Little bit of extra room
+    _map.setMaxBounds ( markerCluster.getBounds().pad( Math.sqrt(2) / 2) );
+  }
+
+  function _addHandlers() {
+    _handlers.push( _map.mapStatus, _map.touchZoom, _map.scrollWheelZoom, _map.dragging, _map.scrollZoom, _map.tap );
   }
   function _addControllers() {
-    _map.mapStatus = new L.Control.MapStatus();
+    // Map enabled/disabled status widget
+    _map.mapStatus = L.control.MapStatus();
     _map.addControl( _map.mapStatus );
   }
-  function _toggleHandlers( enabled ) {
+
+  function _toggleHandlers() {
     // Toggle all handlers & update map status controller
-    var handlers = [_map.mapStatus, _map.touchZoom, _map.scrollWheelZoom, _map.dragging, _map.scrollZoom, _map.tap];
-    for (var i = handlers.length - 1; i >= 0; i--) {
-      if(handlers[i]) {
-        enabled ? handlers[i].enable() : handlers[i].disable();
+    for (var i = _handlers.length - 1; i >= 0; i--) {
+      if(_handlers[i]) {
+        // console.log(_enabled, _handlers[i].enabled() );
+        _enabled ? _handlers[i].enable() : _handlers[i].disable();
       }
     }
-    _enabled = enabled;
   }
   return {
     enable,
@@ -170,35 +154,6 @@ var M4nInteractive = (function( options ) {
   };
 });
 
-L.Control.MapStatus = L.Control.extend({
-  options: {
-    position: 'bottomleft',
-    icon: L.Browser.mobile ? 'touch' : 'desktop'
-  },
-  onAdd: function (map) {
-    this._div = L.DomUtil.create('div', 'touch-info');
-    return this._div;
-  },
-  enable: function() {
-    var action = L.Browser.mobile ? 'Hold' : 'Right click';
-    this._div.innerHTML = '<i class="touch-info-icon '+this.options.icon+'-enabled"></i>'+action+' to deactivate';
-    this._enabled = true;
-    return this;
-  },
-  disable: function() {
-    var action = L.Browser.mobile ? 'Tap' : 'Click';
-    this._div.innerHTML = '<i class="touch-info-icon '+this.options.icon+'-disabled"></i>'+action+' to activate';
-    this._enabled = false;
-    return this;
-  },
-  enabled: function() {
-    return this._enabled;
-  }
-});
-
-// L.control.mapstatus = function () {
-//   return new L.Control.MapStatus();
-// };
 var Job = (function(name) {
     // var _name = name;
     
@@ -212,44 +167,6 @@ var Job = (function(name) {
         report
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

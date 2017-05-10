@@ -1,3 +1,7 @@
+.mapcontainer {
+  height: 500px;
+}
+
 .leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {
   -webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
   -moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
@@ -65,6 +69,7 @@
 .touch-info{
   line-height: 20px;
   font-family: "Arial", Helvetica, sans-serif;
+  user-select: none;
   font-size: 13px;
 }
 .touch-info-icon {

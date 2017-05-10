@@ -28,10 +28,8 @@ L.Control.Search = L.Control.extend({
   },
   keyup: function(e) {
     if (e.keyCode === 38 || e.keyCode === 40) {
-      // do nothing
     } else {
       this.results.innerHTML = '';
-      // console.log('fff'); 
       if (this.input.value.length > 2) {
         var value = this.input.value;
       }
@@ -47,3 +45,4 @@ L.Control.Search = L.Control.extend({
     // L.DomEvent.preventDefault(e);
   }
 });
+
