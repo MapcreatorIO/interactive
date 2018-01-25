@@ -10,7 +10,10 @@ if (preg_match('/\W/', $valid) || strlen($valid) !== 32) {
 	header('HTTP/1.1 400 Bad Request'); die;
 }
 
-$path = "/mnt/data/output/";
+// $path = "/mnt/data/output/";
+
+$path = "https://s3-eu-west-1.amazonaws.com/m4n-production/";
+
 if(preg_match("/bleeding\\.maps4news\\.com$/i", $_SERVER['HTTP_HOST'])) {
 	$path = "/var/ace/output/";
 }
