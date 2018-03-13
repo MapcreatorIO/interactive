@@ -12,7 +12,7 @@ if (preg_match('/\W/', $valid) || strlen($valid) !== 32) {
 
 // $path = "/mnt/data/output/";
 
-$path = "https://s3-eu-west-1.amazonaws.com/m4n-production/";
+$path = "https://content.maps4news.com/";
 
 if(preg_match("/bleeding\\.online\\.maps4news\\.com$/i", $_SERVER['HTTP_HOST'])) {
 	$path = "/var/ace/output/";

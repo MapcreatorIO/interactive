@@ -43,7 +43,7 @@
 			break;
 		default:
 			// main.url = 'https://online.' + main.environment + ".maps4news.com/output/" + options.path + '/';
-			main.url = 'https://s3-eu-west-1.amazonaws.com/m4n-production/' + options.path + '/';
+			main.url = 'https://content.maps4news.com/' + options.path + '/';
 			main.json = 'https://' + main.environment + ".maps4news.com/ia/" + main.version.map + "/?id=" + encodeURIComponent(options.path);
 			break;
 	}
